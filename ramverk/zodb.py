@@ -4,6 +4,7 @@ from werkzeug.utils import cached_property
 
 
 class TransactionMixin(object):
+    """Add managed transactions for each request to an application."""
 
     def __exit__(self, *exc_info):
         if exc_info == (None, None, None):
@@ -16,6 +17,10 @@ class TransactionMixin(object):
 
 
 class ZODBMixin(object):
+    """Add ZODB persistence to an application."""
+
+    def storage(self):
+        """Override to return the storage for ZODB."""
 
     @cached_property
     def __db(self):
@@ -36,6 +41,8 @@ class ZODBMixin(object):
 
     @property
     def root_object(self):
+        """The root object of the :meth:`storage`, connected and
+        subsequently disconnected on-demand for each request."""
         return self.__connection.root()
 
     def __exit__(self, *exc_info):

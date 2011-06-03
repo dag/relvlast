@@ -2,6 +2,8 @@ from functools import update_wrapper
 
 
 class request_property(object):
+    """Property that is cached in the object's `local` container, i.e.
+    effectively for each request."""
 
     def __init__(self, method):
         update_wrapper(self, method)
