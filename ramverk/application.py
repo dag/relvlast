@@ -1,5 +1,3 @@
-from inspect             import isfunction
-
 from logbook             import Logger
 
 from werkzeug.exceptions import HTTPException
