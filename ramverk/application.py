@@ -88,10 +88,14 @@ class Application(object):
         Looks up a function in :attr:`endpoints` and calls it with the
         application and `values` as keyword arguments, by default."""
         view = self.endpoints[endpoint]
-        try:
-            return view(self, **values)
-        except HTTPException as e:
-            return e
+        return view(self, **values)
+
+    def error_response(self, error):
+        """Called to create a response for an
+        :exc:`~werkzeug.exceptions.HTTPException` if one was raised during
+        dispatch. Returns it as-is by default as they are basic responses.
+        Override for custom 404 pages etc."""
+        return error
 
     @responder
     def __call__(self, environ, start_response):
@@ -100,5 +104,8 @@ class Application(object):
         release_local(self.local)
         self.local.environ = environ
         with self:
-            response = self.url_adapter.dispatch(self.dispatch)
+            try:
+                response = self.url_adapter.dispatch(self.dispatch)
+            except HTTPException as e:
+                response = self.error_response(e)
         return response
