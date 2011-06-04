@@ -1,10 +1,11 @@
 from werkzeug.wrappers   import Response
 
 from ramverk.application import AbstractApplication
+from ramverk.genshi      import GenshiMixin
 from ramverk.logbook     import LogbookMixin
 from ramverk.routing     import RoutingMixin
-from ramverk.genshi      import GenshiMixin
-from ramverk.zodb        import TransactionMixin, ZODBMixin
+from ramverk.transaction import TransactionMixin
+from ramverk.zodb        import ZODBMixin
 
 
 class HTMLResponse(Response):
