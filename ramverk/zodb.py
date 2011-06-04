@@ -1,6 +1,5 @@
 from abc            import ABCMeta, abstractmethod
 from ZODB.DB        import DB
-from transaction    import manager
 from werkzeug.utils import cached_property
 
 
@@ -26,8 +25,6 @@ class ZODBMixin(object):
         if not self.__connected:
             self.log.debug('connecting ZODB')
             self.local._ZODBMixin__connection = self.__db.open()
-            self.log.debug('beginning transaction')
-            manager.begin()
         return self.local._ZODBMixin__connection
 
     @property
