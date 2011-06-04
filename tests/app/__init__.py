@@ -12,8 +12,8 @@ from tests.app           import objects, endpoints
 
 class TestApp(TransactionMixin, ZODBMixin, GenshiMixin, Application):
 
-    def storage(self):
-        return DemoStorage()
+    def setup(self):
+        self.storage = DemoStorage()
 
     @request_property
     def db(self):
