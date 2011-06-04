@@ -1,4 +1,4 @@
-from abc                 import ABCMeta, abstractmethod
+from abc                 import ABCMeta, abstractmethod, abstractproperty
 
 from werkzeug.exceptions import HTTPException
 from werkzeug.local      import Local, release_local
@@ -28,6 +28,10 @@ class AbstractApplication(object):
         for key, value in overrides.iteritems():
             setattr(self, key, value)
         self.setup()
+
+    @abstractproperty
+    def log(self):
+        """Log channel for this application."""
 
     def setup(self):
         """Called when a new application has been created, easier to
