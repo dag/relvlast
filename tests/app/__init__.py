@@ -14,18 +14,10 @@ class TestApp(TransactionMixin, ZODBMixin, GenshiMixin, Application):
 
     def setup(self):
         self.storage = DemoStorage()
+        self.route('/', endpoints.index, methods=('GET', 'POST'))
 
     @request_property
     def db(self):
         if 'testapp' not in self.root_object:
             self.root_object['testapp'] = objects.Root()
         return self.root_object['testapp']
-
-    @cached_property
-    def url_map(self):
-        return Map([Rule('/', endpoint='index',
-                              methods=('GET', 'POST'))])
-
-    @cached_property
-    def endpoints(self):
-        return dict(index=endpoints.index)
