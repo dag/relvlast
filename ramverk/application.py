@@ -2,7 +2,7 @@ from logbook             import Logger
 
 from werkzeug.exceptions import HTTPException
 from werkzeug.local      import Local, release_local
-from werkzeug.routing    import Map
+from werkzeug.routing    import Map, Rule
 from werkzeug.utils      import cached_property
 from werkzeug.wrappers   import Request, Response
 from werkzeug.wsgi       import responder
@@ -31,6 +31,21 @@ class Application(object):
         `overrides`."""
         for key, value in overrides.iteritems():
             setattr(self, key, value)
+        self.setup()
+
+    def setup(self):
+        """Called when a new application has been created, easier to
+        override cleanly than :meth:`__init__`."""
+        pass
+
+    def route(self, string, function, **kwargs):
+        """Add a :class:`~werkzeug.routing.Rule` for `string` to the
+        :attr:`url_map`, using the name of `function` as the endpoint and
+        map that endpoint to the function. The remaining arguments are
+        passed to the Rule."""
+        endpoint = function.__name__
+        self.url_map.add(Rule(string, endpoint=endpoint, **kwargs))
+        self.endpoints[endpoint] = function
 
     @cached_property
     def local(self):
