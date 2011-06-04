@@ -21,10 +21,5 @@ class Relvlast(TransactionMixin, ZODBMixin, GenshiMixin, Application):
             self.root_object['relvlast'] = objects.Root()
         return self.root_object['relvlast']
 
-    @cached_property
-    def url_map(self):
-        return Map([Rule('/', endpoint='index')])
-
-    @cached_property
-    def endpoints(self):
-        return dict(index=endpoints.index)
+    def setup(self):
+        self.route('/', endpoints.index)
