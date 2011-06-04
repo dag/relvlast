@@ -1,9 +1,10 @@
-from __future__      import absolute_import
-from genshi.template import TemplateLoader, loader, Context
-from werkzeug.utils  import cached_property
+from __future__         import absolute_import
+from genshi.template    import TemplateLoader, loader, Context
+from werkzeug.utils     import cached_property
+from ramverk.templating import TemplatingMixin
 
 
-class GenshiMixin(object):
+class GenshiMixin(TemplatingMixin):
     """Add Genshi templating to an
     :class:`~ramverk.application.Application`."""
 
@@ -26,21 +27,15 @@ class GenshiMixin(object):
         Flatland installation and such."""
         pass
 
-    def context(self, overrides):
-        """Create a :class:`~genshi.template.Context` to render a template
-        in, including `overrides`. Override to add globals. Includes
-        `request`, `url` and `path` from the application, and the
-        application as `self`, by default."""
-        context = Context(request=self.request,
-                          url=self.url,
-                          path=self.path)
-        context['self'] = self
-        context.update(overrides)
-        return context
-
     def render(self, template_name, **context):
         """Render `template_name` in `context` to a response."""
+        context = self.create_template_context(context)
+
+        # Need this to pass 'self' to generate()
+        genshi_context = Context()
+        genshi_context.update(context)
+
         template = self.__loader.load(template_name)
-        stream = template.generate(self.context(context))
+        stream = template.generate(genshi_context)
         rendering = stream.serialize(self.serializer, doctype=self.doctype)
         return self.response(rendering)
