@@ -18,11 +18,11 @@ class HTMLResponse(Response):
     default_mimetype = 'text/html'
 
 
-class Application(TransactionMixin,
+class Application(LogbookMixin,
+                  TransactionMixin,
                   ZODBMixin,
                   GenshiMixin,
                   RoutingMixin,
-                  LogbookMixin,
                   AbstractApplication):
     """Full-stack application."""
 
