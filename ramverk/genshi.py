@@ -19,7 +19,7 @@ class GenshiMixin(TemplatingMixin):
         """Loads templates from ``templates/`` under the module of the
         application. (Note: name-mangled!)"""
         return TemplateLoader([loader.package(self.module, 'templates')],
-                              auto_reload=self.debug,
+                              auto_reload=self.settings.debug,
                               callback=self.template_loaded)
 
     def template_loaded(self, template):

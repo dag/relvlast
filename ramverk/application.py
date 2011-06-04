@@ -6,7 +6,7 @@ from werkzeug.utils      import cached_property
 from werkzeug.wrappers   import Request, BaseResponse
 from werkzeug.wsgi       import responder
 
-from ramverk.utils       import request_property
+from ramverk.utils       import Bunch, request_property
 
 
 class AbstractApplication(object):
@@ -14,20 +14,20 @@ class AbstractApplication(object):
 
     __metaclass__ = ABCMeta
 
-    #: Enable development niceties that shouldn't be enabled in production
-    #: deployments.
-    debug = False
-
     #: Factory for default response objects.
     response = BaseResponse
 
-    def __init__(self, **overrides):
-        """Create a new application object, overriding attributes with
-        `overrides`."""
+    def __init__(self, **settings):
+        """Create a new application object using `settings`."""
         self.self = self
-        for key, value in overrides.iteritems():
-            setattr(self, key, value)
+        self.settings.update(settings)
         self.setup()
+
+    @cached_property
+    def settings(self):
+        """Environmental configuration in a :class:`~ramverk.utils.Bunch`,
+        by default including `debug` set to false."""
+        return Bunch(debug=False)
 
     @property
     def module(self):

@@ -1,6 +1,13 @@
 from functools import update_wrapper
 
 
+class Bunch(dict):
+
+    __getattr__ = dict.__getitem__
+    __setattr__ = dict.__setitem__
+    __delattr__ = dict.__delitem__
+
+
 class request_property(object):
     """Property that is cached in the object's `local` container, i.e.
     effectively for each request."""

@@ -1,5 +1,4 @@
 from persistent        import Persistent
-from ZODB.FileStorage  import FileStorage
 from werkzeug.testapp  import test_app
 
 from ramverk.fullstack import Application
@@ -15,9 +14,6 @@ def index(render):
 
 
 class Relvlast(Application):
-
-    def storage(self):
-        return FileStorage('relvlast.db')
 
     @request_property
     def db(self):

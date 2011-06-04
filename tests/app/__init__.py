@@ -1,6 +1,4 @@
 from persistent        import Persistent
-from ZODB.DemoStorage  import DemoStorage
-
 from werkzeug.utils    import redirect
 
 from ramverk.fullstack import Application
@@ -23,9 +21,6 @@ def index(request, render, db, path):
 
 
 class TestApp(Application):
-
-    def storage(self):
-        return DemoStorage()
 
     @request_property
     def db(self):

@@ -26,9 +26,11 @@ def serve():
     opts = options.serve
 
     from werkzeug.serving import run_simple
+    from ZODB.FileStorage import FileStorage
     from relvlast         import Relvlast
 
-    app = Relvlast(debug=not opts.production)
+    app = Relvlast(debug=not opts.production,
+                   storage=lambda: FileStorage('relvlast.db'))
     run_simple(opts.hostname, int(opts.port), app,
                use_reloader = not opts.no_reloader,
                use_debugger = not opts.no_debugger,

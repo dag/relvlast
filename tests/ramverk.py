@@ -4,6 +4,7 @@ from textwrap          import dedent
 from attest            import Tests, assert_hook
 from werkzeug.test     import Client
 from werkzeug.wrappers import BaseResponse
+from ZODB.DemoStorage  import DemoStorage
 
 from tests.app         import TestApp
 
@@ -12,7 +13,7 @@ request = Tests()
 
 @request.context
 def test_client():
-    app = TestApp()
+    app = TestApp(storage=DemoStorage)
     client = Client(app, BaseResponse)
     yield client
 
