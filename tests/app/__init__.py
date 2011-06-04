@@ -1,6 +1,4 @@
 from ZODB.DemoStorage    import DemoStorage
-from werkzeug.routing    import Map, Rule
-from werkzeug.utils      import cached_property
 
 from ramverk.application import Application
 from ramverk.genshi      import GenshiMixin

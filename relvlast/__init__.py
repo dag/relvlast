@@ -1,7 +1,5 @@
 from ZODB.FileStorage    import FileStorage
-from werkzeug.routing    import Map, Rule
 from werkzeug.testapp    import test_app
-from werkzeug.utils      import cached_property
 
 from ramverk.application import Application
 from ramverk.genshi      import GenshiMixin
