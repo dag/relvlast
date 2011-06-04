@@ -1,4 +1,8 @@
+from __future__          import absolute_import
+
+from werkzeug.utils      import cached_property
 from werkzeug.wrappers   import Response
+from logbook.more        import ColorizedStderrHandler
 
 from ramverk.application import AbstractApplication
 from ramverk.genshi      import GenshiMixin
@@ -23,3 +27,7 @@ class Application(TransactionMixin,
     """Full-stack application."""
 
     response = HTMLResponse
+
+    @cached_property
+    def log_handler(self):
+        return ColorizedStderrHandler()
