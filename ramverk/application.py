@@ -29,6 +29,13 @@ class AbstractApplication(object):
             setattr(self, key, value)
         self.setup()
 
+    @property
+    def module(self):
+        """Name of the module containing the application, for locating
+        templates and such. Defaults to ``__module__`` but needs to be set
+        to a fixed value for subclasses of complete applications."""
+        return self.__module__
+
     @abstractproperty
     def log(self):
         """Log channel for this application."""
