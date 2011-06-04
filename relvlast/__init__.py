@@ -19,5 +19,5 @@ class Relvlast(TransactionMixin, ZODBMixin, GenshiMixin, Application):
 
     def setup(self):
         self.storage = FileStorage('relvlast.db')
-        self.route('/__info__', lambda x: test_app)
+        self.route('/__info__', lambda x: test_app, endpoint='__info__')
         self.route('/', endpoints.index)

@@ -43,7 +43,7 @@ class Application(object):
         :attr:`url_map`, using the name of `function` as the endpoint and
         map that endpoint to the function. The remaining arguments are
         passed to the Rule."""
-        endpoint = function.__name__
+        endpoint = kwargs.pop('endpoint', function.__name__)
         self.url_map.add(Rule(string, endpoint=endpoint, **kwargs))
         self.endpoints[endpoint] = function
 
