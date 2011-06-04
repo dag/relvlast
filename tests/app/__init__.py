@@ -1,12 +1,10 @@
-from persistent          import Persistent
-from ZODB.DemoStorage    import DemoStorage
+from persistent        import Persistent
+from ZODB.DemoStorage  import DemoStorage
 
-from werkzeug.utils      import redirect
+from werkzeug.utils    import redirect
 
-from ramverk.application import Application
-from ramverk.genshi      import GenshiMixin
-from ramverk.utils       import request_property
-from ramverk.zodb        import TransactionMixin, ZODBMixin
+from ramverk.fullstack import Application
+from ramverk.utils     import request_property
 
 
 class Root(Persistent):
@@ -24,7 +22,7 @@ def index(request, render, db, path):
         return redirect(path('index'))
 
 
-class TestApp(TransactionMixin, ZODBMixin, GenshiMixin, Application):
+class TestApp(Application):
 
     def storage(self):
         return DemoStorage()

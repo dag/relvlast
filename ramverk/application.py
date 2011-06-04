@@ -3,18 +3,10 @@ from abc                 import ABCMeta, abstractmethod
 from werkzeug.exceptions import HTTPException
 from werkzeug.local      import Local, release_local
 from werkzeug.utils      import cached_property
-from werkzeug.wrappers   import Request, Response
+from werkzeug.wrappers   import Request, BaseResponse
 from werkzeug.wsgi       import responder
 
-from ramverk.logbook     import LogbookMixin
-from ramverk.routing     import RoutingMixin
 from ramverk.utils       import request_property
-
-
-class HTMLResponse(Response):
-    """Full-fledged response object with a HTML mimetype default."""
-
-    default_mimetype = 'text/html'
 
 
 class AbstractApplication(object):
@@ -27,7 +19,7 @@ class AbstractApplication(object):
     debug = False
 
     #: Factory for default response objects.
-    response = HTMLResponse
+    response = BaseResponse
 
     def __init__(self, **overrides):
         """Create a new application object, overriding attributes with
@@ -84,7 +76,3 @@ class AbstractApplication(object):
             except HTTPException as e:
                 response = self.error_response(e)
         return response
-
-
-class Application(RoutingMixin, LogbookMixin, AbstractApplication):
-    """Application with URL dispatching and a log channel."""
