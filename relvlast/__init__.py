@@ -11,6 +11,9 @@ from relvlast            import objects, endpoints
 
 class Relvlast(TransactionMixin, ZODBMixin, GenshiMixin, Application):
 
+    def storage(self):
+        return FileStorage('relvlast.db')
+
     @request_property
     def db(self):
         if 'relvlast' not in self.root_object:
@@ -18,6 +21,5 @@ class Relvlast(TransactionMixin, ZODBMixin, GenshiMixin, Application):
         return self.root_object['relvlast']
 
     def setup(self):
-        self.storage = FileStorage('relvlast.db')
         self.route('/__info__', lambda x: test_app, endpoint='__info__')
         self.route('/', endpoints.index)

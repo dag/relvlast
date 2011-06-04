@@ -1,3 +1,4 @@
+from abc            import ABCMeta, abstractmethod
 from ZODB.DB        import DB
 from transaction    import manager
 from werkzeug.utils import cached_property
@@ -19,14 +20,15 @@ class TransactionMixin(object):
 class ZODBMixin(object):
     """Add ZODB persistence to an application."""
 
-    #: Set to the storage for ZODB.
-    storage = None
+    __metaclass__ = ABCMeta
+
+    @abstractmethod
+    def storage(self):
+        """Override to return the storage for ZODB."""
 
     @cached_property
     def __db(self):
-        if self.storage is None:
-            raise ValueError('"storage" must not be None')
-        return DB(self.storage)
+        return DB(self.storage())
 
     @property
     def __connected(self):

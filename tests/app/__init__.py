@@ -10,6 +10,9 @@ from tests.app           import objects, endpoints
 
 class TestApp(TransactionMixin, ZODBMixin, GenshiMixin, Application):
 
+    def storage(self):
+        return DemoStorage()
+
     @request_property
     def db(self):
         if 'testapp' not in self.root_object:
@@ -17,5 +20,4 @@ class TestApp(TransactionMixin, ZODBMixin, GenshiMixin, Application):
         return self.root_object['testapp']
 
     def setup(self):
-        self.storage = DemoStorage()
         self.route('/', endpoints.index, methods=('GET', 'POST'))
