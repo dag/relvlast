@@ -1,7 +1,4 @@
--e git://github.com/dag/attest#egg=Attest-dev
 -e git://github.com/mitsuhiko/werkzeug#egg=Werkzeug-dev
-Creoleparser
 Genshi
 Logbook
-Paver
 ZODB3
