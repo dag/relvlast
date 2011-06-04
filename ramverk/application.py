@@ -1,3 +1,5 @@
+from inspect             import getargspec
+
 from logbook             import Logger
 
 from werkzeug.exceptions import HTTPException
@@ -29,6 +31,7 @@ class Application(object):
     def __init__(self, **overrides):
         """Create a new application object, overriding attributes with
         `overrides`."""
+        self.self = self
         for key, value in overrides.iteritems():
             setattr(self, key, value)
         self.setup()
@@ -96,12 +99,19 @@ class Application(object):
         """Mapping of endpoints to "view" functions."""
         return {}
 
+    @property
+    def route_values(self):
+        return self.local.route_values
+
     def dispatch(self, endpoint, values):
         """Called to create a response for the `endpoint` and `values`.
         Looks up a function in :attr:`endpoints` and calls it with the
         application and `values` as keyword arguments, by default."""
+        self.local.route_values = values
         view = self.endpoints[endpoint]
-        return view(self, **values)
+        wants = getargspec(view).args
+        args = dict((name, getattr(self, name)) for name in wants)
+        return view(**args)
 
     def error_response(self, error):
         """Called to create a response for an
