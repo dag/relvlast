@@ -1,3 +1,4 @@
 -r application.txt
 -e git://github.com/dag/attest#egg=Attest-dev
 Paver
+bpython

@@ -35,3 +35,18 @@ def serve():
                use_reloader = not opts.no_reloader,
                use_debugger = not opts.no_debugger,
                use_evalex   = not opts.no_evalex)
+
+
+@task
+def shell():
+    """Enter a bpython shell configured for relvlast."""
+
+    from bpython          import embed
+    from werkzeug.test    import create_environ
+    from ZODB.FileStorage import FileStorage
+    from relvlast         import Relvlast
+
+    app = Relvlast(storage=lambda: FileStorage('relvlast.db'))
+    app.setup_environ(create_environ())
+
+    embed(dict(app=app))
