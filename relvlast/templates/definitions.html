@@ -1,14 +1,30 @@
-<html xmlns:py="http://genshi.edgewall.org/">
+<html
+ xmlns:py="http://genshi.edgewall.org/"
+ xmlns:form="http://ns.discorporate.us/flatland/genshi">
   <body>
-    <form action="${path('definitions')}" method="POST">
+
+    <form
+     action="${path('definitions')}"
+     method="POST">
+
       <dl>
-        <dt><label for="word">Word:</label></dt>
-        <dd><input type="text" name="word" id="word"/></dd>
-        <dt><label for="definition">Definition:</label></dt>
-        <dd><input type="text" name="definition" id="definition"/></dd>
+        <form:with
+         auto-domid="on"
+         auto-for="on"
+         auto-tabindex="on"
+         tabindex="1">
+
+          <dt><label form:bind="form.word">Word:</label></dt>
+          <dd><input form:bind="form.word" type="text"/></dd>
+
+          <dt><label form:bind="form.definition">Definition:</label></dt>
+          <dd><input form:bind="form.definition" type="text"/></dd>
+
+        </form:with>
       </dl>
       <input type="Submit"/>
     </form>
+
     <hr/>
     <dl py:for="definition in definitions.itervalues()">
       <dt>$definition.word</dt>

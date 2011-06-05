@@ -1,10 +1,11 @@
-from persistent        import Persistent
-from BTrees.OOBTree    import OOBTree
-from werkzeug.utils    import redirect
-from werkzeug.testapp  import test_app
-
-from ramverk.fullstack import Application
-from ramverk.utils     import request_property
+from persistent          import Persistent
+from BTrees.OOBTree      import OOBTree
+from flatland            import Form, String
+from flatland.out.genshi import setup as setup_flatland
+from werkzeug.utils      import redirect
+from werkzeug.testapp    import test_app
+from ramverk.fullstack   import Application
+from ramverk.utils       import request_property
 
 
 class Root(Persistent):
@@ -14,6 +15,10 @@ class Root(Persistent):
 
 
 class Definition(Persistent):
+
+    class schema(Form):
+        word = String
+        definition = String
 
     def __init__(self, word, definition):
         self.word = word
@@ -25,11 +30,17 @@ def index(render):
 
 
 def definitions(request, render, db, path):
+    form = Definition.schema(request.form)
+
     if request.method == 'GET':
-        return render('definitions.html', definitions=db.definitions)
+        return render('definitions.html',
+                      definitions=db.definitions,
+                      form=form)
+
     elif request.method == 'POST':
-        definition = Definition(**request.form)
-        db.definitions[definition.word] = definition
+        if form.validate():
+            definition = Definition(**request.form)
+            db.definitions[definition.word] = definition
         return redirect(path('definitions'))
 
 
@@ -45,3 +56,6 @@ class Relvlast(Application):
         self.route('/__info__', lambda x: test_app, endpoint='__info__')
         self.route('/', index)
         self.route('/definitions/', definitions, methods=('GET', 'POST'))
+
+    def template_loaded(self, template):
+        setup_flatland(template)

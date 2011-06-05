@@ -1,4 +1,5 @@
 -e git://github.com/mitsuhiko/werkzeug#egg=Werkzeug-dev
+Flatland==dev
 Genshi
 Logbook
 ZODB3
