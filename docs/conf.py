@@ -1,5 +1,7 @@
 import sys
-sys.path.insert(0, '..')
+from os.path import abspath, join, dirname
+sys.path.insert(0, abspath(join(dirname(__file__), '..'))
+
 
 project = 'Ramverk'
 release = '0.0.0'
