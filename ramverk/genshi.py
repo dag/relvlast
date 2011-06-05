@@ -37,5 +37,5 @@ class GenshiMixin(TemplatingMixin):
 
         template = self.__loader.load(template_name)
         stream = template.generate(genshi_context)
-        rendering = stream.serialize(self.serializer, doctype=self.doctype)
+        rendering = stream.render(self.serializer, doctype=self.doctype)
         return self.response(rendering)
