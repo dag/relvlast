@@ -2,6 +2,7 @@ from __future__          import absolute_import
 
 from werkzeug.utils      import cached_property
 from werkzeug.wrappers   import Response
+from logbook             import NestedSetup, NullHandler, StderrHandler
 from logbook.more        import ColorizedStderrHandler
 
 from ramverk.application import AbstractApplication
@@ -30,4 +31,7 @@ class Application(LogbookMixin,
 
     @cached_property
     def log_handler(self):
-        return ColorizedStderrHandler()
+        if self.settings.debug:
+            return ColorizedStderrHandler()
+        return NestedSetup([NullHandler(),
+                            StderrHandler(level='WARNING')])
