@@ -75,12 +75,15 @@ class AbstractApplication(object):
         exception was raised from the dispatch. Should return `True` to
         suppress that exception."""
 
-    @responder
-    def __call__(self, environ, start_response):
-        """WSGI interface to this application. Clears :attr:`local` and
-        adds the `environ` to it before dispatching."""
+    def setup_environ(self, environ):
+        """Called to bind the application to the WSGI `environ`."""
         release_local(self.local)
         self.local.environ = environ
+
+    @responder
+    def __call__(self, environ, start_response):
+        """WSGI interface to this application."""
+        self.setup_environ(environ)
         with self:
             try:
                 response = self.respond()
