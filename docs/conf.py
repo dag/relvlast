@@ -1,3 +1,6 @@
+import sys
+sys.path.insert(0, '..')
+
 project = 'Ramverk'
 release = '0.0.0'
 copyright = 'Dag Odenhall'
