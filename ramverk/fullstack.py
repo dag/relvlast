@@ -1,5 +1,6 @@
 from __future__          import absolute_import
 
+from ZODB.FileStorage    import FileStorage
 from werkzeug.utils      import cached_property
 from werkzeug.wrappers   import Response
 from logbook             import NestedSetup, NullHandler, StderrHandler
@@ -28,6 +29,12 @@ class Application(LogbookMixin,
     """Full-stack application."""
 
     response = HTMLResponse
+
+    @cached_property
+    def settings(self):
+        settings = super(Application, self).settings
+        settings.storage = lambda: FileStorage(self.name.lower() + '.db')
+        return settings
 
     @cached_property
     def log_handler(self):

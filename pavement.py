@@ -26,11 +26,9 @@ def serve():
     opts = options.serve
 
     from werkzeug.serving import run_simple
-    from ZODB.FileStorage import FileStorage
     from relvlast         import Relvlast
 
-    app = Relvlast(debug=not opts.production,
-                   storage=lambda: FileStorage('relvlast.db'))
+    app = Relvlast(debug=not opts.production)
     run_simple(opts.hostname, int(opts.port), app,
                use_reloader = not opts.no_reloader,
                use_debugger = not opts.no_debugger,
@@ -43,10 +41,9 @@ def shell():
 
     from bpython          import embed
     from werkzeug.test    import create_environ
-    from ZODB.FileStorage import FileStorage
     from relvlast         import Relvlast
 
-    app = Relvlast(storage=lambda: FileStorage('relvlast.db'))
+    app = Relvlast()
     app.setup_environ(create_environ())
 
     embed(dict(app=app))
