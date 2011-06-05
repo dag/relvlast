@@ -53,7 +53,7 @@ class Relvlast(Application):
         return self.root_object['relvlast']
 
     def setup(self):
-        self.route('/__info__', lambda x: test_app, endpoint='__info__')
+        self.route('/__info__', lambda: test_app, endpoint='__info__')
         self.route('/', index)
         self.route('/definitions/', definitions, methods=('GET', 'POST'))
 
