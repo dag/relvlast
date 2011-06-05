@@ -2,7 +2,6 @@ project = 'Ramverk'
 release = '0.0.0'
 copyright = 'Dag Odenhall'
 
-needs_sphinx = '1.1'
 master_doc = 'index'
 modindex_common_prefix = ['ramverk.']
 
