@@ -36,6 +36,11 @@ class AbstractApplication(object):
         to a fixed value for subclasses of complete applications."""
         return self.__module__
 
+    @property
+    def name(self):
+        """Name of the application, defaulting to the name of the class."""
+        return self.__class__.__name__
+
     @abstractproperty
     def log(self):
         """Log channel for this application."""
