@@ -1,4 +1,5 @@
 from persistent        import Persistent
+from logbook           import TestHandler
 from werkzeug.utils    import redirect
 
 from ramverk.fullstack import Application
@@ -10,7 +11,8 @@ class Root(Persistent):
     greeting = 'Welcome'
 
 
-def index(request, render, db, path):
+def index(log, request, render, db, path):
+    log.info('in index view')
 
     if request.method == 'GET':
         return render('index.html', greeting=db.greeting)
@@ -30,3 +32,4 @@ class TestApp(Application):
 
     def setup(self):
         self.route('/', index, methods=('GET', 'POST'))
+        self.log_handler = TestHandler()

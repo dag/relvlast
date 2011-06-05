@@ -9,18 +9,25 @@ from ZODB.DemoStorage  import DemoStorage
 from tests.app         import TestApp
 
 
+app = TestApp(storage=DemoStorage)
+
+
 request = Tests()
 
 @request.context
 def test_client():
-    app = TestApp(storage=DemoStorage)
-    client = Client(app, BaseResponse)
-    yield client
+    yield Client(app, BaseResponse)
 
 
 @request.test
 def first_get_to_index(client):
     response = client.get('/')
+    assert app.log_handler.formatted_records\
+        == ['[DEBUG] TestApp: beginning transaction',
+            '[DEBUG] TestApp: connecting ZODB',
+             '[INFO] TestApp: in index view',
+            '[DEBUG] TestApp: committing transaction',
+            '[DEBUG] TestApp: disconnecting ZODB']
     assert response.status_code == 200
     assert response.data == dedent("""\
         <!DOCTYPE html>
