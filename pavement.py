@@ -1,8 +1,6 @@
-from paver.easy  import (options,
-                         Bunch,
-                         task,
-                         cmdopts)
-from paver.tasks import help
+from paver.easy     import options, Bunch, task, cmdopts
+from paver.tasks    import help
+from paver.doctools import doc_clean, html
 
 
 options(
@@ -12,7 +10,9 @@ options(
               no_reloader=False,
               no_debugger=False,
               no_evalex=False,
-              production=False))
+              production=False),
+    sphinx=
+        Bunch(builddir='../build'))
 
 
 @task

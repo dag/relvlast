@@ -2,6 +2,7 @@ from functools import update_wrapper
 
 
 class Bunch(dict):
+    """Attribute-accessible :class:`dict`."""
 
     __getattr__ = dict.__getitem__
     __setattr__ = dict.__setitem__

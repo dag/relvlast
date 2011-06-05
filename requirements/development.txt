@@ -1,4 +1,5 @@
 -r application.txt
 -e git://github.com/dag/attest#egg=Attest-dev
+Sphinx==dev
 Paver
 bpython
