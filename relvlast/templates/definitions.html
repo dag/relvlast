@@ -1,0 +1,18 @@
+<html xmlns:py="http://genshi.edgewall.org/">
+  <body>
+    <form action="${path('definitions')}" method="POST">
+      <dl>
+        <dt><label for="word">Word:</label></dt>
+        <dd><input type="text" name="word" id="word"/></dd>
+        <dt><label for="definition">Definition:</label></dt>
+        <dd><input type="text" name="definition" id="definition"/></dd>
+      </dl>
+      <input type="Submit"/>
+    </form>
+    <hr/>
+    <dl py:for="definition in definitions.itervalues()">
+      <dt>$definition.word</dt>
+      <dd>$definition.definition</dd>
+    </dl>
+  </body>
+</html>
