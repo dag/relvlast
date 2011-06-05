@@ -82,7 +82,7 @@ Common Utilities
   .. autoclass:: Bunch
     :show-inheritance:
 
-  .. decorator:: request_property
+  .. autoclass:: request_property
 
     Like :class:`~werkzeug.utils.cached_property` but cached in the
     object's `local` attribute, which in applications are cleared for every
