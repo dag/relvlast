@@ -44,6 +44,6 @@ def shell():
     from relvlast         import Relvlast
 
     app = Relvlast()
-    app.setup_environ(create_environ())
+    app.bind_to_environ(create_environ())
 
     embed(dict(app=app))

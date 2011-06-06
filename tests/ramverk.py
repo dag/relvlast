@@ -62,7 +62,7 @@ genshi = Tests()
 
 @genshi.context
 def fake_wsgi_environ():
-    app.setup_environ(create_environ())
+    app.bind_to_environ(create_environ())
     yield
 
 @genshi.test

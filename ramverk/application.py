@@ -66,14 +66,14 @@ class AbstractApplication(object):
         return error
 
     def __enter__(self):
-        """Called after :meth:`setup_environ` and before :meth:`respond`."""
+        """Called after :meth:`bind_to_environ` and before :meth:`respond`."""
 
     def __exit__(self, exc_type, exc_val, exc_tb):
         """Called after :meth:`respond` and :meth:`error_response`;
         arguments are `None` unless an exception was raised from the
         dispatch. Should return `True` to suppress that exception."""
 
-    def setup_environ(self, environ):
+    def bind_to_environ(self, environ):
         """Called to bind the application to the WSGI `environ`."""
         release_local(self.local)
         self.local.environ = environ
@@ -81,7 +81,7 @@ class AbstractApplication(object):
     @responder
     def __call__(self, environ, start_response):
         """WSGI interface to this application."""
-        self.setup_environ(environ)
+        self.bind_to_environ(environ)
         with self:
             try:
                 response = self.respond()
