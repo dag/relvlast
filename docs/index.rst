@@ -54,43 +54,6 @@ Dispatching Requests by URL
   :members:
 
 
-Logging with Logbook
---------------------
-
-.. automodule:: ramverk.logbook
-
-  .. autoclass:: LogbookMixin
-    :members:
-
-    .. important::
-
-      Should be mixed in at the top of the inheritance chain of the
-      application so that all log records during requests pass through
-      :attr:`log_handler`.
-
-
-Persisting Objects with ZODB
-----------------------------
-
-.. automodule:: ramverk.transaction
-
-  .. autoclass:: TransactionMixin
-
-    .. important::
-
-      Should be mixed in before anything that relies on transactions, such
-      as :class:`~ramverk.zodb.ZODBMixin`.
-
-.. automodule:: ramverk.zodb
-
-  .. autoclass:: ZODBMixin
-    :members:
-
-    .. attribute:: settings.storage
-
-        Must be set to a callable returning a ZODB storage object.
-
-
 Rendering HTML with Genshi
 --------------------------
 
@@ -104,6 +67,43 @@ Rendering HTML with Genshi
 
 .. automodule:: ramverk.templating
   :members:
+
+
+Persisting Objects with ZODB
+----------------------------
+
+.. automodule:: ramverk.zodb
+
+  .. autoclass:: ZODBMixin
+    :members:
+
+    .. attribute:: settings.storage
+
+        Must be set to a callable returning a ZODB storage object.
+
+.. automodule:: ramverk.transaction
+
+  .. autoclass:: TransactionMixin
+
+    .. important::
+
+      Should be mixed in before anything that relies on transactions, such
+      as :class:`~ramverk.zodb.ZODBMixin`.
+
+
+Logging with Logbook
+--------------------
+
+.. automodule:: ramverk.logbook
+
+  .. autoclass:: LogbookMixin
+    :members:
+
+    .. important::
+
+      Should be mixed in at the top of the inheritance chain of the
+      application so that all log records during requests pass through
+      :attr:`log_handler`.
 
 
 Common Utilities
