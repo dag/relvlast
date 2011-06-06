@@ -79,7 +79,7 @@ We also need to write the :file:`index.html` template:
         <input
          type="text"
          name="greeting"
-         placeholder="Enter a greeting" />
+         placeholder="Enter a greeting"/>
 
       </form>
     </body>
