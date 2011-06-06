@@ -48,7 +48,9 @@ class RoutingMixin(object):
 
     @cached_property
     def endpoints(self):
-        """Mapping of endpoints to "view" functions."""
+        """Mapping of endpoints to "view" functions that are passed as
+        keyword arguments the application attributes listed in their
+        signature, and should return responses or WSGI applications."""
         return {}
 
     @property
