@@ -2,7 +2,7 @@ from inspect             import getargspec
 from werkzeug.routing    import Map, Rule
 from werkzeug.utils      import cached_property, redirect
 
-from ramverk.utils       import request_property
+from ramverk.utils       import request_property, class_dict
 
 
 class RoutingMixin(object):
@@ -14,14 +14,10 @@ class RoutingMixin(object):
         application."""
         return self
 
-    def route(self, string, function, **kwargs):
-        """Add a :class:`~werkzeug.routing.Rule` for `string` to the
-        :attr:`url_map`, using the name of `function` as the endpoint and
-        map that endpoint to the function. The remaining arguments are
-        passed to the Rule."""
-        endpoint = kwargs.pop('endpoint', function.__name__)
-        self.url_map.add(Rule(string, endpoint=endpoint, **kwargs))
-        self.endpoints[endpoint] = function
+    def route(self, rulefactory):
+        """Add a :class:`~werkzeug.routing.Rule` or rule factory to
+        :attr:`url_map`."""
+        self.url_map.add(rulefactory)
 
     @cached_property
     def url_map(self):
@@ -46,12 +42,19 @@ class RoutingMixin(object):
         with `values`."""
         return redirect(self.path(endpoint, **values))
 
-    @cached_property
-    def endpoints(self):
-        """Mapping of endpoints to "view" functions that are passed as
-        keyword arguments the application attributes listed in their
-        signature, and should return responses or WSGI applications."""
+    @class_dict
+    def endpoints(cls):
+        """A :class:`~ramverk.utils.class_dict` mapping endpoints to "view"
+        functions that are passed as keyword arguments the application
+        attributes listed in their signature, and should return responses
+        or WSGI applications."""
         return {}
+
+    @classmethod
+    def endpoint(cls, function):
+        """Register `function` in :attr:`endpoints` by function name."""
+        cls.endpoints[function.__name__] = function
+        return function
 
     @property
     def route_values(self):

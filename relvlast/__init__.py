@@ -2,6 +2,7 @@ from persistent          import Persistent
 from BTrees.OOBTree      import OOBTree
 from flatland            import Form, String
 from flatland.out.genshi import setup as setup_flatland
+from werkzeug.routing    import Rule
 from werkzeug.testapp    import test_app
 from ramverk.fullstack   import Application
 from ramverk.utils       import request_property
@@ -24,10 +25,35 @@ class Definition(Persistent):
         self.definition = definition
 
 
+class Relvlast(Application):
+
+    @request_property
+    def db(self):
+        if 'relvlast' not in self.root_object:
+            self.root_object['relvlast'] = Root()
+        return self.root_object['relvlast']
+
+    def setup(self):
+        self.route(Rule('/__info__', endpoint='wsgi_info'))
+        self.route(Rule('/', endpoint='index'))
+        self.route(Rule('/definitions/', endpoint='definitions',
+                                         methods=('GET', 'POST')))
+
+    def template_loaded(self, template):
+        setup_flatland(template)
+
+
+@Relvlast.endpoint
+def wsgi_info():
+    return test_app
+
+
+@Relvlast.endpoint
 def index(render):
     return render('index.html')
 
 
+@Relvlast.endpoint
 def definitions(request, render, db, redirect):
     form = Definition.schema(request.form)
 
@@ -41,20 +67,3 @@ def definitions(request, render, db, redirect):
             definition = Definition(**request.form)
             db.definitions[definition.word] = definition
         return redirect('definitions')
-
-
-class Relvlast(Application):
-
-    @request_property
-    def db(self):
-        if 'relvlast' not in self.root_object:
-            self.root_object['relvlast'] = Root()
-        return self.root_object['relvlast']
-
-    def setup(self):
-        self.route('/__info__', lambda: test_app, endpoint='__info__')
-        self.route('/', index)
-        self.route('/definitions/', definitions, methods=('GET', 'POST'))
-
-    def template_loaded(self, template):
-        setup_flatland(template)

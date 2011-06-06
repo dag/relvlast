@@ -57,7 +57,11 @@ Dispatching Requests by URL
 ---------------------------
 
 .. automodule:: ramverk.routing
-  :members:
+
+  .. autoclass:: RoutingMixin
+    :members:
+
+    .. autoattribute:: endpoints
 
 
 Rendering HTML with Genshi
@@ -121,3 +125,5 @@ Common Utilities
     :show-inheritance:
 
   .. autoclass:: request_property
+
+  .. autoclass:: class_dict
