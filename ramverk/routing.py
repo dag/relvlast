@@ -1,6 +1,6 @@
 from inspect             import getargspec
 from werkzeug.routing    import Map, Rule
-from werkzeug.utils      import cached_property
+from werkzeug.utils      import cached_property, redirect
 
 from ramverk.utils       import request_property
 
@@ -34,6 +34,11 @@ class RoutingMixin(object):
     def path(self, endpoint, **values):
         """Like :meth:`url` but as an absolute path."""
         return self.url_adapter.build(endpoint, values)
+
+    def redirect(self, endpoint, **values):
+        """Create a response that redirects to the route for `endpoint`
+        with `values`."""
+        return redirect(self.path(endpoint, **values))
 
     @cached_property
     def endpoints(self):

@@ -2,7 +2,6 @@ from persistent          import Persistent
 from BTrees.OOBTree      import OOBTree
 from flatland            import Form, String
 from flatland.out.genshi import setup as setup_flatland
-from werkzeug.utils      import redirect
 from werkzeug.testapp    import test_app
 from ramverk.fullstack   import Application
 from ramverk.utils       import request_property
@@ -29,7 +28,7 @@ def index(render):
     return render('index.html')
 
 
-def definitions(request, render, db, path):
+def definitions(request, render, db, redirect):
     form = Definition.schema(request.form)
 
     if request.method == 'GET':
@@ -41,7 +40,7 @@ def definitions(request, render, db, path):
         if form.validate():
             definition = Definition(**request.form)
             db.definitions[definition.word] = definition
-        return redirect(path('definitions'))
+        return redirect('definitions')
 
 
 class Relvlast(Application):

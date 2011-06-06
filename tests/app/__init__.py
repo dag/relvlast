@@ -1,6 +1,5 @@
 from persistent        import Persistent
 from logbook           import TestHandler
-from werkzeug.utils    import redirect
 
 from ramverk.fullstack import Application
 from ramverk.utils     import request_property
@@ -11,7 +10,7 @@ class Root(Persistent):
     greeting = 'Welcome'
 
 
-def index(log, request, render, db, path):
+def index(log, request, render, db, redirect):
     log.info('in index view')
 
     if request.method == 'GET':
@@ -19,7 +18,7 @@ def index(log, request, render, db, path):
 
     if request.method == 'POST':
         db.greeting = request.form.get('greeting')
-        return redirect(path('index'))
+        return redirect('index')
 
 
 class TestApp(Application):
