@@ -5,8 +5,7 @@ from ramverk.templating import TemplatingMixin
 
 
 class GenshiMixin(TemplatingMixin):
-    """Add Genshi templating to an
-    :class:`~ramverk.application.Application`."""
+    """Add Genshi templating to an application."""
 
     #: Serializer used by :meth:`render`.
     serializer = 'html'
@@ -17,7 +16,7 @@ class GenshiMixin(TemplatingMixin):
     @cached_property
     def __loader(self):
         """Loads templates from ``templates/`` under the module of the
-        application. (Note: name-mangled!)"""
+        application."""
         return TemplateLoader([loader.package(self.module, 'templates')],
                               auto_reload=self.settings.debug,
                               callback=self.template_loaded)

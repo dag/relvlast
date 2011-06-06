@@ -95,8 +95,12 @@ Rendering HTML with Genshi
 --------------------------
 
 .. automodule:: ramverk.genshi
-  :members:
-  :show-inheritance:
+
+  .. autoclass:: GenshiMixin
+    :members:
+    :show-inheritance:
+
+    .. automethod:: _GenshiMixin__loader
 
 .. automodule:: ramverk.templating
   :members:

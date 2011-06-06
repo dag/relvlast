@@ -38,6 +38,9 @@ class Application(LogbookMixin,
 
     @cached_property
     def log_handler(self):
+        """A :class:`~logbook.more.ColorizedStderrHandler` if the `debug`
+        setting is true, otherwise only logging warnings and above in plain
+        text to stderr."""
         if self.settings.debug:
             return ColorizedStderrHandler()
         return NestedSetup([NullHandler(),
