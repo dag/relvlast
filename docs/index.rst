@@ -189,18 +189,22 @@ example hook redirections.
 The Full Stack
 --------------
 
+
 .. automodule:: ramverk.fullstack
 
   .. autoclass:: Application
     :members:
     :show-inheritance:
 
+    .. inheritance-diagram:: Application
+      :parts: 1
+
     .. attribute:: settings.storage
 
       :default: File storage based on the `name` setting.
 
-.. autoclass:: HTMLResponse
-  :show-inheritance:
+  .. autoclass:: HTMLResponse
+    :show-inheritance:
 
 
 The Base of Applications

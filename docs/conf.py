@@ -6,6 +6,7 @@ master_doc = 'index'
 modindex_common_prefix = ['ramverk.']
 
 extensions = ['sphinx.ext.autodoc',
+              'sphinx.ext.inheritance_diagram',
               'sphinx.ext.intersphinx',
               'sphinx.ext.viewcode']
 
