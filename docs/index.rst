@@ -121,7 +121,7 @@ are assumed to be well-behaved and call :func:`super` where needed. They
 are of course also free to not call super if that makes sense for any
 particular case.
 
-This is immensely an powerful approach but demands a certain level of
+This is an immensely powerful approach but demands a certain level of
 expertise from the programmer. I'm writing Ramverk for my own personal use
 and expect that any other potential (however unlikely) users are capable
 programmers who aren't afraid to dig into the guts of the source code.
