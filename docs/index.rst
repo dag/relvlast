@@ -10,7 +10,13 @@ The Full Stack
     :members:
     :show-inheritance:
 
+    .. attribute:: settings.storage
+
+      :default: File storage based on
+        :attr:`~ramverk.application.AbstractApplication.name`.
+
 .. autoclass:: HTMLResponse
+  :show-inheritance:
 
 
 The Base of Applications
@@ -23,6 +29,22 @@ The Base of Applications
 
     :param settings:
       Used to update :attr:`settings`.
+
+    :abstract:
+      :attr:`log` must be set and :meth:`respond` must be implemented.
+
+    .. attribute:: settings.debug
+
+      Enable development niceties that shouldn't be enabled in production.
+      May be read by mixins and have no particular effect in itself.
+
+      :default: :const:`False`
+
+    .. automethod:: __enter__
+
+    .. automethod:: __exit__
+
+    .. automethod:: __call__
 
 
 Dispatching Requests by URL
@@ -40,7 +62,7 @@ Logging with Logbook
   .. autoclass:: LogbookMixin
     :members:
 
-    .. note::
+    .. important::
 
       Should be mixed in at the top of the inheritance chain of the
       application so that all log records during requests pass through
@@ -54,13 +76,19 @@ Persisting Objects with ZODB
 
   .. autoclass:: TransactionMixin
 
-    .. note::
+    .. important::
 
       Should be mixed in before anything that relies on transactions, such
       as :class:`~ramverk.zodb.ZODBMixin`.
 
 .. automodule:: ramverk.zodb
-  :members:
+
+  .. autoclass:: ZODBMixin
+    :members:
+
+    .. attribute:: settings.storage
+
+        Must be set to a callable returning a ZODB storage object.
 
 
 Rendering HTML with Genshi
@@ -83,7 +111,3 @@ Common Utilities
     :show-inheritance:
 
   .. autoclass:: request_property
-
-    Like :class:`~werkzeug.utils.cached_property` but cached in the
-    object's `local` attribute, which in applications are cleared for every
-    request. Can be used to create lazily cached request-local properties.

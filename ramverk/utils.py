@@ -10,8 +10,10 @@ class Bunch(dict):
 
 
 class request_property(object):
-    """Property that is cached in the object's `local` container, i.e.
-    effectively for each request."""
+    """Like :class:`~werkzeug.utils.cached_property` but cached in the
+    object's `local` attribute, which in applications are cleared for every
+    request. Can be used to create lazily cached request-local
+    properties."""
 
     def __init__(self, method):
         update_wrapper(self, method)

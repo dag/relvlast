@@ -25,8 +25,8 @@ class AbstractApplication(object):
 
     @cached_property
     def settings(self):
-        """Environmental configuration in a :class:`~ramverk.utils.Bunch`,
-        by default including `debug` set to false."""
+        """Environmental configuration in a
+        :class:`~ramverk.utils.Bunch`."""
         return Bunch(debug=False)
 
     @property
@@ -43,11 +43,11 @@ class AbstractApplication(object):
 
     @abstractproperty
     def log(self):
-        """Log channel for this application."""
+        """Set this to a log channel for this application."""
 
     def setup(self):
-        """Called when a new application has been created, easier to
-        override cleanly than :meth:`__init__`."""
+        """Called after :meth:`__init__` and meant to be overridden by
+        applications to do post-init setup."""
 
     @cached_property
     def local(self):
@@ -72,13 +72,12 @@ class AbstractApplication(object):
         return error
 
     def __enter__(self):
-        """Called after :attr:`local` has been bound to a request and
-        before :meth:`dispatch` is called."""
+        """Called after :meth:`setup_environ` and before :meth:`respond`."""
 
     def __exit__(self, exc_type, exc_val, exc_tb):
-        """Called after :meth:`dispatch`; arguments are `None` unless an
-        exception was raised from the dispatch. Should return `True` to
-        suppress that exception."""
+        """Called after :meth:`respond` and :meth:`error_response`;
+        arguments are `None` unless an exception was raised from the
+        dispatch. Should return `True` to suppress that exception."""
 
     def setup_environ(self, environ):
         """Called to bind the application to the WSGI `environ`."""

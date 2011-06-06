@@ -32,8 +32,6 @@ class Application(LogbookMixin,
 
     @cached_property
     def settings(self):
-        """Includes as a default a ZODB file storage based on
-        :attr:`~ramverk.application.AbstractApplication.name`."""
         settings = super(Application, self).settings
         settings.storage = lambda: FileStorage(self.name.lower() + '.db')
         return settings

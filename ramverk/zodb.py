@@ -22,8 +22,8 @@ class ZODBMixin(object):
 
     @property
     def root_object(self):
-        """The root object of the :meth:`storage`, connected and
-        subsequently disconnected on-demand for each request."""
+        """The root object of the storage, connected and subsequently
+        disconnected on-demand for each request."""
         return self.__connection.root()
 
     def __exit__(self, *exc_info):
