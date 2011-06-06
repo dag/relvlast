@@ -102,6 +102,90 @@ For a development server we can use Paver and write a :file:`pavement.py`::
                  use_evalex  =True)
 
 
+Framework Design
+----------------
+
+In my experience with Flask I've noticed a few things:
+
+#. Rather soon you will want to use the application factory pattern.
+#. Sooner or later you'll need to subclass the Flask application class.
+#. There's an ever-growing need to hook parts of the framework; blinker
+   signals are used for this.
+
+Ramverk uses subclassing from start which also gives us application
+factories for free - just create an instance. Everything is built with
+cooperative mixins using multiple-inheritance, taking care to do very
+little, specific things in every method and treating the methods as the
+signals. All hooking is done with overrides and all mixins and subclasses
+are assumed to be well-behaved and call :func:`super` where needed. They
+are of course also free to not call super if that makes sense for any
+particular case.
+
+This is immensely an powerful approach but demands a certain level of
+expertise from the programmer. I'm writing Ramverk for my own personal use
+and expect that any other potential (however unlikely) users are capable
+programmers who aren't afraid to dig into the guts of the source code.
+
+It has been said that extending through subclassing a framework's classes
+is a `bad idea`_ but I think this is primarily relevant when the classes
+are not designed for it from the start. It could also be said that
+cooperative overrides suffer from issues similar to those of Rails'
+``alias_method_chain`` but again I would say the issue there is (or was)
+the lack of a clearly defined public API and the hooking of private
+internals.
+
+.. _bad idea:
+  http://be.groovie.org/post/1347858988/why-extending-through-subclassing-a-frameworks
+
+To paraphrase an old saying,
+
+  He who does not understand OOP is bound to reinvent it.
+
+I'm sure Armin understands OOP very well, much better than me even, and
+this of course is meant to be tongue-in-cheek. The point is that if you
+don't use classes where they make sense, you'll end up implementing similar
+behavior yourself. It seems sensible to me to instead use the constructs
+the language provides for it.
+
+Another thing that I've noticed is that at least before 0.7, routing in
+Flask is substandard to Werkzeug. A solution to this problem is to keep
+Werkzeug's separation of rules/endpoints and "view" functions, and not
+require of view functions that they read *all* the rule variables.  This
+lets us use rule factories like :class:`~werkzeug.routing.Submount` easily.
+
+Frameworks also face the problem of making view functions friendly to unit
+testing. Flask requires a fake request context be pushed to a stack and
+uses blinker signals for rendered templates. Some think this makes the
+functions a little too complicated and Pyramid instead passes the request
+to the views and lets views return a mapping to be used as the context for
+a "renderer", i.e. a template.
+
+My approach in Ramverk is to let views be explicit about what they need
+from an application and pass application attributes based on the signature
+of the view function. Attributes include the request object and a render
+method for templating. In unit tests, views can instead be passed fake
+request objects and a dumbed-down render function that, say, just return
+its arguments as-is. Given the sample application above we might do::
+
+  from werkzeug.wrappers import Request
+  from werkzeug.test     import create_environ
+
+  def render(template_name, **context):
+      return template_name, context
+
+  def test():
+      request = Request(create_environ())
+      template, context = index(request=request,
+                                render=render,
+                                db=app.db,
+                                redirect=app.redirect)
+
+      assert context['greeting'] == 'Hello'
+
+As you can see it would similarly be trivial to fake the `db` or for
+example hook redirections.
+
+
 The Full Stack
 --------------
 
