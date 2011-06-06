@@ -8,6 +8,12 @@ from ramverk.utils       import request_property
 class RoutingMixin(object):
     """Add URL dispatching to an application."""
 
+    @cached_property
+    def self(self):
+        """Reference to itself, to allow views to access the
+        application."""
+        return self
+
     def route(self, string, function, **kwargs):
         """Add a :class:`~werkzeug.routing.Rule` for `string` to the
         :attr:`url_map`, using the name of `function` as the endpoint and

@@ -19,7 +19,6 @@ class AbstractApplication(object):
 
     def __init__(self, **settings):
         """Create a new application object using `settings`."""
-        self.self = self
         self.settings.update(settings)
         self.setup()
 
