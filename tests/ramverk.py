@@ -78,3 +78,21 @@ def render_genshi_template():
             </form>
           </body>
         </html>""")
+
+@genshi.test
+def injected_context():
+    response = app.render('context.html')
+    assert response.data == dedent("""\
+        <!DOCTYPE html>
+        <html>
+          <body><p>The answer to the ultimate question is 42</p></body>
+        </html>""")
+
+@genshi.test
+def override_context():
+    response = app.render('context.html', injected='not 144')
+    assert response.data == dedent("""\
+        <!DOCTYPE html>
+        <html>
+          <body><p>The answer to the ultimate question is not 144</p></body>
+        </html>""")
