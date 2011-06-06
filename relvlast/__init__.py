@@ -34,10 +34,18 @@ class Relvlast(Application):
         return self.root_object['relvlast']
 
     def setup(self):
-        self.route(Rule('/__info__', endpoint='wsgi_info'))
-        self.route(Rule('/', endpoint='index'))
-        self.route(Rule('/definitions/', endpoint='definitions',
-                                         methods=('GET', 'POST')))
+        self.route(Rule(
+            '/__info__',
+                endpoint='wsgi_info'))
+
+        self.route(Rule(
+            '/',
+                endpoint='index'))
+
+        self.route(Rule(
+            '/definitions/',
+                endpoint='definitions',
+                methods=('GET', 'POST')))
 
     def template_loaded(self, template):
         setup_flatland(template)
