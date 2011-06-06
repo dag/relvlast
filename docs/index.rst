@@ -15,7 +15,7 @@ First we need some boring imports::
 We also make a persistent object that we will use as the root of our tree
 of persistent objects. The actual root of the persistent storage is a dict
 but using a virtual root like this is more maintainable - we can set
-defaults, add methods to the root object, and access childrens as
+defaults, add methods to the root object, and access children as
 attributes. Note that this object is just an object and does nothing fancy
 except knowing when it's been mutated and needs to be written to the
 storage.
