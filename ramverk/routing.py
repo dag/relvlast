@@ -47,6 +47,7 @@ class RoutingMixin(object):
 
     @property
     def route_values(self):
+        """The values that matched the route in the :attr:`url_map`."""
         return self.local.route_values
 
     def dispatch(self, endpoint, values):
@@ -60,4 +61,5 @@ class RoutingMixin(object):
         return view(**args)
 
     def respond(self):
+        """Dispatches to :meth:`dispatch` from :attr:`url_map`."""
         return self.url_adapter.dispatch(self.dispatch)
