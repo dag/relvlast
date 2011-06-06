@@ -6,6 +6,8 @@ from werkzeug.test     import Client, create_environ
 from werkzeug.wrappers import BaseResponse
 from ZODB.DemoStorage  import DemoStorage
 
+from ramverk.utils     import Bunch
+
 from tests.app         import TestApp
 
 
@@ -17,7 +19,6 @@ request = Tests()
 @request.context
 def test_client():
     yield Client(app, BaseResponse)
-
 
 @request.test
 def first_get_to_index(client):
@@ -39,7 +40,6 @@ def first_get_to_index(client):
             </form>
           </body>
         </html>""")
-
 
 @request.test
 def post_to_and_get_index(client):
@@ -96,3 +96,21 @@ def override_context():
         <html>
           <body><p>The answer to the ultimate question is not 144</p></body>
         </html>""")
+
+
+utils = Tests()
+
+@utils.test
+def bunch_attrs_and_items_are_same():
+
+    bunch = Bunch(answer=42)
+    assert bunch.answer is bunch['answer'] == 42
+
+    del bunch.answer
+    assert 'answer' not in bunch and not hasattr(bunch, 'answer')
+
+    bunch.answer = 42
+    assert bunch.answer is bunch['answer'] == 42
+
+    del bunch['answer']
+    assert 'answer' not in bunch and not hasattr(bunch, 'answer')

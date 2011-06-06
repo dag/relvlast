@@ -4,7 +4,12 @@ from functools import update_wrapper
 class Bunch(dict):
     """Attribute-accessible :class:`dict`."""
 
-    __getattr__ = dict.__getitem__
+    def __getattr__(self, name):
+        try:
+            return self[name]
+        except KeyError:
+            raise AttributeError
+
     __setattr__ = dict.__setitem__
     __delattr__ = dict.__delitem__
 
