@@ -33,7 +33,7 @@ class Application(LogbookMixin,
     @cached_property
     def settings(self):
         settings = super(Application, self).settings
-        settings.storage = lambda: FileStorage(self.name.lower() + '.db')
+        settings.storage = lambda: FileStorage(settings.name.lower() + '.db')
         return settings
 
     @cached_property

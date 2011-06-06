@@ -27,7 +27,7 @@ class AbstractApplication(object):
     def settings(self):
         """Environmental configuration in a
         :class:`~ramverk.utils.Bunch`."""
-        return Bunch(debug=False)
+        return Bunch(debug=False, name=self.__class__.__name__)
 
     @property
     def module(self):
@@ -35,11 +35,6 @@ class AbstractApplication(object):
         templates and such. Defaults to ``__module__`` but needs to be set
         to a fixed value for subclasses of complete applications."""
         return self.__module__
-
-    @property
-    def name(self):
-        """Name of the application, defaulting to the name of the class."""
-        return self.__class__.__name__
 
     @abstractproperty
     def log(self):

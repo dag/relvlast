@@ -12,8 +12,7 @@ The Full Stack
 
     .. attribute:: settings.storage
 
-      :default: File storage based on
-        :attr:`~ramverk.application.AbstractApplication.name`.
+      :default: File storage based on the `name` setting.
 
 .. autoclass:: HTMLResponse
   :show-inheritance:
@@ -39,6 +38,13 @@ The Base of Applications
       May be read by mixins and have no particular effect in itself.
 
       :default: :const:`False`
+
+    .. attribute:: settings.name
+
+      Name of the application, may be used for log channels and database
+      defaults and such.
+
+      :default: The name of the class.
 
     .. automethod:: __enter__
 

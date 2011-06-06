@@ -9,7 +9,7 @@ class LogbookMixin(object):
     @cached_property
     def log(self):
         """Log channel for this application."""
-        return Logger(self.name)
+        return Logger(self.settings.name)
 
     @cached_property
     def log_handler(self):
