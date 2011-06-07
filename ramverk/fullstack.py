@@ -6,7 +6,7 @@ from werkzeug.wrappers   import Response
 from logbook             import NestedSetup, NullHandler, StderrHandler
 from logbook.more        import ColorizedStderrHandler
 
-from ramverk.application import AbstractApplication
+from ramverk.application import BaseApplication
 from ramverk.genshi      import GenshiMixin
 from ramverk.logbook     import LogbookMixin
 from ramverk.routing     import RoutingMixin
@@ -25,7 +25,7 @@ class Application(LogbookMixin,
                   ZODBMixin,
                   GenshiMixin,
                   RoutingMixin,
-                  AbstractApplication):
+                  BaseApplication):
     """Full-stack application."""
 
     response = HTMLResponse

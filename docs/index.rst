@@ -212,14 +212,11 @@ The Base of Applications
 
 .. automodule:: ramverk.application
 
-  .. autoclass:: AbstractApplication
+  .. autoclass:: BaseApplication
     :members:
 
     :param settings:
       Used to update :attr:`settings`.
-
-    :abstract:
-      :attr:`log` must be set.
 
     .. attribute:: settings.debug
 

@@ -1,5 +1,3 @@
-from abc                 import ABCMeta, abstractmethod, abstractproperty
-
 from werkzeug.exceptions import HTTPException, NotFound
 from werkzeug.local      import Local, release_local
 from werkzeug.utils      import cached_property
@@ -9,10 +7,8 @@ from werkzeug.wsgi       import responder
 from ramverk.utils       import Bunch, request_property
 
 
-class AbstractApplication(object):
-    """Abstract base for applications."""
-
-    __metaclass__ = ABCMeta
+class BaseApplication(object):
+    """Base for applications."""
 
     #: Factory for default response objects.
     response = BaseResponse
@@ -35,9 +31,11 @@ class AbstractApplication(object):
         to a fixed value for subclasses of complete applications."""
         return self.__module__
 
-    @abstractproperty
+    @cached_property
     def log(self):
-        """Set this to a log channel for this application."""
+        """Log channel for this application."""
+        from logging import getLogger
+        return getLogger(self.settings.name)
 
     def setup(self):
         """Called after :meth:`__init__` and meant to be overridden by
