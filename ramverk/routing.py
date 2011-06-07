@@ -9,7 +9,7 @@ class RoutingMixin(object):
     """Add URL dispatching to an application."""
 
     @cached_property
-    def self(self):
+    def app(self):
         """Reference to itself, to allow views to access the
         application."""
         return self

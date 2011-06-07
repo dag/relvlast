@@ -5,8 +5,8 @@ class TemplatingMixin(object):
         """Create a context mapping to render a template
         in, including `overrides`. Override to add globals. Includes
         `request`, `url` and `path` from the application, and the
-        application as `self`, by default."""
-        context = dict(self=self,
+        application as `app`, by default."""
+        context = dict(app=self,
                        request=self.request,
                        url=self.url,
                        path=self.path)
