@@ -1,6 +1,6 @@
 from abc                 import ABCMeta, abstractmethod, abstractproperty
 
-from werkzeug.exceptions import HTTPException
+from werkzeug.exceptions import HTTPException, NotFound
 from werkzeug.local      import Local, release_local
 from werkzeug.utils      import cached_property
 from werkzeug.wrappers   import Request, BaseResponse
@@ -53,10 +53,11 @@ class AbstractApplication(object):
         """Representative object for the currently processed request."""
         return Request(self.local.environ)
 
-    @abstractmethod
     def respond(self):
         """Called to return a response, or raise an HTTPException, after the
-        request environment has been bound to the context :attr:`local`."""
+        request environment has been bound to the context :attr:`local`.
+        Default raises :exc:`~werkzeug.exceptions.NotFound`."""
+        raise NotFound
 
     def error_response(self, error):
         """Called to create a response for an

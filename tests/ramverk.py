@@ -57,6 +57,10 @@ def post_to_and_get_index(client):
           </body>
         </html>""")
 
+@request.test
+def four_oh_four(client):
+    response = client.get('/404')
+    assert response.status_code == 404
 
 genshi = Tests()
 

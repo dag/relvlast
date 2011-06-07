@@ -1,4 +1,5 @@
 from inspect             import getargspec
+from werkzeug.exceptions import NotFound
 from werkzeug.routing    import Map, Rule
 from werkzeug.utils      import cached_property, redirect
 
@@ -79,7 +80,10 @@ class RoutingMixin(object):
     def respond(self):
         """Match the environment to an endpoint and then :meth:`call_view`
         with :meth:`get_view`."""
-        endpoint, values = self.url_adapter.match()
+        try:
+            endpoint, values = self.url_adapter.match()
+        except NotFound:
+            return super(RoutingMixin, self).respond()
         self.local.endpoint = endpoint
         self.local.route_values = values
         view = self.get_view(endpoint)

@@ -219,7 +219,7 @@ The Base of Applications
       Used to update :attr:`settings`.
 
     :abstract:
-      :attr:`log` must be set and :meth:`respond` must be implemented.
+      :attr:`log` must be set.
 
     .. attribute:: settings.debug
 
