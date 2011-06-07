@@ -61,16 +61,26 @@ class RoutingMixin(object):
         """The values that matched the route in the :attr:`url_map`."""
         return self.local.route_values
 
-    def dispatch(self, endpoint, values):
-        """Called to create a response for the `endpoint` and `values`.
-        Looks up a function in :attr:`endpoints` and calls it with the
-        application and `values` as keyword arguments, by default."""
-        self.local.route_values = values
-        view = self.endpoints[endpoint]
+    def get_view(self, endpoint):
+        """Get a view function for `endpoint`. Default behavior looks it up
+        in :attr:`endpoints`."""
+        return self.endpoints[endpoint]
+
+    def call_view(self, view, **kwargs):
+        """Call the `view` callable with `kwargs` using view semantics: the
+        default is to fetch missing arguments in the view's signature, from
+        the attributes of the application."""
         wants = getargspec(view).args
-        args = dict((name, getattr(self, name)) for name in wants)
-        return view(**args)
+        kwargs.update((name, getattr(self, name))
+                      for name in wants
+                      if name not in kwargs)
+        return view(**kwargs)
 
     def respond(self):
-        """Dispatches to :meth:`dispatch` from :attr:`url_map`."""
-        return self.url_adapter.dispatch(self.dispatch)
+        """Match the environment to an endpoint and then :meth:`call_view`
+        with :meth:`get_view`."""
+        endpoint, values = self.url_adapter.match()
+        self.local.endpoint = endpoint
+        self.local.route_values = values
+        view = self.get_view(endpoint)
+        return self.call_view(view)
