@@ -207,8 +207,8 @@ The Full Stack
     :show-inheritance:
 
 
-The Base of Applications
-------------------------
+Minimal Base for Applications
+-----------------------------
 
 .. automodule:: ramverk.application
 
