@@ -3,3 +3,4 @@ Flatland==dev
 Genshi
 Logbook
 ZODB3
+venusian

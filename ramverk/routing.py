@@ -1,9 +1,20 @@
 from inspect             import getargspec
+
+from venusian            import Scanner, attach
 from werkzeug.exceptions import NotFound
 from werkzeug.routing    import Map, Rule
-from werkzeug.utils      import cached_property, redirect
+from werkzeug.utils      import cached_property, redirect, import_string
 
-from ramverk.utils       import request_property, class_dict
+from ramverk.utils       import request_property
+
+
+def endpoint(view):
+    """Decorate a callable as a view for the endpoint with the same
+    name."""
+    def add_view(scanner, name, ob):
+        scanner.app.add_view(name, ob)
+    attach(view, add_view, category='ramverk.routing')
+    return view
 
 
 class RoutingMixin(object):
@@ -43,24 +54,32 @@ class RoutingMixin(object):
         with `values`."""
         return redirect(self.path(endpoint, **values))
 
-    @class_dict
-    def endpoints(cls):
-        """A :class:`~ramverk.utils.class_dict` mapping endpoints to "view"
-        functions that are passed as keyword arguments the application
-        attributes listed in their signature, and should return responses
-        or WSGI applications."""
-        return {}
+    @cached_property
+    def __scanner(self):
+        return Scanner(app=self)
 
-    @classmethod
-    def endpoint(cls, function):
-        """Register `function` in :attr:`endpoints` by function name."""
-        cls.endpoints[function.__name__] = function
-        return function
+    def scan_for_endpoints(self, package=None, categories=('ramverk.routing',)):
+        """Scan `package` (or otherwise the
+        :attr:`~ramverk.application.BaseApplication.module`) for views as
+        decorated with :func:`endpoint` and register with this
+        application."""
+        if package is None:
+            package = import_string(self.module)
+        self.__scanner.scan(package, categories)
+
+    @cached_property
+    def endpoints(self):
+        """Mapping of endpoints to views."""
+        return {}
 
     @property
     def route_values(self):
         """The values that matched the route in the :attr:`url_map`."""
         return self.local.route_values
+
+    def add_view(self, endpoint, view):
+        """Register `view` for `endpoint`."""
+        self.endpoints[endpoint] = view
 
     def get_view(self, endpoint):
         """Get a view function for `endpoint`. Default behavior looks it up

@@ -11,6 +11,7 @@ First we need some boring imports::
   from werkzeug.routing  import Rule
   from ramverk.fullstack import Application
   from ramverk.utils     import request_property
+  from ramverk.routing   import endpoint
 
 We also make a persistent object that we will use as the root of our tree
 of persistent objects. The actual root of the persistent storage is a dict
@@ -43,18 +44,20 @@ specific key in the real root object. We also route a rule for ``/`` to the
           return self.root_object['greeter']
 
       def setup(self):
+          self.scan_for_endpoints()
           self.route(Rule(
               '/',
                   endpoint='index',
                   methods=('GET', 'POST')))
 
-The function that handles the `index` endpoint is added with a decorator
-classmethod. The arguments can be any or none and refer to attributes on
-the application, which the dispatcher will then pass to the function.
+The function that handles the `index` endpoint is marked with a decorator
+and discovered by the scan we perform in the setup. The arguments to this
+function can be any or none and refer to attributes on the application,
+which the dispatcher will then pass to the function.
 
 ::
 
-  @Greeter.endpoint
+  @endpoint
   def index(request, render, db, redirect):
 
       if request.method == 'GET':
@@ -243,11 +246,7 @@ Dispatching Requests by URL
 ---------------------------
 
 .. automodule:: ramverk.routing
-
-  .. autoclass:: RoutingMixin
-    :members:
-
-    .. autoattribute:: endpoints
+  :members:
 
 
 Rendering HTML with Genshi
@@ -311,5 +310,3 @@ Common Utilities
     :show-inheritance:
 
   .. autoclass:: request_property
-
-  .. autoclass:: class_dict

@@ -4,6 +4,7 @@ from werkzeug.routing  import Rule
 
 from ramverk.fullstack import Application
 from ramverk.utils     import request_property
+from ramverk.routing   import endpoint
 
 
 class Root(Persistent):
@@ -27,9 +28,10 @@ class TestApp(Application):
     def setup(self):
         self.log_handler = TestHandler()
         self.route(Rule('/', endpoint='index', methods=('GET', 'POST')))
+        self.scan_for_endpoints()
 
 
-@TestApp.endpoint
+@endpoint
 def index(log, request, render, db, redirect):
     log.info('in index view')
 

@@ -6,6 +6,7 @@ from werkzeug.routing    import Rule
 from werkzeug.testapp    import test_app
 from ramverk.fullstack   import Application
 from ramverk.utils       import request_property
+from ramverk.routing     import endpoint
 
 
 class Root(Persistent):
@@ -51,17 +52,17 @@ class Relvlast(Application):
         setup_flatland(template)
 
 
-@Relvlast.endpoint
+@endpoint
 def wsgi_info():
     return test_app
 
 
-@Relvlast.endpoint
+@endpoint
 def index(render):
     return render('index.html')
 
 
-@Relvlast.endpoint
+@endpoint
 def definitions(request, render, db, redirect):
     form = Definition.schema(request.form)
 
