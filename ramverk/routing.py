@@ -2,16 +2,35 @@ from inspect             import getargspec
 
 from venusian            import Scanner, attach
 from werkzeug.exceptions import NotFound
-from werkzeug.routing    import Map, Rule
+from werkzeug.routing    import Map, Submount, Subdomain, EndpointPrefix
 from werkzeug.utils      import cached_property, redirect, import_string
 
 from ramverk.utils       import request_property
+
+
+def router(generator):
+    """Decorate a callable as a router, i.e. returns an iterable of rules
+    and rule factories."""
+    def route(scanner, name, ob):
+        rules = ob()
+        if scanner.submount is not None:
+            rules = [Submount(scanner.submount, rules)]
+        if scanner.endpoint_prefix is not None:
+            rules = [EndpointPrefix(scanner.endpoint_prefix, rules)]
+        if scanner.subdomain is not None:
+            rules = [Subdomain(scanner.subdomain, rules)]
+        for rule in rules:
+            scanner.app.route(rule)
+    attach(generator, route, category='ramverk.routing')
+    return generator
 
 
 def endpoint(view):
     """Decorate a callable as a view for the endpoint with the same
     name."""
     def add_view(scanner, name, ob):
+        if scanner.endpoint_prefix is not None:
+            name = scanner.endpoint_prefix + name
         scanner.app.add_view(name, ob)
     attach(view, add_view, category='ramverk.routing')
     return view
@@ -54,18 +73,23 @@ class RoutingMixin(object):
         with `values`."""
         return redirect(self.path(endpoint, **values))
 
-    @cached_property
-    def __scanner(self):
-        return Scanner(app=self)
-
-    def scan_for_endpoints(self, package=None, categories=('ramverk.routing',)):
+    def scan(self, package=None,
+                   submount=None,
+                   endpoint_prefix=None,
+                   subdomain=None,
+                   categories=('ramverk.routing',)):
         """Scan `package` (or otherwise the
-        :attr:`~ramverk.application.BaseApplication.module`) for views as
-        decorated with :func:`endpoint` and register with this
-        application."""
+        :attr:`~ramverk.application.BaseApplication.module`) for routers
+        and endpoints."""
+        scanner = Scanner(app=self,
+                          submount=submount,
+                          endpoint_prefix=endpoint_prefix,
+                          subdomain=subdomain)
         if package is None:
-            package = import_string(self.module)
-        self.__scanner.scan(package, categories)
+            package = self.module
+        if isinstance(package, basestring):
+            package = import_string(package)
+        scanner.scan(package, categories)
 
     @cached_property
     def endpoints(self):

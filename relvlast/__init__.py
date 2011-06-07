@@ -6,7 +6,7 @@ from werkzeug.routing    import Rule
 from werkzeug.testapp    import test_app
 from ramverk.fullstack   import Application
 from ramverk.utils       import request_property
-from ramverk.routing     import endpoint
+from ramverk.routing     import router, endpoint
 
 
 class Root(Persistent):
@@ -35,21 +35,21 @@ class Relvlast(Application):
         return self.root_object['relvlast']
 
     def setup(self):
-        self.route(Rule(
-            '/__info__',
-                endpoint='wsgi_info'))
-
-        self.route(Rule(
-            '/',
-                endpoint='index'))
-
-        self.route(Rule(
-            '/definitions/',
-                endpoint='definitions',
-                methods=('GET', 'POST')))
+        self.scan()
 
     def template_loaded(self, template):
         setup_flatland(template)
+
+
+@router
+def urls():
+    yield Rule('/__info__',
+               endpoint='wsgi_info')
+    yield Rule('/',
+               endpoint='index')
+    yield Rule('/definitions/',
+               endpoint='definitions',
+               methods=('GET', 'POST'))
 
 
 @endpoint

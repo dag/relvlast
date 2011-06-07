@@ -11,7 +11,7 @@ First we need some boring imports::
   from werkzeug.routing  import Rule
   from ramverk.fullstack import Application
   from ramverk.utils     import request_property
-  from ramverk.routing   import endpoint
+  from ramverk.routing   import router, endpoint
 
 We also make a persistent object that we will use as the root of our tree
 of persistent objects. The actual root of the persistent storage is a dict
@@ -30,8 +30,8 @@ storage.
 Now, we'll write the class for our application. We're using the "fullstack"
 base to get all the bells and whistles and some nice defaults. Our
 "virtual" root is simply a property, cached for each request, that reads a
-specific key in the real root object. We also route a rule for ``/`` to the
-`index` endpoint.
+specific key in the real root object. We also scan the module to register
+the router and endpoint we'll add next.
 
 ::
 
@@ -44,18 +44,22 @@ specific key in the real root object. We also route a rule for ``/`` to the
           return self.root_object['greeter']
 
       def setup(self):
-          self.scan_for_endpoints()
-          self.route(Rule(
-              '/',
-                  endpoint='index',
-                  methods=('GET', 'POST')))
+          self.scan()
 
-The function that handles the `index` endpoint is marked with a decorator
-and discovered by the scan we perform in the setup. The arguments to this
-function can be any or none and refer to attributes on the application,
-which the dispatcher will then pass to the function.
+This "scan" will look for functions decorated as routers and endpoints in
+the same module as the application (because we passed no argument). A
+"router" is a function that returns a list of URL patterns that map to
+"endpoints" which in turn are functions that respond to requests.
+
+The arguments to the endpoint function can be any or none and refer to
+attributes on the application, which the dispatcher will then pass to the
+function.
 
 ::
+
+  @router
+  def urls():
+      yield Rule('/', endpoint='index', methods=('GET', 'POST'))
 
   @endpoint
   def index(request, render, db, redirect):

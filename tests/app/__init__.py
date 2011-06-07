@@ -1,10 +1,7 @@
 from persistent        import Persistent
 from logbook           import TestHandler
-from werkzeug.routing  import Rule
-
 from ramverk.fullstack import Application
 from ramverk.utils     import request_property
-from ramverk.routing   import endpoint
 
 
 class Root(Persistent):
@@ -27,17 +24,5 @@ class TestApp(Application):
 
     def setup(self):
         self.log_handler = TestHandler()
-        self.route(Rule('/', endpoint='index', methods=('GET', 'POST')))
-        self.scan_for_endpoints()
-
-
-@endpoint
-def index(log, request, render, db, redirect):
-    log.info('in index view')
-
-    if request.method == 'GET':
-        return render('index.html', greeting=db.greeting)
-
-    if request.method == 'POST':
-        db.greeting = request.form.get('greeting')
-        return redirect('index')
+        self.scan('tests.app.frontend')
+        self.scan('tests.app.module', '/module', 'module:')

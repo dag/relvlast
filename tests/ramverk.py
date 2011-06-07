@@ -62,6 +62,12 @@ def four_oh_four(client):
     response = client.get('/404')
     assert response.status_code == 404
 
+@request.test
+def module(client):
+    response = client.get('/module/')
+    assert response.data == 'module index'
+
+
 genshi = Tests()
 
 @genshi.context
