@@ -114,19 +114,42 @@ Framework Design
 
 In my experience with Flask I've noticed a few things:
 
-#. Rather soon you will want to use the application factory pattern.
-#. Sooner or later you'll need to subclass the Flask application class.
-#. There's an ever-growing need to hook parts of the framework; blinker
-   signals are used for this.
+.. rubric::
+  Sooner or later you will want to use the application factory pattern.
 
-Ramverk uses subclassing from start which also gives us application
-factories for free - just create an instance. Everything is built with
-cooperative mixins using multiple-inheritance, taking care to do very
-little, specific things in every method and treating the methods as the
-signals. All hooking is done with overrides and all mixins and subclasses
-are assumed to be well-behaved and call :func:`super` where needed. They
-are of course also free to not call super if that makes sense for any
-particular case.
+Flask applications are singletons, built imperatively. This quickly becomes
+an issue when you want to build the application conditionally based on some
+arguments. The problem is easily solved by wrapping the creation of the
+application in a function but what we end up with is effectively a sort of
+custom object model to get the effects of class instances. Ramverk
+applications use the language construct that exists to solve this very
+problem: class-based OOP.
+
+.. rubric::
+  At some point you'll need to subclass the Flask application class.
+
+Because Ramverk uses the class construct, we're prepared for this up front
+and don't need to refactor the application later. It isn't difficult to do
+this refactoring with Flask but the premise of it seems to scare people:
+they think of the Flask class as some opaque thing you shouldn't mess with.
+
+.. rubric::
+  There's always a use case for hooking parts of the framework.
+
+Flask solves this by emitting blinker signals and providing decorators with
+which to register callback functions for different situations, such as
+"before request" or "handle this http error". The former case covers only
+cases where a signal has specifically been emitted and the latter case
+requires Flask to know how to deal with multiple callbacks and how they
+interact with each other. Both of these cases are really, again,
+reimplementations of OOP constructs: signals correspond to method
+overloading and callback handling to the method resolution order. Ramverk is
+designed for cooperative multiple inheritance; as an effect of this you
+can, and in fact, are expected to hook *any* part of the framework and you
+are in control of how your hooks interact. In Ramverk, "everything is a
+mixin" and "everything is a cooperative method". Flask is actually well
+designed for this kind of usage as well, but it isn't the *primary* way you
+use the framework.
 
 This is an immensely powerful approach but demands a certain level of
 expertise from the programmer. I'm writing Ramverk for my own personal use
@@ -154,11 +177,22 @@ don't use classes where they make sense, you'll end up implementing similar
 behavior yourself. It seems sensible to me to instead use the constructs
 the language provides for it.
 
+.. rubric::
+  Coupling routing with views eventually leads to pain.
+
 Another thing that I've noticed is that at least before 0.7, routing in
-Flask is substandard to Werkzeug. A solution to this problem is to keep
-Werkzeug's separation of rules/endpoints and "view" functions, and not
-require of view functions that they read *all* the rule variables.  This
-lets us use rule factories like :class:`~werkzeug.routing.Submount` easily.
+Flask is substandard to Werkzeug. This is in part because routes are
+directly associated with views so without going around it we can only use
+"rules" and not "rule factories"; in part because views are expected to
+read *all* values that matched in the rule. The result of this is that it's
+inconvenient to add a "submount" for say a locale code.
+
+A solution to this problem is to keep Werkzeug's separation of
+rules/endpoints and "view" functions, and not require of view functions
+that they read all the rule variables. This lets us use rule factories
+like :class:`~werkzeug.routing.Submount` easily.
+
+----
 
 Frameworks also face the problem of making view functions friendly to unit
 testing. Flask requires a fake request context be pushed to a stack and
