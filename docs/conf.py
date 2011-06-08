@@ -17,6 +17,6 @@ inheritance_node_attrs = {'color': '"#465158"',
                           'fontsize': '13',
                           'style': '"rounded,filled"'}
 
-intersphinx_mapping = {'python':   ('http://docs.python.org/', None),
-                       'werkzeug': ('http://werkzeug.pocoo.org/docs/', None),
-                       'logbook':  ('http://packages.python.org/Logbook/', None)}
+intersphinx_mapping = {'python':   ('http://python.readthedocs.org/en/latest/', None),
+                       'werkzeug': ('http://werkzeug.readthedocs.org/en/latest/', None),
+                       'logbook':  ('http://log-book.readthedocs.org/en/latest/', None)}
