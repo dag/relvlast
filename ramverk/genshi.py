@@ -5,7 +5,9 @@ from ramverk.rendering import TemplatingMixin
 
 
 class GenshiMixin(TemplatingMixin):
-    """Add Genshi templating to an application."""
+    """Add Genshi templating to an application. Requires a
+    :attr:`~ramverk.application.BaseApplication.response` implementing
+    :class:`~ramverk.wrappers.ResponseUsingMixin`."""
 
     @cached_property
     def renderers(self):

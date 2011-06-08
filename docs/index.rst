@@ -298,6 +298,10 @@ Minimal Base for Applications
 
     .. automethod:: __call__
 
+  .. autoclass:: Response
+    :members:
+    :show-inheritance:
+
 
 Dispatching Requests by URL
 ---------------------------
@@ -308,6 +312,9 @@ Dispatching Requests by URL
 
 Rendering Content
 -----------------
+
+.. automodule:: ramverk.wrappers
+  :members:
 
 .. automodule:: ramverk.rendering
 
@@ -330,7 +337,7 @@ Rendering Content
     :members:
     :show-inheritance:
 
-    By default configures a ``'.html'`` renderer for HTML5.
+    By default configures an ``'.html'`` renderer for HTML5.
 
     .. automethod:: _GenshiMixin__loader
 
