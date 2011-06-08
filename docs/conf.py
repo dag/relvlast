@@ -5,7 +5,7 @@ copyright = 'Dag Odenhall'
 master_doc = 'index'
 modindex_common_prefix = ['ramverk.']
 
-html_style = 'rtd.css'
+html_style = 'ramverk.css'
 html_static_path = ['_static']
 
 extensions = ['sphinx.ext.autodoc',
