@@ -13,6 +13,14 @@ First we need some boring imports::
   from ramverk.utils     import request_property
   from ramverk.routing   import router, endpoint
 
+.. sidebar:: ZODB
+
+  The ZODB is a transactional persistence system with ACID properties
+  acting as an object database for Python. Whoa, what now? Well, it lets
+  you use Python objects as if you ran a single process that never needed
+  restarting and had close-to infinite memory. Sounds like magic, right? In
+  reality it's just the :mod:`pickle` module with scalability added.
+
 We also make a persistent object that we will use as the root of our tree
 of persistent objects. The actual root of the persistent storage is a dict
 but using a virtual root like this is more maintainable - we can set
