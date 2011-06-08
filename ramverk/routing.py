@@ -28,11 +28,11 @@ def router(generator):
 def endpoint(view):
     """Decorate a callable as a view for the endpoint with the same
     name."""
-    def add_view(scanner, name, ob):
+    def register_endpoint(scanner, name, ob):
         if scanner.endpoint_prefix is not None:
             name = scanner.endpoint_prefix + name
-        scanner.app.add_view(name, ob)
-    attach(view, add_view, category='ramverk.routing')
+        scanner.app.endpoints[name] = ob
+    attach(view, register_endpoint, category='ramverk.routing')
     return view
 
 
@@ -101,15 +101,6 @@ class RoutingMixin(object):
         """The values that matched the route in the :attr:`url_map`."""
         return self.local.route_values
 
-    def add_view(self, endpoint, view):
-        """Register `view` for `endpoint`."""
-        self.endpoints[endpoint] = view
-
-    def get_view(self, endpoint):
-        """Get a view function for `endpoint`. Default behavior looks it up
-        in :attr:`endpoints`."""
-        return self.endpoints[endpoint]
-
     def call_view(self, view, **kwargs):
         """Call the `view` callable with `kwargs` using view semantics: the
         default is to fetch missing arguments in the view's signature, from
@@ -122,12 +113,12 @@ class RoutingMixin(object):
 
     def respond(self):
         """Match the environment to an endpoint and then :meth:`call_view`
-        with :meth:`get_view`."""
+        the corresponding view."""
         try:
             endpoint, values = self.url_adapter.match()
         except NotFound:
             return super(RoutingMixin, self).respond()
         self.local.endpoint = endpoint
         self.local.route_values = values
-        view = self.get_view(endpoint)
+        view = self.endpoints[endpoint]
         return self.call_view(view)
