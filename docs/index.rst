@@ -263,6 +263,7 @@ The Full Stack
       :default: File storage based on the `name` setting.
 
   .. autoclass:: HTMLResponse
+    :members:
     :show-inheritance:
 
 

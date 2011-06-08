@@ -132,6 +132,12 @@ def override_context():
           <body><p>The answer to the ultimate question is not 144</p></body>
         </html>""")
 
+@genshi.test
+def mutate_response():
+    response = app.render('context.html').using(status=404, mimetype='text/css')
+    assert response.status_code == 404
+    assert response.content_type == 'text/css; charset=utf-8'
+
 
 utils = Tests()
 
