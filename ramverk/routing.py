@@ -36,42 +36,9 @@ def endpoint(view):
     return view
 
 
-class RoutingMixin(object):
-    """Add URL dispatching to an application."""
-
-    @cached_property
-    def app(self):
-        """Reference to itself, to allow views to access the
-        application."""
-        return self
-
-    def route(self, rulefactory):
-        """Add a :class:`~werkzeug.routing.Rule` or rule factory to
-        :attr:`url_map`."""
-        self.url_map.add(rulefactory)
-
-    @cached_property
-    def url_map(self):
-        """Map of URLs to :attr:`endpoints`."""
-        return Map()
-
-    @request_property
-    def url_adapter(self):
-        """Adapter for :attr:`url_map` bound to the current request."""
-        return self.url_map.bind_to_environ(self.local.environ)
-
-    def url(self, endpoint, **values):
-        """Build a URL for a route to `endpoint` with `values`."""
-        return self.url_adapter.build(endpoint, values, force_external=True)
-
-    def path(self, endpoint, **values):
-        """Like :meth:`url` but as an absolute path."""
-        return self.url_adapter.build(endpoint, values)
-
-    def redirect(self, endpoint, **values):
-        """Create a response that redirects to the route for `endpoint`
-        with `values`."""
-        return redirect(self.path(endpoint, **values))
+class RoutingScannerMixin(object):
+    """Add support for scanning for :func:`router` and :func:`endpoint`
+    functions to an application with URL dispatch."""
 
     def scan(self, package=None,
                    submount=None,
@@ -90,6 +57,49 @@ class RoutingMixin(object):
         if isinstance(package, basestring):
             package = import_string(package)
         scanner.scan(package, categories)
+
+
+class RoutingHelpersMixin(object):
+    """Add some convenient helpers for applications with URL dispatch."""
+
+    @cached_property
+    def app(self):
+        """Reference to itself, to allow views to access the
+        application."""
+        return self
+
+    def url(self, endpoint, **values):
+        """Build a URL for a route to `endpoint` with `values`."""
+        return self.url_adapter.build(endpoint, values, force_external=True)
+
+    def path(self, endpoint, **values):
+        """Like :meth:`url` but as an absolute path."""
+        return self.url_adapter.build(endpoint, values)
+
+    def redirect(self, endpoint, **values):
+        """Create a response that redirects to the route for `endpoint`
+        with `values`."""
+        return redirect(self.path(endpoint, **values))
+
+
+class URLMapMixin(object):
+    """Add URL dispatch using a :class:`~werkzeug.routing.Map` to an
+    application."""
+
+    @cached_property
+    def url_map(self):
+        """Map of URLs to :attr:`endpoints`."""
+        return Map()
+
+    def route(self, rulefactory):
+        """Add a :class:`~werkzeug.routing.Rule` or rule factory to
+        :attr:`url_map`."""
+        self.url_map.add(rulefactory)
+
+    @request_property
+    def url_adapter(self):
+        """Adapter for :attr:`url_map` bound to the current request."""
+        return self.url_map.bind_to_environ(self.local.environ)
 
     @cached_property
     def endpoints(self):
@@ -117,8 +127,14 @@ class RoutingMixin(object):
         try:
             endpoint, values = self.url_adapter.match()
         except NotFound:
-            return super(RoutingMixin, self).respond()
+            return super(URLMapMixin, self).respond()
         self.local.endpoint = endpoint
         self.local.route_values = values
         view = self.endpoints[endpoint]
         return self.call_view(view)
+
+
+class RoutingMixin(RoutingScannerMixin,
+                   RoutingHelpersMixin,
+                   URLMapMixin):
+    """Add complete URL dispatching to an application."""
