@@ -33,10 +33,9 @@ class TemplatingMixin(RenderingMixin):
     """Add common functionality for templating to an application."""
 
     def update_template_context(self, context):
-        """Create a context mapping to render a template
-        in, including `overrides`. Override to add globals. Includes
-        `request`, `url` and `path` from the application, and the
-        application as `app`, by default."""
+        """Add templating "globals" to `context`. Override to add your own
+        globals.  Includes `request`, `url` and `path` from the
+        application, and the application as `app`, by default."""
         context.setdefault('app', self)
         context.setdefault('request', self.request)
         context.setdefault('url', self.url)
@@ -45,7 +44,7 @@ class TemplatingMixin(RenderingMixin):
 
 
 class JSONRenderingMixin(RenderingMixin):
-    """Add a `json` renderer to an application."""
+    """Add a ``'json'`` renderer to an application."""
 
     @cached_property
     def renderers(self):
@@ -54,6 +53,9 @@ class JSONRenderingMixin(RenderingMixin):
         return renderers
 
     def __default(self, obj):
+        """Called to return a serializable representation (that is, using
+        types that map cleanly to JSON equivalents) of `obj`, or raise
+        :exc:`TypeError` (the default)."""
         raise TypeError
 
     def __render(self, _, **kwargs):

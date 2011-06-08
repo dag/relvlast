@@ -30,8 +30,9 @@ class GenshiMixin(TemplatingMixin):
 
     def __create_renderer(self, serializer=None,
                                 doctype=None,
-                                cls=None,
-                                mimetype=None):
+                                mimetype=None,
+                                cls=None):
+        """Create a Genshi renderer that use these arguments."""
         def renderer(template_name, **context):
             self.update_template_context(context)
             template = self.__loader.load(template_name, cls=cls)

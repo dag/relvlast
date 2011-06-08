@@ -306,8 +306,23 @@ Dispatching Requests by URL
   :members:
 
 
-Rendering HTML with Genshi
---------------------------
+Rendering Content
+-----------------
+
+.. automodule:: ramverk.rendering
+
+  .. autoclass:: RenderingMixin
+    :members:
+
+  .. autoclass:: TemplatingMixin
+    :members:
+    :show-inheritance:
+
+  .. autoclass:: JSONRenderingMixin
+    :members:
+    :show-inheritance:
+
+    .. automethod:: _JSONRenderingMixin__default
 
 .. automodule:: ramverk.genshi
 
@@ -315,10 +330,17 @@ Rendering HTML with Genshi
     :members:
     :show-inheritance:
 
+    By default configures a ``'.html'`` renderer for HTML5.
+
     .. automethod:: _GenshiMixin__loader
 
-.. automodule:: ramverk.rendering
-  :members:
+    .. automethod:: _GenshiMixin__create_renderer
+
+      Example::
+
+        def setup(self):
+            self.renderers['.svg'] =\
+                self._GenshiMixin__create_renderer('xml', 'svg', 'image/svg+xml')
 
 
 Persisting Objects with ZODB
