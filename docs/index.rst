@@ -1,6 +1,10 @@
 Ramverk
 =======
 
+.. raw:: html
+
+  <link rel="stylesheet" href="_static/ramverk.css" type="text/css" />
+
 
 Sample Application: Hello World with Writable Greeting
 ------------------------------------------------------
