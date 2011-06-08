@@ -15,8 +15,9 @@ class GenshiMixin(TemplatingMixin):
 
     @cached_property
     def __loader(self):
-        """Loads templates from ``templates/`` under the module of the
-        application."""
+        """A :func:`~genshi.template.loader.package`
+        :class:`~genshi.template.loader.TemplateLoader` for the
+        ``templates/`` directory under the module of the application."""
         return TemplateLoader([loader.package(self.module, 'templates')],
                               auto_reload=self.settings.debug,
                               callback=self.template_loaded)
