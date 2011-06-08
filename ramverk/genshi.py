@@ -33,7 +33,7 @@ class GenshiMixin(TemplatingMixin):
                                 cls=None,
                                 mimetype=None):
         def renderer(template_name, **context):
-            context = self.create_template_context(context)
+            self.update_template_context(context)
             template = self.__loader.load(template_name, cls=cls)
             stream = template.generate(**context)
             if doctype is None:

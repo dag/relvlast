@@ -32,16 +32,15 @@ class RenderingMixin(object):
 class TemplatingMixin(RenderingMixin):
     """Add common functionality for templating to an application."""
 
-    def create_template_context(self, overrides):
+    def update_template_context(self, context):
         """Create a context mapping to render a template
         in, including `overrides`. Override to add globals. Includes
         `request`, `url` and `path` from the application, and the
         application as `app`, by default."""
-        context = dict(app=self,
-                       request=self.request,
-                       url=self.url,
-                       path=self.path)
-        context.update(overrides)
+        context.setdefault('app', self)
+        context.setdefault('request', self.request)
+        context.setdefault('url', self.url)
+        context.setdefault('path', self.path)
         return context
 
 
