@@ -30,4 +30,5 @@ class ZODBMixin(object):
         if self.__connected:
             self.log.debug('disconnecting ZODB')
             self.__connection.close()
+            del self.local._ZODBMixin__connection
         return super(ZODBMixin, self).__exit__(*exc_info)

@@ -11,7 +11,7 @@ class TransactionMixin(object):
         return super(TransactionMixin, self).__enter__()
 
     def __exit__(self, *exc_info):
-        if exc_info == (None, None, None):
+        if exc_info == (None, None, None) and not manager.isDoomed():
             self.log.debug('committing transaction')
             manager.commit()
         else:
