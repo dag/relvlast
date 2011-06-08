@@ -460,8 +460,10 @@ table td, table th {
 
 /* ADMONITIONS AND WARNINGS ------------------------------------------------- */
 
-/* Shared by admonitions and warnings */
-div.admonition, div.warning, div.sidebar {
+/* Shared by admonitions, warnings and sidebars */
+div.admonition,
+div.warning,
+div.sidebar {
     font-size: 0.9em;
     margin: 2em;
     padding: 0;
@@ -471,11 +473,15 @@ div.admonition, div.warning, div.sidebar {
     -webkit-border-radius: 6px;
     */
 }
-div.admonition p, div.warning p, div.sidebar p {
+div.admonition p,
+div.warning p,
+div.sidebar p {
     margin: 0.5em 1em 0.5em 1em;
     padding: 0;
 }
-div.admonition pre, div.warning pre, div.sidebar pre {
+div.admonition pre,
+div.warning pre,
+div.sidebar pre {
     margin: 0.4em 1em 0.4em 1em;
 }
 div.admonition p.admonition-title,
@@ -496,7 +502,7 @@ div.sidebar ul, div.sidebar ol {
 }
 
 
-/* Admonitions only */
+/* Admonitions and sidebars only */
 div.admonition, div.sidebar {
     border: 1px solid #609060;
     background-color: #e9ffe9;
@@ -519,6 +525,7 @@ div.warning p.admonition-title {
 }
 
 
+/* Sidebars only */
 div.sidebar {
   max-width: 200px;
 }
