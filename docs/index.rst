@@ -79,6 +79,15 @@ function.
           db.greeting = request.form.get('greeting')
           return redirect('index')
 
+.. sidebar:: Genshi
+
+  Genshi templates are XML streams which means that we don't have to worry
+  about escaping markup and don't need to bother with ensuring well-formed
+  output. It also means we can change the serialization and doctype on the
+  fly, extract messages for translation directly from the markup and that
+  we can apply filters and transformations on the stream before it renders.
+  This comes at the cost of speed but for most uses it is fast enough.
+
 We also need to write the :file:`index.html` template:
 
 .. sourcecode:: html+genshi
