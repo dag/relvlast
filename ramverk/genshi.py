@@ -1,17 +1,18 @@
-from __future__         import absolute_import
-from genshi.template    import TemplateLoader, loader, Context
-from werkzeug.utils     import cached_property
-from ramverk.templating import TemplatingMixin
+from __future__        import absolute_import
+from genshi.template   import TemplateLoader, loader
+from werkzeug.utils    import cached_property
+from ramverk.rendering import TemplatingMixin
 
 
 class GenshiMixin(TemplatingMixin):
     """Add Genshi templating to an application."""
 
-    #: Serializer used by :meth:`render`.
-    serializer = 'html'
-
-    #: Doctype used by :meth:`render`.
-    doctype = 'html5'
+    @cached_property
+    def renderers(self):
+        renderers = super(GenshiMixin, self).renderers
+        renderers['.html'] = self.__create_renderer(serializer='html',
+                                                    doctype='html5')
+        return renderers
 
     @cached_property
     def __loader(self):
@@ -27,15 +28,17 @@ class GenshiMixin(TemplatingMixin):
         Flatland installation and such."""
         pass
 
-    def render(self, template_name, **context):
-        """Render `template_name` in `context` to a response."""
-        context = self.create_template_context(context)
-
-        # Need this to pass 'self' to generate()
-        genshi_context = Context()
-        genshi_context.update(context)
-
-        template = self.__loader.load(template_name)
-        stream = template.generate(genshi_context)
-        rendering = stream.render(self.serializer, doctype=self.doctype)
-        return self.response(rendering)
+    def __create_renderer(self, serializer=None,
+                                doctype=None,
+                                cls=None,
+                                mimetype=None):
+        def renderer(template_name, **context):
+            context = self.create_template_context(context)
+            template = self.__loader.load(template_name, cls=cls)
+            stream = template.generate(**context)
+            if doctype is None:
+                rendering = stream.render(serializer)
+            else:
+                rendering = stream.render(serializer, doctype=doctype)
+            return self.response(rendering).using(mimetype=mimetype)
+        return renderer

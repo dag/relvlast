@@ -12,6 +12,8 @@ def index(log, request, render, db, redirect):
     log.info('in index view')
 
     if request.method == 'GET':
+        if 'json' in request.args:
+            return render('json', greeting=db.greeting)
         return render('index.html', greeting=db.greeting)
 
     if request.method == 'POST':

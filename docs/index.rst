@@ -317,7 +317,7 @@ Rendering HTML with Genshi
 
     .. automethod:: _GenshiMixin__loader
 
-.. automodule:: ramverk.templating
+.. automodule:: ramverk.rendering
   :members:
 
 

@@ -9,6 +9,7 @@ from logbook.more        import ColorizedStderrHandler
 from ramverk.application import BaseApplication
 from ramverk.genshi      import GenshiMixin
 from ramverk.logbook     import LogbookMixin
+from ramverk.rendering   import JSONRenderingMixin
 from ramverk.routing     import RoutingMixin
 from ramverk.transaction import TransactionMixin
 from ramverk.zodb        import ZODBMixin
@@ -61,6 +62,7 @@ class Application(LogbookMixin,
                   TransactionMixin,
                   ZODBMixin,
                   GenshiMixin,
+                  JSONRenderingMixin,
                   RoutingMixin,
                   BaseApplication):
     """Full-stack application."""

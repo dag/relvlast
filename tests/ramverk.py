@@ -3,7 +3,6 @@ from textwrap          import dedent
 
 from attest            import Tests, assert_hook
 from werkzeug.test     import Client, create_environ
-from werkzeug.wrappers import BaseResponse
 from ZODB.DemoStorage  import DemoStorage
 from transaction       import manager
 
@@ -43,7 +42,7 @@ request = Tests()
 
 @request.context
 def test_client():
-    yield Client(app, BaseResponse)
+    yield Client(app, app.response)
 
 @request.test
 def first_get_to_index(client):
@@ -65,6 +64,12 @@ def first_get_to_index(client):
             </form>
           </body>
         </html>""")
+
+@request.test
+def get_and_render_json(client):
+    response = client.get('/?json')
+    assert response.mimetype == 'application/json'
+    assert response.data == '{"greeting": "Welcome"}'
 
 @request.test
 def post_to_and_get_index(client):
