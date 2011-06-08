@@ -140,7 +140,8 @@ arguments. The problem is easily solved by wrapping the creation of the
 application in a function but what we end up with is effectively a sort of
 custom object model to get the effects of class instances. Ramverk
 applications use the language construct that exists to solve this very
-problem: class-based OOP.
+problem: class-based OOP. Classes also know their name and containing
+module so there's no need for passing ``__name__`` to anything.
 
 .. rubric::
   At some point you'll need to subclass the Flask application class.
