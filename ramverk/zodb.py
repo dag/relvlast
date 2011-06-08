@@ -16,7 +16,8 @@ class ZODBMixin(object):
     @property
     def __connection(self):
         if not self.__connected:
-            self.log.debug('connecting ZODB')
+            if __debug__:
+                self.log.debug('connecting ZODB')
             self.local._ZODBMixin__connection = self.__db.open()
         return self.local._ZODBMixin__connection
 
@@ -28,7 +29,8 @@ class ZODBMixin(object):
 
     def __exit__(self, *exc_info):
         if self.__connected:
-            self.log.debug('disconnecting ZODB')
+            if __debug__:
+                self.log.debug('disconnecting ZODB')
             self.__connection.close()
             del self.local._ZODBMixin__connection
         return super(ZODBMixin, self).__exit__(*exc_info)
