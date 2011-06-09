@@ -33,15 +33,17 @@ class GenshiMixin(TemplatingMixin):
     def __create_renderer(self, serializer=None,
                                 doctype=None,
                                 mimetype=None,
-                                cls=None):
+                                cls=None,
+                                lazy=False):
         """Create a Genshi renderer that use these arguments."""
         def renderer(template_name, **context):
             self.update_template_context(context)
             template = self.__loader.load(template_name, cls=cls)
             stream = template.generate(**context)
+            serialize = stream.serialize if lazy else stream.render
             if doctype is None:
-                rendering = stream.render(serializer)
+                rendering = serialize(serializer)
             else:
-                rendering = stream.render(serializer, doctype=doctype)
+                rendering = serialize(serializer, doctype=doctype)
             return self.response(rendering).using(mimetype=mimetype)
         return renderer
