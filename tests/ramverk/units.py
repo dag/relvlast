@@ -1,12 +1,14 @@
 from __future__          import absolute_import
 from attest              import Tests, assert_hook, raises
-from fudge               import Fake, test
+from fudge               import Fake
 from ramverk.utils       import Bunch
 from ramverk.application import BaseApplication
 from ramverk.transaction import TransactionMixin
+from tests               import mocking
 
 
 unit = Tests()
+mock = Tests(contexts=[mocking])
 
 
 @unit.test
@@ -25,8 +27,7 @@ def bunch_attrs_and_items_are_same():
     assert 'answer' not in bunch and not hasattr(bunch, 'answer')
 
 
-@unit.test
-@test
+@mock.test
 def successful_transaction():
 
     class App(TransactionMixin, BaseApplication):
@@ -42,8 +43,7 @@ def successful_transaction():
         pass
 
 
-@unit.test
-@test
+@mock.test
 def failed_transaction():
 
     class App(TransactionMixin, BaseApplication):
@@ -58,8 +58,7 @@ def failed_transaction():
             raise RuntimeError
 
 
-@unit.test
-@test
+@mock.test
 def doomed_transaction():
 
     class App(TransactionMixin, BaseApplication):

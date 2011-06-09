@@ -1,7 +1,7 @@
 from contextlib       import contextmanager
 from werkzeug.test    import Client, create_environ
 from ZODB.DemoStorage import DemoStorage
-from fudge            import clear_calls, verify
+from fudge            import registry
 from tests.app        import TestApp
 
 
@@ -20,8 +20,6 @@ def wsgiclient():
 
 @contextmanager
 def mocking():
-    clear_calls()
-    try:
-        yield
-    finally:
-        verify()
+    registry.clear_all()
+    yield
+    registry.verify()
