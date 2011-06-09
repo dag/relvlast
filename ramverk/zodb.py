@@ -1,5 +1,6 @@
 from ZODB.DB        import DB
 from werkzeug.utils import cached_property
+from ramverk.utils  import request_property
 
 
 class ZODBMixin(object):
@@ -19,15 +20,12 @@ class ZODBMixin(object):
         """Whether ZODB has connected yet during the current request."""
         return hasattr(self.local, '_ZODBMixin__connection')
 
-    @property
-    def __connection(self):
+    @request_property
+    def _ZODBMixin__connection(self):
         """On-demand per-request connection."""
-        if not self.__connected:
-            if __debug__:
-                self.log.debug('connecting ZODB')
-            self.local._ZODBMixin__connection = self.__db.open(
-                    transaction_manager=self.transaction_manager)
-        return self.local._ZODBMixin__connection
+        if __debug__:
+            self.log.debug('connecting ZODB')
+        return self.__db.open(transaction_manager=self.transaction_manager)
 
     @property
     def root_object(self):
