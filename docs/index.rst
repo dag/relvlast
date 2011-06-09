@@ -382,8 +382,6 @@ Persisting Objects with ZODB
 
     .. autoattribute:: _ZODBMixin__db
 
-    .. autoattribute:: _ZODBMixin__connected
-
     .. autoattribute:: _ZODBMixin__connection
 
 

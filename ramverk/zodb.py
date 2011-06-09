@@ -15,11 +15,6 @@ class ZODBMixin(object):
         """The connection pool."""
         return DB(self.settings['storage']())
 
-    @property
-    def __connected(self):
-        """Whether ZODB has connected yet during the current request."""
-        return hasattr(self.local, '_ZODBMixin__connection')
-
     @request_property
     def _ZODBMixin__connection(self):
         """On-demand per-request connection."""
@@ -34,9 +29,13 @@ class ZODBMixin(object):
         return self.__connection.root()
 
     def __exit__(self, *exc_info):
-        if self.__connected:
+        try:
+            connection = self.local._ZODBMixin__connection
+        except AttributeError:
+            pass
+        else:
             if __debug__:
                 self.log.debug('disconnecting ZODB')
-            self.__connection.close()
+            connection.close()
             del self.local._ZODBMixin__connection
         return super(ZODBMixin, self).__exit__(*exc_info)
