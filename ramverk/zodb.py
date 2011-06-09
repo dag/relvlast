@@ -11,14 +11,17 @@ class ZODBMixin(object):
 
     @cached_property
     def __db(self):
+        """The connection pool."""
         return DB(self.settings['storage']())
 
     @property
     def __connected(self):
+        """Whether ZODB has connected yet during the current request."""
         return hasattr(self.local, '_ZODBMixin__connection')
 
     @property
     def __connection(self):
+        """On-demand per-request connection."""
         if not self.__connected:
             if __debug__:
                 self.log.debug('connecting ZODB')

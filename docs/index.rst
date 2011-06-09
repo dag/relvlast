@@ -380,6 +380,13 @@ Persisting Objects with ZODB
 
         Must be set to a callable returning a ZODB storage object.
 
+    .. autoattribute:: _ZODBMixin__db
+
+    .. autoattribute:: _ZODBMixin__connected
+
+    .. autoattribute:: _ZODBMixin__connection
+
+
 .. automodule:: ramverk.transaction
 
   .. autoclass:: TransactionMixin
