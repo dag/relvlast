@@ -20,4 +20,5 @@ inheritance_node_attrs = {'color': '"#465158"',
 intersphinx_mapping = {'python':   ('http://python.readthedocs.org/en/latest/', None),
                        'werkzeug': ('http://werkzeug.readthedocs.org/en/latest/', None),
                        'genshi':   ('http://genshi.readthedocs.org/en/latest/', None),
+                       'zodb':     ('http://zodb.readthedocs.org/en/latest/', None),
                        'logbook':  ('http://log-book.readthedocs.org/en/latest/', None)}

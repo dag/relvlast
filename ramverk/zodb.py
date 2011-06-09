@@ -6,29 +6,31 @@ from ramverk.utils  import request_property
 
 
 class ZODBMixin(object):
-    """Add ZODB persistence to an application."""
+    """Add automatic ZODB connection management to an application."""
 
     transaction_manager = manager  # if TransactionMixin isn't used
-    """The transaction manager for this application. You should use this
-    rather than the the transaction package, for example
-    ``self.transaction_manager.doom()``."""
+    """The :obj:`transaction manager <transaction.manager>` for this
+    application. You should use this rather than the the transaction
+    package, for example ``self.transaction_manager.doom()``."""
 
     @cached_property
     def __db(self):
-        """The connection pool."""
+        """The :class:`connection pool <ZODB.DB>`."""
         return DB(self.settings['storage']())
 
     @request_property
     def _ZODBMixin__connection(self):
-        """On-demand per-request connection."""
+        """On-demand per-request :class:`connection
+        <ZODB.Connection.Connection>`."""
         if __debug__:
             self.log.debug('connecting ZODB')
         return self.__db.open(transaction_manager=self.transaction_manager)
 
     @property
     def root_object(self):
-        """The root object of the storage, connected and subsequently
-        disconnected on-demand for each request."""
+        """The root object of the storage, which is a
+        :class:`~persistent.mapping.PersistentMapping` and behaves like a
+        :class:`dict`."""
         return self.__connection.root()
 
     def __exit__(self, *exc_info):

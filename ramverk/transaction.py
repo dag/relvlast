@@ -8,7 +8,10 @@ class TransactionMixin(object):
 
     @request_property
     def transaction_manager(self):
-        """Transaction manager to use, with a request-bound default."""
+        """Transaction manager to use, per default a request-bound
+        :class:`~transaction.TransactionManager`."""
+        # Because it is a @request_property we don't need to use
+        # the thread-safe ThreadTransactionManager
         return TransactionManager()
 
     def __enter__(self):
