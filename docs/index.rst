@@ -343,6 +343,24 @@ Rendering Content
 
     .. automethod:: _GenshiMixin__create_renderer
 
+      :type serializer: genshi.output.get_serializer
+      :param serializer:
+        The method to use when serializing the stream.
+
+        ============= ========= ========== ======== =======
+        input         xml       xhtml      html     text
+        ============= ========= ========== ======== =======
+        ``<hr></hr>`` ``<hr/>`` ``<hr />`` ``<hr>`` *empty*
+        ``<a>b</a>``  *same*    *same*     *same*   ``b``
+        ============= ========= ========== ======== =======
+      :type doctype: genshi.output.DocType
+      :param doctype: Set a doctype for the rendered document.
+      :param mimetype: Set a mimetype on the response object.
+      :type cls: genshi.template.base.Template
+      :param cls: Template class if not
+        :class:`~genshi.template.markup.MarkupTemplate`.
+      :param bool lazy: Serialize lazily, can misbehave with databases.
+
       Example::
 
         def setup(self):

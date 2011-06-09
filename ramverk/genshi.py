@@ -35,7 +35,7 @@ class GenshiMixin(TemplatingMixin):
                                 mimetype=None,
                                 cls=None,
                                 lazy=False):
-        """Create a Genshi renderer that use these arguments."""
+        """Create a Genshi renderer."""
         def renderer(template_name, **context):
             self.update_template_context(context)
             template = self.__loader.load(template_name, cls=cls)
