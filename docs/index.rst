@@ -365,6 +365,7 @@ Persisting Objects with ZODB
 .. automodule:: ramverk.transaction
 
   .. autoclass:: TransactionMixin
+    :members:
 
     .. important::
 

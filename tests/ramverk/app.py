@@ -1,7 +1,6 @@
-from attest      import Tests, assert_hook, raises
-from fudge       import patch
-from transaction import manager
-from tests       import testapp
+from attest import Tests, assert_hook, raises
+from fudge  import patch
+from tests  import testapp
 
 
 app = Tests(contexts=[testapp])
@@ -9,6 +8,8 @@ app = Tests(contexts=[testapp])
 
 @app.test
 def transactions(app):
+    manager = app.transaction_manager
+
     with app:
         app.root_object[1] = 42
     with app:

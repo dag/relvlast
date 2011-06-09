@@ -5,6 +5,10 @@ from werkzeug.utils import cached_property
 class ZODBMixin(object):
     """Add ZODB persistence to an application."""
 
+    # In case we're not using TransactionMixin;
+    # None gets us the default thread-bound manager.
+    transaction_manager = None
+
     @cached_property
     def __db(self):
         return DB(self.settings['storage']())
@@ -18,7 +22,8 @@ class ZODBMixin(object):
         if not self.__connected:
             if __debug__:
                 self.log.debug('connecting ZODB')
-            self.local._ZODBMixin__connection = self.__db.open()
+            self.local._ZODBMixin__connection = self.__db.open(
+                    transaction_manager=self.transaction_manager)
         return self.local._ZODBMixin__connection
 
     @property
