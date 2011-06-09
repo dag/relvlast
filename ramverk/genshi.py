@@ -12,8 +12,8 @@ class GenshiMixin(TemplatingMixin):
     @cached_property
     def renderers(self):
         renderers = super(GenshiMixin, self).renderers
-        renderers['.html'] = self.__create_renderer(serializer='html',
-                                                    doctype='html5')
+        renderers['.html'] = self.genshi_renderer(serializer='html',
+                                                  doctype='html5')
         return renderers
 
     @cached_property
@@ -30,11 +30,12 @@ class GenshiMixin(TemplatingMixin):
         Flatland installation and such."""
         pass
 
-    def __create_renderer(self, serializer=None,
-                                doctype=None,
-                                mimetype=None,
-                                cls=None,
-                                lazy=False):
+    def genshi_renderer(self,
+                        serializer=None,
+                        doctype=None,
+                        mimetype=None,
+                        cls=None,
+                        lazy=False):
         """Create a Genshi renderer."""
         def renderer(template_name, **context):
             self.update_template_context(context)

@@ -334,14 +334,15 @@ Rendering Content
 .. automodule:: ramverk.genshi
 
   .. autoclass:: GenshiMixin
-    :members:
     :show-inheritance:
 
     By default configures an ``'.html'`` renderer for HTML5.
 
     .. automethod:: _GenshiMixin__loader
 
-    .. automethod:: _GenshiMixin__create_renderer
+    .. automethod:: template_loaded
+
+    .. automethod:: genshi_renderer
 
       :type serializer: genshi.output.get_serializer
       :param serializer:
@@ -364,8 +365,7 @@ Rendering Content
       Example::
 
         def setup(self):
-            self.renderers['.svg'] =\
-                self._GenshiMixin__create_renderer('xml', 'svg', 'image/svg+xml')
+            self.renderers['.svg'] = self.genshi_renderer('xml', 'svg', 'image/svg+xml')
 
 
 Persisting Objects with ZODB
