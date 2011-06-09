@@ -14,7 +14,7 @@ class LogbookMixin(object):
     @cached_property
     def log_handler(self):
         """Log handler bound to requests. Defaults to
-        :class:`~logbook.StderrHandler`."""
+        :class:`~logbook.handlers.StderrHandler`."""
         return StderrHandler()
 
     def __enter__(self):
