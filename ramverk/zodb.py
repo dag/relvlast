@@ -1,4 +1,6 @@
+from __future__     import absolute_import
 from ZODB.DB        import DB
+from transaction    import manager
 from werkzeug.utils import cached_property
 from ramverk.utils  import request_property
 
@@ -6,9 +8,10 @@ from ramverk.utils  import request_property
 class ZODBMixin(object):
     """Add ZODB persistence to an application."""
 
-    # In case we're not using TransactionMixin;
-    # None gets us the default thread-bound manager.
-    transaction_manager = None
+    transaction_manager = manager  # if TransactionMixin isn't used
+    """The transaction manager for this application. You should use this
+    rather than the the transaction package, for example
+    ``self.transaction_manager.doom()``."""
 
     @cached_property
     def __db(self):
