@@ -45,6 +45,8 @@ class Application(LogbookMixin,
         setting is true, otherwise only logging warnings and above in plain
         text to stderr."""
         if self.settings.debug:
-            return ColorizedStderrHandler()
+            return ColorizedStderrHandler(
+                format_string='{record.level_name:>8}: '
+                              '{record.channel}: {record.message}')
         return NestedSetup([NullHandler(),
                             StderrHandler(level='WARNING')])

@@ -27,6 +27,7 @@ def serve():
 
     opts = options.serve
     app = appfactory(debug=opts.debug)
+    app.log_handler.push_application()
 
     def _log(type, message, *args, **kwargs):
         getattr(app.log, type)(message % args % kwargs)
