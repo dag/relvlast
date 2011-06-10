@@ -346,32 +346,32 @@ Rendering Content
         - Mimetype
         - Class
       * - ``'.html'``
-        - HTML
+        - :class:`HTML <genshi.output.HTMLSerializer>`
         - HTML 5
         - :mimetype:`text/html`
         - MarkupTemplate_
       * - ``'.xhtml'``
-        - XML
+        - :class:`XML <genshi.output.XMLSerializer>`
         - XHTML 1.1
         - :mimetype:`application/xhtml+xml`
         - MarkupTemplate_
       * - ``'.atom'``
-        - XML
+        - :class:`XML <genshi.output.XMLSerializer>`
         -
         - :mimetype:`application/atom+xml`
         - MarkupTemplate_
       * - ``'.svg'``
-        - XML
+        - :class:`XML <genshi.output.XMLSerializer>`
         - SVG
         - :mimetype:`image/svg+xml`
         - MarkupTemplate_
       * - ``'.xml'``
-        - XML
+        - :class:`XML <genshi.output.XMLSerializer>`
         -
         - :mimetype:`application/xml`
         - MarkupTemplate_
       * - ``'.txt'``
-        - Text
+        - :class:`Text <genshi.output.TextSerializer>`
         -
         - :mimetype:`text/plain`
         - NewTextTemplate_
