@@ -42,13 +42,15 @@ def serve():
 
 @task
 def shell():
-    """Enter a bpython shell set up for the app."""
-
-    from bpython       import embed
+    """Enter a [b]python shell set up for the app."""
     from werkzeug.test import create_environ
-
     appfactory = import_string(options.ramverk.app)
     app = appfactory()
     app.bind_to_environ(create_environ())
 
-    embed(dict(app=app))
+    try:
+        from bpython import embed
+        embed(dict(app=app))
+    except ImportError:
+        from code import interact
+        interact(local=dict(app=app))

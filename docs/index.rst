@@ -428,7 +428,10 @@ Task Management with Paver
   .. autofunction:: shell()
 
     This will create an app bound to a fake request and add it to the shell
-    locals as `app`.
+    locals as `app`. If installed, `bpython`_ is used, otherwise a normal
+    Python console.
+
+    .. _bpython: http://bpython-interpreter.org/
 
 
 Common Utilities
