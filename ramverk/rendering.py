@@ -6,9 +6,8 @@ except ImportError: #pragma: no cover
 from werkzeug.utils import cached_property
 
 
-class RenderingMixin(object):
-    """Generic mixin for adding support for "renderers" to an
-    application."""
+class RenderingMixinBase(object):
+    """Base class for renderer mixins."""
 
     @cached_property
     def renderers(self):
@@ -29,8 +28,8 @@ class RenderingMixin(object):
         return renderer(renderer_name, **context)
 
 
-class TemplatingMixin(RenderingMixin):
-    """Add common functionality for templating to an application."""
+class TemplatingMixinBase(RenderingMixinBase):
+    """Base class for templating mixins."""
 
     def update_template_context(self, context):
         """Add templating "globals" to `context`. Override to add your own
@@ -43,7 +42,7 @@ class TemplatingMixin(RenderingMixin):
         return context
 
 
-class JSONRenderingMixin(RenderingMixin):
+class JSONRenderingMixin(RenderingMixinBase):
     """Add a ``'json'`` renderer to an application."""
 
     @cached_property

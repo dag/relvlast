@@ -317,7 +317,7 @@ Rendering Content
 
 .. automodule:: ramverk.rendering
 
-  .. autoclass:: RenderingMixin
+  .. autoclass:: RenderingMixinBase
     :members:
 
   .. autoclass:: JSONRenderingMixin
@@ -419,7 +419,7 @@ Templating with Genshi
       def setup(self):
           self.renderers['.svg'] = GenshiRenderer(self, 'xml', 'svg', 'image/svg+xml')
 
-.. autoclass:: ramverk.rendering.TemplatingMixin
+.. autoclass:: ramverk.rendering.TemplatingMixinBase
   :members:
   :show-inheritance:
 

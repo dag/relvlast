@@ -1,7 +1,7 @@
 from __future__        import absolute_import
 from genshi.template   import TemplateLoader, loader, NewTextTemplate
 from werkzeug.utils    import cached_property
-from ramverk.rendering import TemplatingMixin
+from ramverk.rendering import TemplatingMixinBase
 
 
 class GenshiRenderer(object):
@@ -47,7 +47,7 @@ class GenshiRenderer(object):
         return 'GenshiRenderer({})'.format(', '.join(attrs))
 
 
-class GenshiMixin(TemplatingMixin):
+class GenshiMixin(TemplatingMixinBase):
     """Add Genshi templating to an application. Requires a
     :attr:`~ramverk.application.BaseApplication.response` implementing
     :class:`~ramverk.wrappers.ResponseUsingMixin`."""
