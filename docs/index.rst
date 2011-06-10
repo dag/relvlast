@@ -361,7 +361,7 @@ Rendering Content
 
     .. autoattribute:: mimetype
 
-    .. autoattribute:: cls
+    .. autoattribute:: class_
 
     .. autoattribute:: lazy
 

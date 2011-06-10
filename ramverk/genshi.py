@@ -16,7 +16,7 @@ class GenshiRenderer(object):
     mimetype = None
     """Set a mimetype on the returned response object."""
 
-    cls = None
+    class_ = None
     """Template class if not
     :class:`~genshi.template.markup.MarkupTemplate`."""
 
@@ -24,14 +24,14 @@ class GenshiRenderer(object):
     """Serialize lazily, can misbehave with databases."""
 
     def __init__(self, app, serializer=None, doctype=None,
-                 mimetype=None, cls=None, lazy=False):
+                 mimetype=None, class_=None, lazy=False):
         self.app, self.serializer, self.doctype = app, serializer, doctype
-        self.mimetype, self.cls, self.lazy = mimetype, cls, lazy
+        self.mimetype, self.class_, self.lazy = mimetype, class_, lazy
 
     def __call__(self, template_name, **context):
         self.app.update_template_context(context)
         loader = self.app._GenshiMixin__loader
-        template = loader.load(template_name, cls=self.cls)
+        template = loader.load(template_name, cls=self.class_)
         stream = template.generate(**context)
         serialize = stream.serialize if self.lazy else stream.render
         if self.doctype is None:
@@ -53,7 +53,7 @@ class GenshiMixin(TemplatingMixin):
                                                   doctype='html5')
         renderers['.txt']  = GenshiRenderer(self, serializer='text',
                                                   mimetype='text/plain',
-                                                  cls=NewTextTemplate)
+                                                  class_=NewTextTemplate)
         return renderers
 
     @cached_property
