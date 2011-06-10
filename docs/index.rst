@@ -320,15 +320,15 @@ Rendering Content
   .. autoclass:: RenderingMixin
     :members:
 
-  .. autoclass:: TemplatingMixin
-    :members:
-    :show-inheritance:
-
   .. autoclass:: JSONRenderingMixin
     :members:
     :show-inheritance:
 
     .. automethod:: _JSONRenderingMixin__default
+
+
+Templating with Genshi
+----------------------
 
 .. automodule:: ramverk.genshi
 
@@ -418,6 +418,10 @@ Rendering Content
 
       def setup(self):
           self.renderers['.svg'] = GenshiRenderer(self, 'xml', 'svg', 'image/svg+xml')
+
+.. autoclass:: ramverk.rendering.TemplatingMixin
+  :members:
+  :show-inheritance:
 
 
 Persisting Objects with ZODB
