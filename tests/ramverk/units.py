@@ -1,8 +1,10 @@
 from __future__          import absolute_import
+from datetime            import datetime
 from attest              import Tests, assert_hook, raises
 from fudge               import Fake
 from werkzeug.wrappers   import BaseResponse
 from ramverk.application import BaseApplication
+from ramverk.rendering   import JSONRenderingMixin
 from ramverk.transaction import TransactionMixin
 from ramverk.utils       import Bunch, request_property
 from ramverk.wrappers    import ResponseUsingMixin
@@ -124,3 +126,21 @@ def request_properties():
     newmapping = app.mapping
 
     assert mapping is not app.local.mapping is newmapping
+
+
+@unit.test
+def json_renderer():
+
+    class App(JSONRenderingMixin, BaseApplication):
+
+        def _JSONRenderingMixin__default(self, obj):
+            if isinstance(obj, datetime):
+                return obj.isoformat()
+            return super(App, self)._JSONRenderingMixin__default(obj)
+
+    now = datetime.now()
+    response = App().render('json', time=now)
+    assert response.data == '{"time": "%s"}' % now.isoformat()
+
+    with raises(TypeError):
+        App().render('json', response=response)

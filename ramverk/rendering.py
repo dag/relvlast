@@ -1,6 +1,6 @@
 try:
     import simplejson as json
-except ImportError:
+except ImportError: #pragma: no cover
     import json
 
 from werkzeug.utils import cached_property
