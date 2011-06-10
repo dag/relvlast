@@ -49,11 +49,17 @@ class GenshiMixin(TemplatingMixin):
     @cached_property
     def renderers(self):
         renderers = super(GenshiMixin, self).renderers
-        renderers['.html'] = GenshiRenderer(self, serializer='html',
-                                                  doctype='html5')
-        renderers['.txt']  = GenshiRenderer(self, serializer='text',
-                                                  mimetype='text/plain',
-                                                  class_=NewTextTemplate)
+
+        renderers['.html']  = GenshiRenderer(self, serializer='html',
+                                                   doctype='html5')
+
+        renderers['.xhtml'] = GenshiRenderer(self, serializer='xml',
+                                                   doctype='xhtml11',
+                                                   mimetype='application/xhtml+xml')
+
+        renderers['.txt']   = GenshiRenderer(self, serializer='text',
+                                                   mimetype='text/plain',
+                                                   class_=NewTextTemplate)
         return renderers
 
     @cached_property

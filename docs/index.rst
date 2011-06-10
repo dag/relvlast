@@ -352,6 +352,12 @@ Rendering Content
         - :mimetype:`text/html`
         - MarkupTemplate_
         - no
+      * - ``'.xhtml'``
+        - XML
+        - XHTML 1.1
+        - :mimetype:`application/xhtml+xml`
+        - MarkupTemplate_
+        - no
       * - ``'.txt'``
         - Text
         -
