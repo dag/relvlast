@@ -320,11 +320,11 @@ Rendering Content
   .. autoclass:: RenderingMixinBase
     :members:
 
-  .. autoclass:: JSONRenderingMixin
+  .. autoclass:: JSONMixin
     :members:
     :show-inheritance:
 
-    .. automethod:: _JSONRenderingMixin__default
+    .. automethod:: _JSONMixin__default
 
 
 Templating with Genshi

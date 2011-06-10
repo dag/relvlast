@@ -4,7 +4,7 @@ from attest              import Tests, assert_hook, raises
 from fudge               import Fake
 from werkzeug.wrappers   import BaseResponse
 from ramverk.application import BaseApplication
-from ramverk.rendering   import JSONRenderingMixin
+from ramverk.rendering   import JSONMixin
 from ramverk.transaction import TransactionMixin
 from ramverk.utils       import Bunch, request_property
 from ramverk.wrappers    import ResponseUsingMixin
@@ -131,12 +131,12 @@ def request_properties():
 @unit.test
 def json_renderer():
 
-    class App(JSONRenderingMixin, BaseApplication):
+    class App(JSONMixin, BaseApplication):
 
-        def _JSONRenderingMixin__default(self, obj):
+        def _JSONMixin__default(self, obj):
             if isinstance(obj, datetime):
                 return obj.isoformat()
-            return super(App, self)._JSONRenderingMixin__default(obj)
+            return super(App, self)._JSONMixin__default(obj)
 
     now = datetime.now()
     response = App().render('json', time=now)

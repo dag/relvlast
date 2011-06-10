@@ -42,12 +42,12 @@ class TemplatingMixinBase(RenderingMixinBase):
         return context
 
 
-class JSONRenderingMixin(RenderingMixinBase):
+class JSONMixin(RenderingMixinBase):
     """Add a ``'json'`` renderer to an application."""
 
     @cached_property
     def renderers(self):
-        renderers = super(JSONRenderingMixin, self).renderers
+        renderers = super(JSONMixin, self).renderers
         renderers['json'] = self.__render
         return renderers
 
