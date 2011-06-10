@@ -337,12 +337,27 @@ Rendering Content
 
     Preconfigured renderers:
 
-    =========== ========== ======= ====================== ================ ====
-    Renderer    Serializer Doctype Mimetype               Class            Lazy
-    =========== ========== ======= ====================== ================ ====
-    ``'.html'`` HTML       HTML 5  :mimetype:`text/html`  MarkupTemplate_  no
-    ``'.txt'``  Text               :mimetype:`text/plain` NewTextTemplate_ no
-    =========== ========== ======= ====================== ================ ====
+    .. list-table::
+      :header-rows: 1
+
+      * - Renderer
+        - Serializer
+        - Doctype
+        - Mimetype
+        - Class
+        - Lazy
+      * - ``'.html'``
+        - HTML
+        - HTML 5
+        - :mimetype:`text/html`
+        - MarkupTemplate_
+        - no
+      * - ``'.txt'``
+        - Text
+        -
+        - :mimetype:`text/plain`
+        - NewTextTemplate_
+        - no
 
     .. _MarkupTemplate: http://genshi.readthedocs.org/en/latest/xml-templates/
 
