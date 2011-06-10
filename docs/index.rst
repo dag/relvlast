@@ -335,7 +335,7 @@ Rendering Content
   .. autoclass:: GenshiMixin
     :show-inheritance:
 
-    Preconfigured renderers:
+    These renderers are configured by default:
 
     .. list-table::
       :header-rows: 1
@@ -345,43 +345,41 @@ Rendering Content
         - Doctype
         - Mimetype
         - Class
-        - Lazy
       * - ``'.html'``
         - HTML
         - HTML 5
         - :mimetype:`text/html`
         - MarkupTemplate_
-        - no
       * - ``'.xhtml'``
         - XML
         - XHTML 1.1
         - :mimetype:`application/xhtml+xml`
         - MarkupTemplate_
-        - no
       * - ``'.atom'``
         - XML
         -
         - :mimetype:`application/atom+xml`
         - MarkupTemplate_
-        - no
       * - ``'.svg'``
         - XML
         - SVG
         - :mimetype:`image/svg+xml`
         - MarkupTemplate_
-        - no
       * - ``'.xml'``
         - XML
         -
         - :mimetype:`application/xml`
         - MarkupTemplate_
-        - no
       * - ``'.txt'``
         - Text
         -
         - :mimetype:`text/plain`
         - NewTextTemplate_
-        - no
+
+    .. admonition:: Notes
+
+      * None of the preconfigured renderers serialize lazily by default.
+      * You probably don't want to use the XHTML renderer.
 
     .. _MarkupTemplate: http://genshi.readthedocs.org/en/latest/xml-templates/
 
