@@ -15,10 +15,15 @@ extensions = ['sphinx.ext.autodoc',
 
 autodoc_member_order = 'bysource'
 
+inheritance_graph_attrs = {'rankdir': 'RL'}
+
 inheritance_node_attrs = {'color': '"#465158"',
                           'fontcolor': 'white',
-                          'fontsize': '13',
+                          'fontsize': '12',
+                          'fontname': '"Ubuntu"',
                           'style': '"rounded,filled"'}
+
+inheritance_edge_attrs = {'color': '"#444444"'}
 
 intersphinx_mapping = {'python':   ('http://python.readthedocs.org/en/latest/', None),
                        'werkzeug': ('http://werkzeug.readthedocs.org/en/latest/', None),
