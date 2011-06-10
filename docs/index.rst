@@ -14,6 +14,7 @@ First we need some boring imports::
   from ramverk.routing   import router, endpoint
 
 .. sidebar:: ZODB
+  :class: left
 
   The ZODB is a transactional persistence system with ACID properties
   acting as an object database for Python. Whoa, what now? Well, it lets
