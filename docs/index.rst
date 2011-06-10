@@ -358,6 +358,12 @@ Rendering Content
         - :mimetype:`application/xhtml+xml`
         - MarkupTemplate_
         - no
+      * - ``'.atom'``
+        - XML
+        -
+        - :mimetype:`application/atom+xml`
+        - MarkupTemplate_
+        - no
       * - ``'.svg'``
         - XML
         - SVG
