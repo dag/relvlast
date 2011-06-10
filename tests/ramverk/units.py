@@ -4,7 +4,7 @@ from fudge               import Fake
 from werkzeug.wrappers   import BaseResponse
 from ramverk.application import BaseApplication
 from ramverk.transaction import TransactionMixin
-from ramverk.utils       import Bunch
+from ramverk.utils       import Bunch, request_property
 from ramverk.wrappers    import ResponseUsingMixin
 from tests               import mocking
 
@@ -100,3 +100,27 @@ def response_using():
 
     response = Response(status=300).using(status='404 NOT FOUND')
     assert response.status_code == 404
+
+
+@unit.test
+def request_properties():
+
+    class App(object):
+
+        @request_property
+        def mapping(self):
+            return {}
+
+    assert isinstance(App.mapping, request_property)
+
+    app = App()
+    app.local = Bunch()
+    mapping = app.mapping
+
+    assert mapping is app.local.mapping
+    assert app.mapping is mapping
+
+    app.local = Bunch()
+    newmapping = app.mapping
+
+    assert mapping is not app.local.mapping is newmapping
