@@ -111,19 +111,18 @@ We also need to write the :file:`index.html` template:
 
 For a development server we can use Paver and write a :file:`pavement.py`::
 
-  from paver.easy import task
+  from paver.easy    import options
+  from ramverk.paver import serve
 
-  @task
-  def serve():
-      """Run the development server."""
-      from werkzeug.serving import run_simple
-      from greeter          import Greeter
+  options.ramverk.app = 'greeter:Greeter'
 
-      app = Greeter(debug=True)
-      run_simple('localhost', 8080, app,
-                 use_reloader=True,
-                 use_debugger=True,
-                 use_evalex  =True)
+.. code-block:: console
+
+  $ paver serve
+  ---> ramverk.paver.serve
+  INFO: Greeter:  * Running on http://localhost:8008/
+  INFO: Greeter:  * Restarting with reloader: stat() polling
+  ---> ramverk.paver.serve
 
 
 Framework Design
@@ -409,6 +408,27 @@ Logging with Logbook
       Should be mixed in at the top of the inheritance chain of the
       application so that all log records during requests pass through
       :attr:`log_handler`.
+
+
+Task Management with Paver
+--------------------------
+
+.. automodule:: ramverk.paver
+
+  :file:`pavement.py`::
+
+    from paver.easy    import options
+    from ramverk.paver import serve, shell
+
+    options.ramverk.app = 'dotted.path.to:AppClass'
+
+
+  .. autofunction:: serve()
+
+  .. autofunction:: shell()
+
+    This will create an app bound to a fake request and add it to the shell
+    locals as `app`.
 
 
 Common Utilities
