@@ -2,3 +2,5 @@
 *.sw?
 relvlast.db*
 build
+.coverage
+htmlcov

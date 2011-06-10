@@ -4,3 +4,4 @@ Fudge
 Paver
 Sphinx
 bpython
+coverage

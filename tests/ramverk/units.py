@@ -1,9 +1,11 @@
 from __future__          import absolute_import
 from attest              import Tests, assert_hook, raises
 from fudge               import Fake
-from ramverk.utils       import Bunch
+from werkzeug.wrappers   import BaseResponse
 from ramverk.application import BaseApplication
 from ramverk.transaction import TransactionMixin
+from ramverk.utils       import Bunch
+from ramverk.wrappers    import ResponseUsingMixin
 from tests               import mocking
 
 
@@ -72,3 +74,29 @@ def doomed_transaction():
 
     with App():
         pass
+
+
+@unit.test
+def response_using():
+
+    class Response(ResponseUsingMixin, BaseResponse):
+        pass
+
+    response = Response('hello').using(status=404)
+    assert response.data == 'hello' and response.status_code == 404
+
+    response = Response(headers={'location': 'other-place'})
+    response = response.using(headers={'Server': 'some-server'})
+    assert response.headers['Location'] == 'other-place'
+    assert response.headers['Server'] == 'some-server'
+
+    assert Response().direct_passthrough == False
+    assert Response().using().direct_passthrough == False
+    response = Response().using(direct_passthrough=True)
+    assert response.direct_passthrough == True
+
+    assert Response('hello').using('hi').data == 'hi'
+    assert Response('hello').using(['hi']).data == 'hi'
+
+    response = Response(status=300).using(status='404 NOT FOUND')
+    assert response.status_code == 404

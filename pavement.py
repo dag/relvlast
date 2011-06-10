@@ -1,4 +1,4 @@
-from paver.easy     import options, Bunch, task, cmdopts
+from paver.easy     import options, Bunch, task, cmdopts, sh
 from paver.tasks    import help
 from paver.doctools import doc_clean, html
 
@@ -56,3 +56,11 @@ def shell():
     app.bind_to_environ(create_environ())
 
     embed(dict(app=app))
+
+
+@task
+def cover():
+    """Measure test coverage."""
+    sh('coverage run -m attest')
+    sh('coverage report')
+    sh('coverage html')
