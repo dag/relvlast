@@ -370,6 +370,12 @@ Rendering Content
         - :mimetype:`image/svg+xml`
         - MarkupTemplate_
         - no
+      * - ``'.xml'``
+        - XML
+        -
+        - :mimetype:`application/xml`
+        - MarkupTemplate_
+        - no
       * - ``'.txt'``
         - Text
         -
