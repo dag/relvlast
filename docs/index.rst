@@ -335,7 +335,18 @@ Rendering Content
   .. autoclass:: GenshiMixin
     :show-inheritance:
 
-    By default configures an ``'.html'`` renderer for HTML5.
+    Preconfigured renderers:
+
+    =========== ========== ======= ====================== ================ ====
+    Renderer    Serializer Doctype Mimetype               Class            Lazy
+    =========== ========== ======= ====================== ================ ====
+    ``'.html'`` HTML       HTML 5  :mimetype:`text/html`  MarkupTemplate_  no
+    ``'.txt'``  Text               :mimetype:`text/plain` NewTextTemplate_ no
+    =========== ========== ======= ====================== ================ ====
+
+    .. _MarkupTemplate: http://genshi.readthedocs.org/en/latest/xml-templates/
+
+    .. _NewTextTemplate: http://genshi.readthedocs.org/en/latest/text-templates/
 
     .. automethod:: _GenshiMixin__loader
 
