@@ -5,6 +5,8 @@ copyright = 'Dag Odenhall'
 master_doc = 'index'
 modindex_common_prefix = ['ramverk.']
 
+html_static_path = ['_static']
+
 extensions = ['sphinx.ext.autodoc',
               'sphinx.ext.inheritance_diagram',
               'sphinx.ext.intersphinx',
