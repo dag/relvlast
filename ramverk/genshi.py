@@ -40,6 +40,12 @@ class GenshiRenderer(object):
             rendering = serialize(self.serializer, doctype=self.doctype)
         return self.app.response(rendering).using(mimetype=self.mimetype)
 
+    def __repr__(self):
+        attrs = ('{}={!r}'.format(k, v)
+                 for (k, v) in vars(self).iteritems()
+                 if k != 'app' and v)
+        return 'GenshiRenderer({})'.format(', '.join(attrs))
+
 
 class GenshiMixin(TemplatingMixin):
     """Add Genshi templating to an application. Requires a
