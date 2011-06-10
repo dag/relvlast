@@ -341,11 +341,9 @@ Rendering Content
 
     .. automethod:: template_loaded
 
-    .. automethod:: genshi_renderer
+  .. autoclass:: GenshiRenderer
 
-      :type serializer: genshi.output.get_serializer
-      :param serializer:
-        The method to use when serializing the stream.
+    .. autoattribute:: serializer
 
         ============= ========= ========== ======== =======
         input         xml       xhtml      html     text
@@ -353,18 +351,25 @@ Rendering Content
         ``<hr></hr>`` ``<hr/>`` ``<hr />`` ``<hr>`` *empty*
         ``<a>b</a>``  *same*    *same*     *same*   ``b``
         ============= ========= ========== ======== =======
-      :type doctype: genshi.output.DocType
-      :param doctype: Set a doctype for the rendered document.
-      :param mimetype: Set a mimetype on the response object.
-      :type cls: genshi.template.base.Template
-      :param cls: Template class if not
-        :class:`~genshi.template.markup.MarkupTemplate`.
-      :param bool lazy: Serialize lazily, can misbehave with databases.
 
-      Example::
+      See :func:`~genshi.output.get_serializer` for more information.
 
-        def setup(self):
-            self.renderers['.svg'] = self.genshi_renderer('xml', 'svg', 'image/svg+xml')
+    .. autoattribute:: doctype
+
+      Can be a string or a tuple, see :class:`~genshi.output.DocType` for
+      more information.
+
+    .. autoattribute:: mimetype
+
+    .. autoattribute:: cls
+
+    .. autoattribute:: lazy
+
+
+    Example::
+
+      def setup(self):
+          self.renderers['.svg'] = GenshiRenderer(self, 'xml', 'svg', 'image/svg+xml')
 
 
 Persisting Objects with ZODB
