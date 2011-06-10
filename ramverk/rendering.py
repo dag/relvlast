@@ -7,7 +7,7 @@ from werkzeug.utils import cached_property
 
 
 class RenderingMixin(object):
-    """Generic mixins for adding support for "renderers" to an
+    """Generic mixin for adding support for "renderers" to an
     application."""
 
     @cached_property
