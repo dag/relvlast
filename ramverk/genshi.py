@@ -57,6 +57,10 @@ class GenshiMixin(TemplatingMixin):
                                                    doctype='xhtml11',
                                                    mimetype='application/xhtml+xml')
 
+        renderers['.svg']   = GenshiRenderer(self, serializer='xml',
+                                                   doctype='svg',
+                                                   mimetype='image/svg+xml')
+
         renderers['.txt']   = GenshiRenderer(self, serializer='text',
                                                    mimetype='text/plain',
                                                    class_=NewTextTemplate)
