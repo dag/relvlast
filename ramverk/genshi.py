@@ -48,28 +48,16 @@ class GenshiMixin(TemplatingMixin):
 
     @cached_property
     def renderers(self):
+        R = GenshiRenderer
         renderers = super(GenshiMixin, self).renderers
-
-        renderers['.html']  = GenshiRenderer(self, serializer='html',
-                                                   doctype='html5')
-
-        renderers['.xhtml'] = GenshiRenderer(self, serializer='xml',
-                                                   doctype='xhtml11',
-                                                   mimetype='application/xhtml+xml')
-
-        renderers['.atom']  = GenshiRenderer(self, serializer='xml',
-                                                   mimetype='application/atom+xml')
-
-        renderers['.svg']   = GenshiRenderer(self, serializer='xml',
-                                                   doctype='svg',
-                                                   mimetype='image/svg+xml')
-
-        renderers['.xml']   = GenshiRenderer(self, serializer='xml',
-                                                   mimetype='application/xml')
-
-        renderers['.txt']   = GenshiRenderer(self, serializer='text',
-                                                   mimetype='text/plain',
-                                                   class_=NewTextTemplate)
+        renderers.update({
+            '.html' : R(self, 'html', 'html5'),
+            '.xhtml': R(self, 'xml',  'xhtml11', 'application/xhtml+xml'),
+            '.atom' : R(self, 'xml',   None,     'application/atom+xml'),
+            '.svg'  : R(self, 'xml',  'svg',     'image/svg+xml'),
+            '.xml'  : R(self, 'xml',   None,     'application/xml'),
+            '.txt'  : R(self, 'text',  None,     'text/plain', NewTextTemplate)
+        })
         return renderers
 
     @cached_property
