@@ -265,6 +265,9 @@ The Full Stack
     :members:
     :show-inheritance:
 
+    .. inheritance-diagram:: HTMLResponse
+      :parts: 1
+
 
 Minimal Base for Applications
 -----------------------------
