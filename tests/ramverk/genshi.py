@@ -46,3 +46,10 @@ def mutate_response(app):
     response = app.render('context.html').using(status=404, mimetype='text/css')
     assert response.status_code == 404
     assert response.content_type == 'text/css; charset=utf-8'
+
+
+@genshi.test
+def text_template(app):
+    response = app.render('newtext.txt')
+    assert response.content_type == 'text/plain; charset=utf-8'
+    assert response.data == 'The answer to the ultimate question is 42\n'

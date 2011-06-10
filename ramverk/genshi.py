@@ -1,5 +1,5 @@
 from __future__        import absolute_import
-from genshi.template   import TemplateLoader, loader
+from genshi.template   import TemplateLoader, loader, NewTextTemplate
 from werkzeug.utils    import cached_property
 from ramverk.rendering import TemplatingMixin
 
@@ -14,6 +14,9 @@ class GenshiMixin(TemplatingMixin):
         renderers = super(GenshiMixin, self).renderers
         renderers['.html'] = self.genshi_renderer(serializer='html',
                                                   doctype='html5')
+        renderers['.txt'] = self.genshi_renderer(serializer='text',
+                                                 mimetype='text/plain',
+                                                 cls=NewTextTemplate)
         return renderers
 
     @cached_property
