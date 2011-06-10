@@ -31,7 +31,6 @@ class GenshiMixin(TemplatingMixin):
     def template_loaded(self, template):
         """Called when `template` is first loaded; override to do Babel and
         Flatland installation and such."""
-        pass
 
     def genshi_renderer(self,
                         serializer=None,
