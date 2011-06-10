@@ -1,5 +1,5 @@
 from __future__     import absolute_import
-from logbook        import Logger, StderrHandler
+from logbook        import Logger, default_handler
 from werkzeug.utils import cached_property
 
 
@@ -11,11 +11,9 @@ class LogbookMixin(object):
         """Log channel for this application."""
         return Logger(self.settings.name)
 
-    @cached_property
-    def log_handler(self):
-        """Log handler bound to requests. Defaults to
-        :class:`~logbook.handlers.StderrHandler`."""
-        return StderrHandler()
+    log_handler = default_handler
+    """Log handler bound to requests. Uses the Logbook default handler by
+    default, which is an :class:`~logbook.handlers.StderrHandler`."""
 
     def __enter__(self):
         self.log_handler.push_thread()
