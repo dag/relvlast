@@ -120,8 +120,8 @@ For a development server we can use Paver and write a :file:`pavement.py`::
 
   $ paver serve
   ---> ramverk.paver.serve
-      INFO: Relvlast:  * Running on http://localhost:8008/
-      INFO: Relvlast:  * Restarting with reloader: stat() polling
+      INFO: Greeter:  * Running on http://localhost:8008/
+      INFO: Greeter:  * Restarting with reloader: stat() polling
   ---> ramverk.paver.serve
 
 
