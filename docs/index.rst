@@ -470,6 +470,34 @@ Templating with Genshi
   :show-inheritance:
 
 
+Compiling Static Resources On-Demand
+------------------------------------
+
+.. automodule:: ramverk.compiling
+
+  .. autoclass:: CompilerMixinBase
+    :members:
+    :show-inheritance:
+
+    A "compiler" is like a middleground between static files and renderers.
+    Unlike renderers there is no "context", everything needed to compile
+    the source should be in the source. Unlike static files, these sources
+    need preprocessing before their rendered state can be sent to clients.
+    This is primarily a convenience for development where these sources may
+    change at any time but for production deployments these files should
+    usually be precompiled up front and served as static files.
+
+    Compilation sources are stored in :file:`{package}/compiled` and are
+    compiled on-demand for GET requests to ``/compiled/`` at the
+    application root. The file extension is mapped to a compiler in
+    :attr:`compilers` which compiles a corresponding file (usually with a
+    different file extension) into a response. A ``'compiled'`` endpoint is
+    set up so you can build URLs e.g. ``path('compiled',
+    name='main.css')`` → ``'/compiled/main.css'`` which in turn sends a
+    compiled version of :file:`compiled/main.scss` if the mixin below is
+    used.
+
+
 Styling with SCSS
 -----------------
 
@@ -478,12 +506,8 @@ Styling with SCSS
   .. autoclass:: SCSSMixin
     :show-inheritance:
 
-    Requests like ``GET /compiled/path/to/file.css`` will compile
-    :file:`compiled/path/to/file.scss` under the application module and
-    serve the result as CSS.
-
-.. automodule:: ramverk.compiling
-  :members:
+    Compiles Sassy stylesheets in :file:`{source}.scss` files into
+    :file:`{compiled}.css` responses.
 
 
 Persisting Objects with ZODB

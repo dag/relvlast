@@ -20,4 +20,5 @@ class CompilerMixinBase(URLMapMixin):
 
     @cached_property
     def compilers(self):
+        """Mapping of output file extensions to compilers."""
         return {}
