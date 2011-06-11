@@ -1,7 +1,8 @@
 from werkzeug.routing import Rule
 from werkzeug.testapp import test_app
+from creoleparser     import text2html
 from ramverk.routing  import router, endpoint
-from relvlast.objects import Definition
+from relvlast.objects import Page
 
 
 @router
@@ -9,9 +10,7 @@ def urls():
     yield Rule('/wsgi/',
                endpoint='wsgi_info')
     yield Rule('/',
-               endpoint='index')
-    yield Rule('/definitions/',
-               endpoint='definitions',
+               endpoint='index',
                methods=('GET', 'POST'))
 
 
@@ -21,21 +20,17 @@ def wsgi_info():
 
 
 @endpoint
-def index(render):
-    return render('index.html')
-
-
-@endpoint
-def definitions(request, render, db, redirect):
-    form = Definition.schema(request.form)
-
+def index(request, render, db, redirect):
     if request.method == 'GET':
-        return render('definitions.html',
-                      definitions=db.definitions,
-                      form=form)
+        page = db.start
+        title = page.title
+        body = text2html.generate(page.body)
+        form = Page.schema(vars(page))
+        return render('index.html', form=form, title=title, body=body)
 
     elif request.method == 'POST':
+        form = Page.schema(request.form)
         if form.validate():
-            definition = Definition(**request.form)
-            db.definitions[definition.word] = definition
-        return redirect('definitions')
+            page = Page(**form.value)
+            db.start = page
+        return redirect('index')

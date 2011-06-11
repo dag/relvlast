@@ -1,3 +1,4 @@
+from pkg_resources  import resource_string
 from persistent     import Persistent
 from BTrees.OOBTree import OOBTree
 from flatland       import Form, String
@@ -6,15 +7,16 @@ from flatland       import Form, String
 class Root(Persistent):
 
     def __init__(self):
-        self.definitions = OOBTree()
+        self.start = Page("la lojban bangu filo si'o zifre",
+                          resource_string('relvlast', 'lojban.creole'))
 
 
-class Definition(Persistent):
+class Page(Persistent):
 
     class schema(Form):
-        word = String
-        definition = String
 
-    def __init__(self, word, definition):
-        self.word = word
-        self.definition = definition
+        title = String
+        body  = String
+
+    def __init__(self, title, body):
+        self.title, self.body = title, body

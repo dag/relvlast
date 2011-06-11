@@ -1,0 +1,72 @@
+$first  : #2F2C2D;
+$second : #534046;
+$third  : #F77F67;
+$fourth : #E29E6A;
+$fifth  : #B4B281;
+
+$width  : 960px;
+
+
+body {
+  font: {
+    family: "Buda", sans-serif;
+    size: 150%;
+  }
+  h1, h2, h3 {
+    font-family: "EB Garamond", serif;
+  }
+  margin: 0 auto;
+  max-width: $width;
+  color: $first;
+}
+
+a {
+  text-decoration: none;
+  color: $second;
+  border-bottom: 1px dotted $fourth;
+}
+
+nav {
+  ul {
+    float: right;
+    li {
+      margin-left: 10px;
+      display: inline;
+      list-style: {
+        type: none;
+        position: inside;
+      }
+      a {
+        border: none;
+        padding: 10px;
+        background-color: $first;
+        color: white;
+        &:hover {
+          background-color: $third;
+        }
+      }
+    }
+  }
+}
+
+
+form.uniForm {
+  textarea {
+    width: 100%;
+    min-height: 500px;
+  }
+  button.submit {
+    padding: 10px;
+    background-color: $second;
+    color: white;
+    border: none;
+  }
+}
+
+
+article {
+  footer {
+    border-top: 1px solid $fifth;
+    text-align: right;
+  }
+}

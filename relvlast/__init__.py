@@ -13,7 +13,8 @@ class Relvlast(Application):
         return self.root_object['relvlast']
 
     def setup(self):
-        self.scan()
+        self.scan('relvlast.frontend')
+        self.scan('relvlast.dictionary', '/vlaste', 'dictionary:')
 
     def template_loaded(self, template):
         setup_flatland(template)

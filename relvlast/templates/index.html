@@ -1,5 +1,47 @@
-<html>
+<html xmlns:py="http://genshi.edgewall.org/"
+  xmlns:xi="http://www.w3.org/2001/XInclude"
+  xmlns:form="http://ns.discorporate.us/flatland/genshi"
+>
+  <xi:include href="layout.html"/>
   <body>
-    <h1>coi munje</h1>
+    <h1>$title</h1>
+
+    <article py:if="'galfi' not in request.args">
+      $body
+      <footer>
+        <p><a href="${path('index', galfi='')}">galfi</a></p>
+      </footer>
+    </article>
+
+    <article py:if="'galfi' in request.args">
+      <form action="${path('index')}"
+        method="POST"
+        class="uniForm"
+      >
+
+        <form:with
+         auto-domid="on"
+         auto-for="on"
+         auto-tabindex="on"
+         tabindex="1">
+
+          <fieldset>
+
+            <div class="ctrlHolder">
+              <label form:bind="form.title">cmene</label>
+              <input form:bind="form.title" type="text" class="textInput"/>
+            </div>
+
+            <div class="ctrlHolder">
+              <label form:bind="form.body">papri</label>
+              <textarea form:bind="form.body"/>
+            </div>
+          </fieldset>
+        </form:with>
+        <div class="buttonHolder">
+          <button type="submit" class="submit">rejgau</button>
+        </div>
+      </form>
+    </article>
   </body>
 </html>

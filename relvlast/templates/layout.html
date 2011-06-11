@@ -1,0 +1,60 @@
+<?python
+
+  javascripts = [
+    'https://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js',
+    'https://ajax.googleapis.com/ajax/libs/webfont/1.0.19/webfont.js',
+    path('static', name='js/uni-form.jquery.min.js'),
+  ]
+
+  stylesheets = [
+    path('static', name='css/uni-form.css'),
+    path('static', name='css/default.uni-form.css'),
+    path('compiled', name='main.css'),
+  ]
+
+?>
+<html xmlns:py="http://genshi.edgewall.org/"
+  py:strip=""
+>
+  <head>
+    <title>la lojban</title>
+
+    <script type="text/javascript">
+      WebFontConfig = {
+        google: { families: ['EB Garamond', 'Buda:light'] }
+      };
+    </script>
+
+    <script py:for="src in javascripts"
+      src="$src"
+      type="text/javascript"
+    />
+
+    <script type="text/javascript">
+      $(function(){
+        $('form.uniForm').uniform();
+      }); 
+    </script>
+
+    <link py:for="href in stylesheets"
+      href="$href"
+      rel="stylesheet"
+      type="text/css"
+      media="all"
+    />
+
+  </head>
+
+  <py:match path="body" once="true">
+    <body py:attrs="select('@*')">
+      <nav>
+        <ul>
+          <li><a href="${path('index')}">pamo'o</a></li>
+          <li><a href="${path('dictionary:index')}">vlaste</a></li>
+        </ul>
+      </nav>
+
+      ${select('*|text()')}
+    </body>
+  </py:match>
+</html>
