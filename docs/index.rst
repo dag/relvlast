@@ -482,6 +482,9 @@ Styling with SCSS
     :file:`compiled/path/to/file.scss` under the application module and
     serve the result as CSS.
 
+.. automodule:: ramverk.compiling
+  :members:
+
 
 Persisting Objects with ZODB
 ----------------------------
