@@ -25,3 +25,4 @@ class TestApp(Application):
         self.log_handler = TestHandler()
         self.scan('tests.app.frontend')
         self.scan('tests.app.module', '/module', 'module:')
+        self.scan('tests.app.subdomain', subdomain='en')

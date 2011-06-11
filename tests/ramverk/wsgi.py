@@ -62,3 +62,9 @@ def four_oh_four(client):
 def module(client):
     response = client.get('/module/')
     assert response.data == 'module index'
+
+
+@wsgi.test
+def route_values(client):
+    response = client.get('/page/fubar/')
+    assert response.data == 'fubar'

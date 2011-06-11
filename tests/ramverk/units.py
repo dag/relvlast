@@ -5,6 +5,7 @@ from fudge               import Fake
 from werkzeug.wrappers   import BaseResponse
 from ramverk.application import BaseApplication
 from ramverk.rendering   import JSONMixin
+from ramverk.routing     import endpoint, RoutingMixin
 from ramverk.transaction import TransactionMixin
 from ramverk.utils       import Bunch, request_property
 from ramverk.wrappers    import ResponseUsingMixin
@@ -144,3 +145,26 @@ def json_renderer():
 
     with raises(TypeError):
         App().render('json', response=response)
+
+
+@endpoint
+def first_endpoint():
+    pass
+
+
+@endpoint
+def second_endpoint():
+    pass
+
+
+@unit.test
+def endpoint_scanning():
+
+    class App(RoutingMixin, BaseApplication):
+        pass
+
+    app = App()
+    assert not app.endpoints
+    app.scan()
+    assert app.endpoints == dict(first_endpoint=first_endpoint,
+                                 second_endpoint=second_endpoint)

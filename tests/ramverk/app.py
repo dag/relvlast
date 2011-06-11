@@ -42,3 +42,10 @@ def transactions(app):
         with raises(AssertionError):
             with app:
                 assert False
+
+
+@app.test
+def url_building(app):
+    assert app.path('module:index') == '/module/'
+    assert app.url('module:index') == 'http://localhost/module/'
+    assert app.url('en_index') == 'http://en.localhost/'

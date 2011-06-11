@@ -40,7 +40,7 @@ class Application(LogbookMixin,
         return settings
 
     @cached_property
-    def log_handler(self):
+    def log_handler(self): #pragma: no cover
         """A :class:`~logbook.more.ColorizedStderrHandler` if the `debug`
         setting is true, otherwise only logging warnings and above in plain
         text to stderr."""

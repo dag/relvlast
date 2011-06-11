@@ -40,7 +40,7 @@ class GenshiRenderer(object):
             rendering = serialize(self.serializer, doctype=self.doctype)
         return self.app.response(rendering).using(mimetype=self.mimetype)
 
-    def __repr__(self):
+    def __repr__(self): #pragma: no cover
         attrs = ('{}={!r}'.format(k, v)
                  for (k, v) in vars(self).iteritems()
                  if k != 'app' and v)

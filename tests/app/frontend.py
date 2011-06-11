@@ -5,6 +5,7 @@ from ramverk.routing  import router, endpoint
 @router
 def urls():
     yield Rule('/', endpoint='index', methods=('GET', 'POST'))
+    yield Rule('/page/<page>/', endpoint='page')
 
 
 @endpoint
@@ -19,3 +20,8 @@ def index(log, request, render, db, redirect):
     if request.method == 'POST':
         db.greeting = request.form.get('greeting')
         return redirect('index')
+
+
+@endpoint
+def page(response, route_values):
+    return response(route_values['page'])

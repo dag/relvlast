@@ -63,7 +63,7 @@ class RoutingHelpersMixin(object):
     """Add some convenient helpers for applications with URL dispatch."""
 
     @cached_property
-    def app(self):
+    def app(self): #pragma: no cover
         """Reference to itself, to allow views to access the
         application."""
         return self
