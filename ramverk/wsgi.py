@@ -2,6 +2,28 @@ from werkzeug.utils import cached_property
 from werkzeug.wsgi  import SharedDataMiddleware, responder
 
 
+def mixin_from_middleware(middleware):
+    """Create a mixin from a middleware."""
+
+    class MiddlewareMixin(object):
+
+        @cached_property
+        def _middlewares(self):
+            return {}
+
+        @responder
+        def __call__(self, environ, start_response):
+            app = super(MiddlewareMixin, self).__call__
+            if middleware not in self._middlewares:
+                self._middlewares[middleware] = middleware(app)
+            return self._middlewares[middleware]
+
+    MiddlewareMixin.__name__ =\
+            'mixin_from_middleware({})'.format(middleware.__name__)
+    return MiddlewareMixin
+
+
+
 def middleware_mixin(mixin):
     """Decorate a class as a middleware mixin. A special `pipeline` method
     is passed the WSGI application to wrap, and the pipeline is transformed

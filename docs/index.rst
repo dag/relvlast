@@ -529,6 +529,15 @@ WSGI Middlewares
   .. autoclass:: SharedDataMiddlewareMixin
     :members:
 
+  .. autofunction:: mixin_from_middleware
+
+    Example::
+
+      from werkzeug._internal import _easteregg
+
+      class App(mixin_from_middleware(_easteregg), BaseApplication):
+          pass
+
   .. autofunction:: middleware_mixin
 
     Example::
