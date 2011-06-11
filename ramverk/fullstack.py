@@ -11,6 +11,7 @@ from ramverk.genshi      import GenshiMixin
 from ramverk.logbook     import LogbookMixin
 from ramverk.rendering   import JSONMixin
 from ramverk.routing     import RoutingMixin
+from ramverk.scss        import SCSSMixin
 from ramverk.transaction import TransactionMixin
 from ramverk.utils       import request_property
 from ramverk.wrappers    import ResponseUsingMixin
@@ -29,6 +30,7 @@ class Application(LogbookMixin,
                   ZODBMixin,
                   GenshiMixin,
                   JSONMixin,
+                  SCSSMixin,
                   RoutingMixin,
                   SharedDataMiddlewareMixin,
                   BaseApplication):

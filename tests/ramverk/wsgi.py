@@ -68,3 +68,10 @@ def module(client):
 def route_values(client):
     response = client.get('/page/fubar/')
     assert response.data == 'fubar'
+
+
+@wsgi.test
+def compiled_scss(client):
+    response = client.get('/compiled/style.css')
+    assert response.mimetype == 'text/css'
+    assert response.data == 'body h1{font-size:larger}'
