@@ -1,8 +1,10 @@
-from __future__        import absolute_import
-from pkg_resources     import resource_string
-from werkzeug.utils    import cached_property
-from scss.parser       import Stylecheet as Stylesheet
-from ramverk.compiling import CompilerMixinBase
+from __future__          import absolute_import
+from errno               import ENOENT
+from pkg_resources       import resource_string
+from werkzeug.exceptions import abort
+from werkzeug.utils      import cached_property
+from scss.parser         import Stylecheet as Stylesheet
+from ramverk.compiling   import CompilerMixinBase
 
 
 class SCSSMixin(CompilerMixinBase):
@@ -20,6 +22,11 @@ class SCSSMixin(CompilerMixinBase):
 
     def __compiler(self, filename):
         source = 'compiled/{}.scss'.format(filename[:-4])
-        string = resource_string(self.module, source)
+        try:
+            string = resource_string(self.module, source)
+        except IOError as e:
+            if e.errno == ENOENT:
+                abort(404)
+            raise
         css = self.__parser.parse(string)
         return self.response(css, mimetype='text/css')
