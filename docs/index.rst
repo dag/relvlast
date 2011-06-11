@@ -513,6 +513,30 @@ Task Management with Paver
     .. _bpython: http://bpython-interpreter.org/
 
 
+WSGI Middlewares
+----------------
+
+.. automodule:: ramverk.wsgi
+
+  .. autoclass:: SharedDataMiddlewareMixin
+    :members:
+
+  .. autofunction:: middleware_mixin
+
+    Example::
+
+      from werkzeug._internal import _easteregg
+
+      @middleware_mixin
+      class EasterEggMiddlewareMixin(object):
+
+          def pipeline(self, app):
+              return _easteregg(app)
+
+      class App(EasterEggMiddlewareMixin, BaseApplication):
+          pass
+
+
 Common Utilities
 ----------------
 

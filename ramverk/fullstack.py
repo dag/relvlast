@@ -13,6 +13,7 @@ from ramverk.rendering   import JSONMixin
 from ramverk.routing     import RoutingMixin
 from ramverk.transaction import TransactionMixin
 from ramverk.wrappers    import ResponseUsingMixin
+from ramverk.wsgi        import SharedDataMiddlewareMixin
 from ramverk.zodb        import ZODBMixin
 
 
@@ -28,6 +29,7 @@ class Application(LogbookMixin,
                   GenshiMixin,
                   JSONMixin,
                   RoutingMixin,
+                  SharedDataMiddlewareMixin,
                   BaseApplication):
     """Full-stack application."""
 
