@@ -22,8 +22,13 @@ body {
 
 a {
   text-decoration: none;
-  color: $second;
-  border-bottom: 1px dotted $fourth;
+  border: none;
+  padding: 0 10px;
+  background-color: $first;
+  color: white;
+  &:hover {
+    background-color: $third;
+  }
 }
 
 nav {
@@ -37,13 +42,8 @@ nav {
         position: inside;
       }
       a {
-        border: none;
+        font-family: "EB Garamond", serif;
         padding: 10px;
-        background-color: $first;
-        color: white;
-        &:hover {
-          background-color: $third;
-        }
       }
     }
   }

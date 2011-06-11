@@ -7,7 +7,7 @@ from flatland       import Form, String
 class Root(Persistent):
 
     def __init__(self):
-        self.start = Page("la lojban bangu filo si'o zifre",
+        self.start = Page("la lojban bangu fi lo si'o zifre",
                           resource_string('relvlast', 'lojban.creole'))
 
 
