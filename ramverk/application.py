@@ -1,7 +1,7 @@
 from werkzeug.exceptions import HTTPException, NotFound
 from werkzeug.local      import Local, release_local
 from werkzeug.utils      import cached_property
-from werkzeug.wrappers   import Request, BaseResponse
+from werkzeug.wrappers   import BaseRequest, BaseResponse
 from werkzeug.wsgi       import responder
 
 from ramverk.utils       import Bunch, request_property
@@ -54,8 +54,9 @@ class BaseApplication(object):
 
     @request_property
     def request(self):
-        """Representative object for the currently processed request."""
-        return Request(self.local.environ)
+        """The currently processed request wrapped in a
+        :class:`~werkzeug.wrappers.BaseRequest`."""
+        return BaseRequest(self.local.environ)
 
     def respond(self):
         """Called to return a response, or raise an HTTPException, after the

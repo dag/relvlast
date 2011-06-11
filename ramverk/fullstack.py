@@ -2,7 +2,7 @@ from __future__          import absolute_import
 
 from ZODB.FileStorage    import FileStorage
 from werkzeug.utils      import cached_property
-from werkzeug.wrappers   import Response
+from werkzeug.wrappers   import Request, Response
 from logbook             import NestedSetup, NullHandler, StderrHandler
 from logbook.more        import ColorizedStderrHandler
 
@@ -12,6 +12,7 @@ from ramverk.logbook     import LogbookMixin
 from ramverk.rendering   import JSONMixin
 from ramverk.routing     import RoutingMixin
 from ramverk.transaction import TransactionMixin
+from ramverk.utils       import request_property
 from ramverk.wrappers    import ResponseUsingMixin
 from ramverk.wsgi        import SharedDataMiddlewareMixin
 from ramverk.zodb        import ZODBMixin
@@ -34,6 +35,13 @@ class Application(LogbookMixin,
     """Full-stack application."""
 
     response = HTMLResponse
+    """Overloaded with a more capable :class:`HTMLResponse`."""
+
+    @request_property
+    def request(self):
+        """Overloaded to use the more capable
+        :class:`~werkzeug.wrappers.Request` class."""
+        return Request(self.local.environ)
 
     @cached_property
     def settings(self):

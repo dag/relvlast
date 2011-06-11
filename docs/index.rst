@@ -251,7 +251,6 @@ The Full Stack
 .. automodule:: ramverk.fullstack
 
   .. autoclass:: Application
-    :members:
     :show-inheritance:
 
     .. inheritance-diagram:: Application
@@ -261,12 +260,21 @@ The Full Stack
 
       :default: File storage based on the `name` setting.
 
+    .. autoattribute:: log_handler
+
+    .. autoattribute:: request
+
+      .. inheritance-diagram:: werkzeug.wrappers.Request
+        :parts: 1
+
+    .. autoattribute:: response
+
+      .. inheritance-diagram:: HTMLResponse
+        :parts: 1
+
   .. autoclass:: HTMLResponse
     :members:
     :show-inheritance:
-
-    .. inheritance-diagram:: HTMLResponse
-      :parts: 1
 
 
 Minimal Base for Applications
