@@ -58,7 +58,7 @@ class SharedDataMiddlewareMixin(object):
         method."""
         super(SharedDataMiddlewareMixin, self).setup_mixins()
         if hasattr(self, 'route'):
-            self.route(Rule('/static/<path:path>',
+            self.route(Rule('/static/<path:name>',
                        endpoint='static',
                        build_only=True))
 
