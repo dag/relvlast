@@ -21,7 +21,7 @@ class SCSSMixin(CompilerMixinBase):
         return Stylesheet(options=dict(compress=True))
 
     def __compiler(self, filename):
-        source = 'compiled/{}.scss'.format(filename[:-4])
+        source = 'compiled/{0}.scss'.format(filename[:-4])
         try:
             string = resource_string(self.module, source)
         except IOError as e:

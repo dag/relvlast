@@ -41,10 +41,10 @@ class GenshiRenderer(object):
         return self.app.response(rendering).using(mimetype=self.mimetype)
 
     def __repr__(self): #pragma: no cover
-        attrs = ('{}={!r}'.format(k, v)
+        attrs = ('{0}={1!r}'.format(k, v)
                  for (k, v) in vars(self).iteritems()
                  if k != 'app' and v)
-        return 'GenshiRenderer({})'.format(', '.join(attrs))
+        return 'GenshiRenderer({0})'.format(', '.join(attrs))
 
 
 class GenshiMixin(TemplatingMixinBase):

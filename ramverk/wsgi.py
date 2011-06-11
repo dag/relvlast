@@ -20,7 +20,7 @@ def mixin_from_middleware(middleware):
             return self._middlewares[middleware]
 
     MiddlewareMixin.__name__ =\
-            'mixin_from_middleware({})'.format(middleware.__name__)
+            'mixin_from_middleware({0})'.format(middleware.__name__)
     return MiddlewareMixin
 
 
