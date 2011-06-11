@@ -4,3 +4,4 @@ relvlast.db*
 build
 .coverage
 htmlcov
+relvlast/compiled/*.css
