@@ -309,7 +309,7 @@ Minimal Base for Applications
 
     .. automethod:: __exit__
 
-    .. automethod:: __call__
+    .. automethod:: __call__(environ, start_response)
 
   .. autoclass:: Response
     :members:
