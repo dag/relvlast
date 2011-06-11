@@ -1,5 +1,6 @@
-from werkzeug.utils import cached_property
-from werkzeug.wsgi  import SharedDataMiddleware, responder
+from werkzeug.routing import Rule
+from werkzeug.utils   import cached_property
+from werkzeug.wsgi    import SharedDataMiddleware, responder
 
 
 def mixin_from_middleware(middleware):
@@ -50,6 +51,16 @@ def middleware_mixin(mixin):
 @middleware_mixin
 class SharedDataMiddlewareMixin(object):
     """Serve static files for an application."""
+
+    def setup_mixins(self):
+        """Configures a build-only endpoint called `static` if the
+        application has a :meth:`~ramverk.routing.URLMapMixin.route`
+        method."""
+        super(SharedDataMiddlewareMixin, self).setup_mixins()
+        if hasattr(self, 'route'):
+            self.route(Rule('/static/<path:path>',
+                       endpoint='static',
+                       build_only=True))
 
     @cached_property
     def shared_data(self):

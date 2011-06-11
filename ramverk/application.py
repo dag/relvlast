@@ -22,6 +22,7 @@ class BaseApplication(object):
     def __init__(self, **settings):
         """Create a new application object using `settings`."""
         self.settings.update(settings)
+        self.setup_mixins()
         self.setup()
 
     @cached_property
@@ -42,6 +43,10 @@ class BaseApplication(object):
         """Log channel for this application."""
         from logging import getLogger
         return getLogger(self.settings.name)
+
+    def setup_mixins(self):
+        """Called after :meth:`__init__` and meant to be hooked by
+        cooperative mixins."""
 
     def setup(self):
         """Called after :meth:`__init__` and meant to be overridden by
