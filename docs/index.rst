@@ -336,7 +336,23 @@ The call stack for WSGI requests with URL dispatch adds this:
   respond -> url_adapter -> "endpoint name" -> endpoints -> "view function" -> call_view;
 
 .. automodule:: ramverk.routing
-  :members:
+
+  .. autofunction:: router
+
+  .. autofunction:: endpoint
+
+  .. autoclass:: RoutingScannerMixin
+    :members:
+
+  .. autoclass:: RoutingHelpersMixin
+    :members:
+
+  .. autoclass:: URLMapMixin
+    :members:
+
+  .. autoclass:: RoutingMixin
+    :members:
+    :show-inheritance:
 
 
 Rendering Content
