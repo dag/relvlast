@@ -476,6 +476,7 @@ Styling with SCSS
 .. automodule:: ramverk.scss
 
   .. autoclass:: SCSSMixin
+    :show-inheritance:
 
     Requests like ``GET /compiled/path/to/file.css`` will compile
     :file:`compiled/path/to/file.scss` under the application module and

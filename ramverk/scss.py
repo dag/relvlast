@@ -1,9 +1,9 @@
-from __future__ import absolute_import
-
-from pkg_resources import resource_string
+from __future__       import absolute_import
+from pkg_resources    import resource_string
 from werkzeug.routing import Rule
-from werkzeug.utils import cached_property
-from scss.parser import Stylecheet as Stylesheet
+from werkzeug.utils   import cached_property
+from scss.parser      import Stylecheet as Stylesheet
+from ramverk.routing  import URLMapMixin
 
 
 def compile_scss(_SCSSMixin__parser, route_values, module, response):
@@ -13,9 +13,8 @@ def compile_scss(_SCSSMixin__parser, route_values, module, response):
     return response(css, mimetype='text/css')
 
 
-class SCSSMixin(object):
-    """Add an SCSS compiler to an application. Requires
-    :class:`~ramverk.routing.URLMapMixin`."""
+class SCSSMixin(URLMapMixin):
+    """Add an SCSS compiler to an application."""
 
     def setup_mixins(self):
         super(SCSSMixin, self).setup_mixins()
