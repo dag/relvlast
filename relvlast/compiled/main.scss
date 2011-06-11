@@ -12,9 +12,10 @@ body {
     family: "Buda", sans-serif;
     size: 150%;
   }
-  h1, h2, h3 {
+  h1, h2, h3, code {
     font-family: "EB Garamond", serif;
   }
+  line-height: 1.5em;
   margin: 0 auto;
   max-width: $width;
   color: $first;
