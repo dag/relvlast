@@ -10,12 +10,23 @@
     path('compiled', name='main.css'),
   ]
 
+  javascripts = [
+    'https://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js',
+    path('static', name='creole.js'),
+    path('static', name='app.js'),
+  ]
+
 ?>
 <html xmlns:py="http://genshi.edgewall.org/"
   py:strip=""
 >
   <head>
     <title>la lojban</title>
+
+    <script py:for="src in javascripts"
+      src="$src"
+    />
+
     <link py:for="href in stylesheets"
       href="$href"
       rel="stylesheet"
