@@ -1,4 +1,5 @@
 @import "blueprint/reset";
+@import "compass/css3/border-radius";
 
 // http://www.colourlovers.com/palette/1604389/who_are_you
 $color-0: #2F2C2D;
@@ -42,6 +43,7 @@ a {
   &:hover, &.active {
     background-color: $color-2;
   }
+  @include border-radius();
 }
 
 nav {
@@ -81,6 +83,7 @@ form {
     &:focus {
       background: $color-6;
     }
+    @include border-radius();
   }
   button {
     font: {
@@ -95,6 +98,7 @@ form {
     &:hover {
       background-color: $color-2;
     }
+    @include border-radius();
   }
 }
 
