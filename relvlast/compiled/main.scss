@@ -1,3 +1,4 @@
+// http://www.colourlovers.com/palette/1604389/who_are_you
 $first  : #2F2C2D;
 $second : #534046;
 $third  : #F77F67;
@@ -5,15 +6,17 @@ $fourth : #E29E6A;
 $fifth  : #B4B281;
 
 $width  : 960px;
+$sans   : "Buda", sans-serif;
+$serif  : "EB Garamond", serif;
 
 
 body {
   font: {
-    family: "Buda", sans-serif;
+    family: $sans;
     size: 150%;
   }
   h1, h2, h3, code {
-    font-family: "EB Garamond", serif;
+    font-family: $serif;
   }
   line-height: 1.5em;
   margin: 0 auto;
@@ -46,7 +49,7 @@ nav {
         position: inside;
       }
       a {
-        font-family: "EB Garamond", serif;
+        font-family: $serif;
         padding: 10px;
       }
     }
@@ -107,7 +110,7 @@ nav.pages {
         type: none;
       }
       a {
-        font-family: "EB Garamond", serif;
+        font-family: $serif;
         padding-bottom: .2em;
         line-height: 2em;
       }
