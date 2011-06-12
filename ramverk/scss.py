@@ -3,7 +3,7 @@ from errno               import ENOENT
 from pkg_resources       import resource_string
 from werkzeug.exceptions import abort
 from werkzeug.utils      import cached_property
-from scss.parser         import Stylecheet as Stylesheet
+from scss                import Scss
 from ramverk.compiling   import CompilerMixinBase
 
 
@@ -18,7 +18,9 @@ class SCSSMixin(CompilerMixinBase):
 
     @cached_property
     def __parser(self):
-        return Stylesheet(options=dict(compress=True))
+        parser = Scss()
+        parser.scss_opts.update(compress=False)
+        return parser
 
     def __compiler(self, filename):
         source = 'compiled/{0}.scss'.format(filename[:-4])
@@ -28,5 +30,5 @@ class SCSSMixin(CompilerMixinBase):
             if e.errno == ENOENT:
                 abort(404)
             raise
-        css = self.__parser.parse(string)
+        css = self.__parser.compile(string)
         return self.response(css, mimetype='text/css')

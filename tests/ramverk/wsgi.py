@@ -74,4 +74,9 @@ def route_values(client):
 def compiled_scss(client):
     response = client.get('/compiled/style.css')
     assert response.mimetype == 'text/css'
-    assert response.data == 'body h1{font-size:larger}'
+    assert response.data == dedent("""\
+        body h1 {
+          font-size: larger;
+        }
+
+        """)

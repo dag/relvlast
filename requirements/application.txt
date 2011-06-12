@@ -4,5 +4,5 @@ Genshi
 Logbook
 ZODB3
 creoleparser
-scss
+pyScss
 venusian
