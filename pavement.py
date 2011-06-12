@@ -1,3 +1,5 @@
+from inspect        import isclass
+from werkzeug.utils import import_string
 from paver.easy     import options, Bunch, task, sh
 from paver.tasks    import help
 from paver.doctools import doc_clean, html
@@ -24,7 +26,9 @@ def import_words():
     from relvlast import Relvlast
     from relvlast.objects import Word
 
-    app = Relvlast()
+    app = import_string(options.ramverk.app)
+    if isclass(app):
+        app = app()
 
     tree = objectify.parse('jvs.xml')
     root = tree.getroot()
