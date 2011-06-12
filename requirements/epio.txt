@@ -1,2 +1,2 @@
--r application.txt
+-r development.txt
 RelStorage
