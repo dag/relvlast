@@ -11,5 +11,15 @@
         <dd>$word.html</dd>
       </section>
     </dl>
+    <nav class="pages">
+      <ol py:for="page in xrange(1, total + 1)">
+        <?python
+          attrs = {}
+          if page == request.args.get('papri', 1, int):
+            attrs['class'] = 'active'
+        ?>
+        <li><a href="?papri=$page" py:attrs="attrs">$page</a></li>
+      </ol>
+    </nav>
   </body>
 </html>

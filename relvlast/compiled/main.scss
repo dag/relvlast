@@ -30,6 +30,9 @@ a {
   &:hover {
     background-color: $third;
   }
+  &.active {
+    background-color: $third;
+  }
 }
 
 nav {
@@ -85,6 +88,28 @@ dl {
       display: table-cell;
       p {
         margin: 0;
+      }
+    }
+  }
+}
+
+nav.pages {
+  border-top: 1px solid $fifth;
+  padding: 2em;
+  text-align: center;
+  ol {
+    display: inline;
+    padding-left: 0;
+    li {
+      display: inline;
+      list-style: {
+        position: inside;
+        type: none;
+      }
+      a {
+        font-family: "EB Garamond", serif;
+        padding-bottom: .2em;
+        line-height: 2em;
       }
     }
   }

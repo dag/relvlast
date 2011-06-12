@@ -11,5 +11,13 @@ def urls():
 
 
 @endpoint
-def index(render, db):
-    return render('dictionary/index.html', words=db.words.values()[:20])
+def index(request, render, db):
+    words = db.words.values()
+    page = request.args.get('papri', 1, type=int)
+    per = 50
+    end = per * page
+    start = end - per
+    total = len(words) / per
+    return render('dictionary/index.html',
+                  words=words[start:end],
+                  total=total)
