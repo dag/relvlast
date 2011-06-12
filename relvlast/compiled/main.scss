@@ -1,9 +1,16 @@
 // http://www.colourlovers.com/palette/1604389/who_are_you
-$first  : #2F2C2D;
-$second : #534046;
-$third  : #F77F67;
-$fourth : #E29E6A;
-$fifth  : #B4B281;
+$color-0: #2F2C2D;
+$color-1: #534046;
+$color-2: #F77F67;
+$color-3: #E29E6A;
+$color-4: #B4B281;
+
+// http://www.colourlovers.com/palette/444487/Curiosity_Killed
+$color-5: #EFFFCD;
+$color-6: #DCE9BE;
+$color-7: #555152;
+$color-8: #2E2633;
+$color-9: #99173C;
 
 $width  : 960px;
 $sans   : "Buda", sans-serif;
@@ -21,20 +28,17 @@ body {
   line-height: 1.5em;
   margin: 0 auto;
   max-width: $width;
-  color: $first;
+  color: $color-0;
 }
 
 a {
   text-decoration: none;
   border: none;
   padding: 0 10px;
-  background-color: $first;
+  background-color: $color-0;
   color: white;
-  &:hover {
-    background-color: $third;
-  }
-  &.active {
-    background-color: $third;
+  &:hover, &.active {
+    background-color: $color-2;
   }
 }
 
@@ -57,23 +61,45 @@ nav {
 }
 
 
-form.uniForm {
-  textarea {
-    width: 100%;
-    min-height: 500px;
-  }
-  button.submit {
-    padding: 10px;
-    background-color: $second;
-    color: white;
+form {
+  fieldset {
     border: none;
+    dt {
+      vertical-align: top;
+    }
+  }
+  input, textarea {
+    font: {
+      family: $sans;
+      size: 100%;
+    }
+    border: 1px solid $color-0;
+    background: none;
+    width: $width - 200px; 
+    &:focus {
+      background: $color-6;
+    }
+  }
+  button {
+    font: {
+      family: $sans;
+      size: 100%;
+    }
+    padding: 10px;
+    margin: 1em;
+    border: none;
+    background: $color-0;
+    color: white;
+    &:hover {
+      background-color: $color-2;
+    }
   }
 }
 
 
 article {
   footer {
-    border-top: 1px solid $fifth;
+    border-top: 1px solid $color-4;
     text-align: right;
   }
 }
@@ -97,7 +123,7 @@ dl {
 }
 
 nav.pages {
-  border-top: 1px solid $fifth;
+  border-top: 1px solid $color-4;
   padding: 2em;
   text-align: center;
   ol {

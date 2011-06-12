@@ -1,14 +1,12 @@
 <?python
 
-  javascripts = [
-    'https://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js',
-    'https://ajax.googleapis.com/ajax/libs/webfont/1.0.19/webfont.js',
-    path('static', name='js/uni-form.jquery.min.js'),
+  webfonts = [
+    'EB Garamond',
+    'Buda:light',
   ]
 
   stylesheets = [
-    path('static', name='css/uni-form.css'),
-    path('static', name='css/default.uni-form.css'),
+    'http://fonts.googleapis.com/css?family=' + '|'.join(webfonts),
     path('compiled', name='main.css'),
   ]
 
@@ -18,31 +16,12 @@
 >
   <head>
     <title>la lojban</title>
-
-    <script type="text/javascript">
-      WebFontConfig = {
-        google: { families: ['EB Garamond', 'Buda:light'] }
-      };
-    </script>
-
-    <script py:for="src in javascripts"
-      src="$src"
-      type="text/javascript"
-    />
-
-    <script type="text/javascript">
-      $(function(){
-        $('form.uniForm').uniform();
-      }); 
-    </script>
-
     <link py:for="href in stylesheets"
       href="$href"
       rel="stylesheet"
       type="text/css"
       media="all"
     />
-
   </head>
 
   <py:match path="body" once="true">

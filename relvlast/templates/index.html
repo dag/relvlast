@@ -16,7 +16,6 @@
     <article py:if="'galfi' in request.args">
       <form action="${path('index')}"
         method="POST"
-        class="uniForm"
       >
 
         <form:with
@@ -27,20 +26,28 @@
 
           <fieldset>
 
-            <div class="ctrlHolder">
-              <label form:bind="form.title">cmene</label>
-              <input form:bind="form.title" type="text" class="textInput"/>
-            </div>
+            <dl>
+              <section>
+                <dt><label form:bind="form.title">cmene</label></dt>
+                <dd><input form:bind="form.title" type="text"/></dd>
+              </section>
 
-            <div class="ctrlHolder">
-              <label form:bind="form.body">papri</label>
-              <textarea form:bind="form.body"/>
-            </div>
+              <section>
+                <dt><label form:bind="form.body">papri</label></dt>
+                <dd>
+                  <textarea form:bind="form.body"
+                    spellcheck="false"
+                    cols="60"
+                    rows="20"
+                  />
+                </dd>
+              </section>
+            </dl>
           </fieldset>
         </form:with>
-        <div class="buttonHolder">
-          <button type="submit" class="submit">rejgau</button>
-        </div>
+        <footer>
+          <button type="submit">rejgau</button>
+        </footer>
       </form>
     </article>
   </body>
