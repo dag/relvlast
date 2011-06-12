@@ -1,10 +1,11 @@
 from __future__          import absolute_import
 from errno               import ENOENT
-from pkg_resources       import resource_string
+from pkg_resources       import resource_string, resource_filename
 from werkzeug.exceptions import abort
 from werkzeug.utils      import cached_property
-from scss                import Scss
 from ramverk.compiling   import CompilerMixinBase
+
+import scss
 
 
 class SCSSMixin(CompilerMixinBase):
@@ -18,7 +19,7 @@ class SCSSMixin(CompilerMixinBase):
 
     @cached_property
     def __parser(self):
-        parser = Scss()
+        parser = scss.Scss()
         parser.scss_opts.update(compress=False)
         return parser
 
@@ -30,5 +31,11 @@ class SCSSMixin(CompilerMixinBase):
             if e.errno == ENOENT:
                 abort(404)
             raise
-        css = self.__parser.compile(string)
+        old = scss.LOAD_PATHS
+        scss.LOAD_PATHS = ','.join([resource_filename(self.module, 'compiled'),
+                                    scss.LOAD_PATHS])
+        try:
+            css = self.__parser.compile(string)
+        finally:
+            scss.LOAD_PATHS = old
         return self.response(css, mimetype='text/css')
