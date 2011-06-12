@@ -4,10 +4,10 @@
 >
   <xi:include href="layout.html"/>
   <body>
-    <h1>$title</h1>
+    <h1>$page.title</h1>
 
     <article py:if="'galfi' not in request.args">
-      $body
+      $page.html
       <footer>
         <p><a href="${path('index', galfi='')}">galfi</a></p>
       </footer>

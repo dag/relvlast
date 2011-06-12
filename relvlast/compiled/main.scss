@@ -71,3 +71,21 @@ article {
     text-align: right;
   }
 }
+
+
+dl {
+  section {
+    dt {
+      width: 5em;
+      display: table-cell;
+      text-align: right;
+      padding-right: 1em;
+    }
+    dd {
+      display: table-cell;
+      p {
+        margin: 0;
+      }
+    }
+  }
+}

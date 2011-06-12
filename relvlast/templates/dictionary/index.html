@@ -1,0 +1,15 @@
+<html xmlns:py="http://genshi.edgewall.org/"
+  xmlns:xi="http://www.w3.org/2001/XInclude"
+  xmlns:form="http://ns.discorporate.us/flatland/genshi"
+>
+  <xi:include href="../layout.html"/>
+  <body>
+    <h1>vlaste fu la lojban</h1>
+    <dl py:for="word in words">
+      <section>
+        <dt><a href="${path('dictionary:word', word=word.id)}">$word.id</a></dt>
+        <dd>$word.html</dd>
+      </section>
+    </dl>
+  </body>
+</html>

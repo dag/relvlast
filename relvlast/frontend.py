@@ -1,6 +1,5 @@
 from werkzeug.routing import Rule
 from werkzeug.testapp import test_app
-from creoleparser     import text2html
 from ramverk.routing  import router, endpoint
 from relvlast.objects import Page
 
@@ -23,10 +22,8 @@ def wsgi_info():
 def index(request, render, db, redirect):
     if request.method == 'GET':
         page = db.start
-        title = page.title
-        body = text2html.generate(page.body)
         form = Page.schema(vars(page))
-        return render('index.html', form=form, title=title, body=body)
+        return render('index.html', form=form, page=page)
 
     elif request.method == 'POST':
         form = Page.schema(request.form)
