@@ -62,4 +62,4 @@ def deploy():
     """Deploy to ep.io."""
     with pushd('relvlast/compiled'):
         sh('pyscss -o main.css main.scss')
-    sh('epio upload -a relvlast')
+    sh('epio upload')
