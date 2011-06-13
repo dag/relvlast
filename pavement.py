@@ -1,6 +1,6 @@
 from inspect        import isclass
 from werkzeug.utils import import_string
-from paver.easy     import options, Bunch, task, sh
+from paver.easy     import options, Bunch, task, sh, pushd
 from paver.tasks    import help
 from paver.doctools import doc_clean, html
 from ramverk.paver  import serve, shell
@@ -55,3 +55,11 @@ def import_words():
                                     affixes=affixes,
                                     definition=defn,
                                     notes=notes)
+
+
+@task
+def deploy():
+    """Deploy to ep.io."""
+    with pushd('relvlast/compiled'):
+        sh('pyscss -o main.css main.scss')
+    sh('epio upload -a relvlast')
