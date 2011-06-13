@@ -113,21 +113,23 @@ article {
 
 
 dl {
-  section {
-    dt {
-      width: 5em;
-      display: table-cell;
-      text-align: right;
-      padding-right: 1em;
-    }
-    dd {
-      display: table-cell;
-      p {
-        margin: 0;
-      }
+  dt {
+    width: 5em;
+    display: table-cell;
+    text-align: right;
+    padding-right: 1em;
+  }
+  dd {
+    display: table-cell;
+    p {
+      margin: 0;
     }
   }
+  &.word-data dt {
+    font-weight: bold;
+  }
 }
+
 
 nav.pages {
   border-top: 1px solid $color-4;

@@ -1,0 +1,95 @@
+<html xmlns:py="http://genshi.edgewall.org/"
+  xmlns:xi="http://www.w3.org/2001/XInclude"
+  xmlns:form="http://ns.discorporate.us/flatland/genshi"
+  py:strip=""
+>
+  <xi:include href="../layout.html"/>
+
+  <body>
+    <h1>$word.id</h1>
+    <article py:if="'galfi' not in request.args">
+      <dl class="word-data">
+        <section>
+          <dt>vlatai</dt>
+          <dd>${word.type}</dd>
+        </section>
+        <section py:if="word.class_">
+          <dt>selma'o</dt>
+          <dd><code>$word.class_</code></dd>
+        </section>
+        <section py:if="word.affixes">
+          <dt>rafsi</dt>
+          <dd>${', '.join(word.affixes)}</dd>
+        </section>
+        <section>
+          <dt>smuni</dt>
+          <dd>${creole(word.definition)}</dd>
+        </section>
+        <section py:if="word.notes">
+          <dt>notci</dt>
+          <dd>${creole(word.notes)}</dd>
+        </section>
+      </dl>
+      <footer>
+        <p><a href="${path('dictionary:word', word=word.id, galfi='')}">galfi</a></p>
+      </footer>
+    </article>
+
+    <article py:if="'galfi' in request.args">
+      <form action="${path('dictionary:word', word=word.id)}"
+        method="POST"
+      >
+        <form:with
+         auto-domid="on"
+         auto-for="on"
+         auto-tabindex="on"
+         tabindex="1">
+
+          <fieldset>
+
+            <dl>
+
+              <section>
+                <dt><label form:bind="form.type">vlatai</label></dt>
+                <dd><input form:bind="form.type" type="text"/></dd>
+              </section>
+
+              <section py:if="word.class_">
+                <dt><label form:bind="form.class_">selma'o</label></dt>
+                <dd><input form:bind="form.class_" type="text"/></dd>
+              </section>
+
+              <section>
+                <dt><label form:bind="form.definition">smuni</label></dt>
+                <dd>
+                  <input form:bind="form.definition"
+                    type="text"
+                    class="creole"
+                  />
+                  <div id="preview-f_definition"/>
+                </dd>
+              </section>
+
+              <section py:if="word.notes">
+                <dt><label form:bind="form.notes">notci</label></dt>
+                <dd>
+                  <input form:bind="form.notes"
+                    type="text"
+                    class="creole"
+                  />
+                  <div id="preview-f_notes"/>
+                </dd>
+              </section>
+
+            </dl>
+          </fieldset>
+        </form:with>
+
+        <footer>
+          <button type="submit">rejgau</button>
+        </footer>
+
+      </form>
+    </article>
+  </body>
+</html>

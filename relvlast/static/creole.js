@@ -361,6 +361,7 @@ Parse.Simple.Creole = function(options) {
             g.h4.children = g.h5.children = g.h6.children =
             g.singleLine.children = g.paragraph.children =
             g.text.children = g.strong.children = g.em.children =
+            g.code.children = g.sub.children = g.sup.children =
         [ g.escapedSequence, g.strong, g.em, g.code, g.sup, g.sub, g.br, g.rawUri,
             g.namedUri, g.namedInterwikiLink, g.namedLink,
             g.unnamedUri, g.unnamedInterwikiLink, g.unnamedLink,

@@ -1,8 +1,7 @@
 from pkg_resources  import resource_string
 from persistent     import Persistent
 from BTrees.OOBTree import OOBTree
-from creoleparser   import text2html
-from flatland       import Form, String
+from flatland       import Form, String, List
 
 
 class Root(Persistent):
@@ -24,21 +23,25 @@ class Page(Persistent):
     def __init__(self, title, body):
         self.title, self.body = title, body
 
-    @property
-    def html(self):
-        return text2html.generate(self.body)
-
 
 class Word(Persistent):
 
     class schema(Form):
 
         id = String
+        type = String
+        class_ = String
+        affixes = List.of(String).using(optional=True)
         definition = String
+        notes = String
 
-    def __init__(self, id, definition):
-        self.id, self.definition = id, definition
+    id = None
+    type = None
+    class_ = None
+    affixes = ()
+    definition = None
+    notes = None
 
-    @property
-    def html(self):
-        return text2html.generate(self.definition)
+    def __init__(self, **attrs):
+        for name, value in attrs.iteritems():
+            setattr(self, name, value)

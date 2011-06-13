@@ -30,7 +30,7 @@ def serve():
     app.log_handler.push_application()
 
     def _log(type, message, *args, **kwargs):
-        getattr(app.log, type)(message % args % kwargs)
+        getattr(app.log, type)(message, *args, **kwargs)
     _internal._log = _log
 
     from werkzeug.serving import run_simple

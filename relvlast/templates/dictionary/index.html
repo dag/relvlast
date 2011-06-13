@@ -8,7 +8,7 @@
     <dl py:for="word in words">
       <section>
         <dt><a href="${path('dictionary:word', word=word.id)}">$word.id</a></dt>
-        <dd>$word.html</dd>
+        <dd>${creole(word.definition)}</dd>
       </section>
     </dl>
     <nav class="pages">

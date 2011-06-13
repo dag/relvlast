@@ -7,5 +7,5 @@ $(function(){
     creole.parse(preview.get()[0], this.value);
   }
 
-  $('textarea.creole').each(previewCreole).keyup(previewCreole);
+  $('.creole').each(previewCreole).keyup(previewCreole);
 });
