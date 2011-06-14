@@ -6,7 +6,8 @@
   ]
 
   stylesheets = [
-    'http://fonts.googleapis.com/css?family=' + '|'.join(webfonts),
+    'http://fonts.googleapis.com/css?family='
+        + '|'.join(webfonts).replace(' ', '+'),
     path('compiled', name='main.css'),
   ]
 
