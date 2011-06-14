@@ -15,7 +15,7 @@ bu'a ginai lo drata bangu cu bu'a .i mu'a tu'e
 * .i lo voksnaske be ly cu jai se **javni** gi'e **satci**
 * .i ly zmadu loi rarna bangu loka **sampu** .i frili fa lo'e
   nu cilre
-* .i ly te valsi lo **1300 gismu** noi ke'a frili te zbasu
+* .i ly te valsi lo **##1300## gismu** noi ke'a frili te zbasu
   lo **so'oki'oki'o lujvo**
 * .i ly jai se javni .i **pino** loi javni cu sezynatfe
 * .i ly jai troci lonu **zifre pensi** sidju
@@ -24,7 +24,7 @@ bu'a ginai lo drata bangu cu bu'a .i mu'a tu'e
 
 //ni'o// lo dei pagbu be la .ueb. cu catni stuzi loi datni ne ra'i la
 //.lojbangirz.// noi ke'a kagni fi na'ebo lonu rupnu se prali gi'e sidju
-lonu ly farvi kei co'a lo detri be li 1987
+lonu ly farvi kei co'a lo detri be li ##1987##
 
 //ni'o// mu'i lonu sidju lo lojbo cecmu kei lo dei pagbu cu jai troci lonu
 krati so'e lojbo noi na pagbu la .lojbangirz.

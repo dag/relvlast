@@ -1,4 +1,5 @@
 from pkg_resources  import resource_string
+from werkzeug.utils import cached_property
 from persistent     import Persistent
 from BTrees.OOBTree import OOBTree
 from relvlast       import schemata
@@ -6,11 +7,14 @@ from relvlast       import schemata
 
 class Root(Persistent):
 
-    def __init__(self):
-        self.start = Page("la lojban bangu fi lo si'o zifre",
-                          resource_string('relvlast', 'lojban.creole'))
+    @cached_property
+    def start(self):
+        return Page("la lojban bangu fi lo si'o zifre",
+                    resource_string('relvlast', 'lojban.creole'))
 
-        self.words = OOBTree()
+    @cached_property
+    def words(self):
+        return OOBTree()
 
 
 class Page(Persistent):
