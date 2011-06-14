@@ -1,7 +1,7 @@
 from pkg_resources  import resource_string
 from persistent     import Persistent
 from BTrees.OOBTree import OOBTree
-from flatland       import Form, String, List
+from relvlast       import schemata
 
 
 class Root(Persistent):
@@ -15,10 +15,7 @@ class Root(Persistent):
 
 class Page(Persistent):
 
-    class schema(Form):
-
-        title = String
-        body  = String
+    schema = schemata.Page
 
     def __init__(self, title, body):
         self.title, self.body = title, body
@@ -26,14 +23,7 @@ class Page(Persistent):
 
 class Word(Persistent):
 
-    class schema(Form):
-
-        id = String
-        type = String
-        class_ = String
-        affixes = List.of(String).using(optional=True)
-        definition = String
-        notes = String
+    schema = schemata.Word
 
     id = None
     type = None
