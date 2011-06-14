@@ -1,8 +1,6 @@
 <html xmlns:py="http://genshi.edgewall.org/"
-  xmlns:xi="http://www.w3.org/2001/XInclude"
-  xmlns:form="http://ns.discorporate.us/flatland/genshi"
-  py:strip=""
->
+  xmlns:xi="http://www.w3.org/2001/XInclude">
+
   <xi:include href="../layout.html"/>
 
   <body>
@@ -37,58 +35,22 @@
 
     <article py:if="'galfi' in request.args">
       <form action="${path('dictionary:word', word=word.id)}"
-        method="POST"
-      >
-        <form:with
-         auto-domid="on"
-         auto-for="on"
-         auto-tabindex="on"
-         tabindex="1">
-
-          <fieldset>
-
-            <dl>
-
-              <section>
-                <dt><label form:bind="form.type">vlatai</label></dt>
-                <dd><input form:bind="form.type" type="text"/></dd>
-              </section>
-
-              <section py:if="word.class_">
-                <dt><label form:bind="form.class_">selma'o</label></dt>
-                <dd><input form:bind="form.class_" type="text"/></dd>
-              </section>
-
-              <section>
-                <dt><label form:bind="form.definition">smuni</label></dt>
-                <dd>
-                  <input form:bind="form.definition"
-                    type="text"
-                    class="creole"
-                  />
-                  <div id="preview-f_definition"/>
-                </dd>
-              </section>
-
-              <section py:if="word.notes">
-                <dt><label form:bind="form.notes">notci</label></dt>
-                <dd>
-                  <input form:bind="form.notes"
-                    type="text"
-                    class="creole"
-                  />
-                  <div id="preview-f_notes"/>
-                </dd>
-              </section>
-
-            </dl>
-          </fieldset>
-        </form:with>
-
+        method="POST">
+        <fieldset>
+          <dl>
+            ${field(form.type, 'vlatai')}
+            <py:if test="word.class_">
+              ${field(form.class_, "selma'o")}
+            </py:if>
+            ${field(form.definition, 'smuni')}
+            <py:if test="word.notes">
+              ${field(form.notes, 'notci')}
+            </py:if>
+          </dl>
+        </fieldset>
         <footer>
           <button type="submit">rejgau</button>
         </footer>
-
       </form>
     </article>
   </body>

@@ -1,17 +1,22 @@
-from flatland       import Form, String, List
+from flatland import Form, String, List
+
+
+TextInput = String.with_properties(template='forms/text-input.html')
+CreoleInput = String.with_properties(template='forms/creole-input.html')
+CreoleArea = String.with_properties(template='forms/creole-area.html')
 
 
 class Page(Form):
 
-    title = String
-    body  = String
+    title = TextInput
+    body  = CreoleArea
 
 
 class Word(Form):
 
-    id = String
-    type = String
-    class_ = String
+    id = TextInput
+    type = TextInput
+    class_ = TextInput
     affixes = List.of(String).using(optional=True)
-    definition = String
-    notes = String
+    definition = CreoleInput
+    notes = CreoleInput

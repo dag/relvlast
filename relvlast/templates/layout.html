@@ -18,21 +18,20 @@
 
 ?>
 <html xmlns:py="http://genshi.edgewall.org/"
-  py:strip=""
->
+  xmlns:xi="http://www.w3.org/2001/XInclude"
+  py:strip="">
+
+  <xi:include href="functions.html"/>
+
   <head>
     <title>la lojban</title>
-
     <script py:for="src in javascripts"
-      src="$src"
-    />
-
+      src="$src"/>
     <link py:for="href in stylesheets"
       href="$href"
       rel="stylesheet"
       type="text/css"
-      media="all"
-    />
+      media="all"/>
   </head>
 
   <py:match path="body" once="true">
@@ -43,7 +42,6 @@
           <li><a href="${path('dictionary:index')}">vlaste</a></li>
         </ul>
       </nav>
-
       ${select('*|text()')}
     </body>
   </py:match>

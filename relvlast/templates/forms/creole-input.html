@@ -1,0 +1,11 @@
+<section xmlns:py="http://genshi.edgewall.org/"
+  xmlns:form="http://ns.discorporate.us/flatland/genshi">
+  <dt><label form:bind="field">$label</label></dt>
+  <dd>
+    <input form:bind="field"
+      py:attrs="attributes"
+      type="text"
+      class="creole"/>
+    <div id="preview-f_$field.name"/>
+  </dd>
+</section>

@@ -1,11 +1,10 @@
 <html xmlns:py="http://genshi.edgewall.org/"
-  xmlns:xi="http://www.w3.org/2001/XInclude"
-  xmlns:form="http://ns.discorporate.us/flatland/genshi"
->
+  xmlns:xi="http://www.w3.org/2001/XInclude">
+
   <xi:include href="layout.html"/>
+
   <body>
     <h1>$page.title</h1>
-
     <article py:if="'galfi' not in request.args">
       ${creole(page.body)}
       <footer>
@@ -15,37 +14,13 @@
 
     <article py:if="'galfi' in request.args">
       <form action="${path('index')}"
-        method="POST"
-      >
-
-        <form:with
-         auto-domid="on"
-         auto-for="on"
-         auto-tabindex="on"
-         tabindex="1">
-
-          <fieldset>
-
-            <dl>
-              <section>
-                <dt><label form:bind="form.title">cmene</label></dt>
-                <dd><input form:bind="form.title" type="text"/></dd>
-              </section>
-
-              <section>
-                <dt><label form:bind="form.body">papri</label></dt>
-                <dd>
-                  <textarea form:bind="form.body"
-                    spellcheck="false"
-                    cols="60"
-                    rows="10"
-                    class="creole"
-                  />
-                </dd>
-              </section>
-            </dl>
-          </fieldset>
-        </form:with>
+        method="POST">
+        <fieldset>
+          <dl>
+            ${field(form.title, 'cmene')}
+            ${field(form.body, 'papri', spellcheck='false', cols='60', rows='10')}
+          </dl>
+        </fieldset>
         <div id="preview-f_body"/>
         <footer>
           <button type="submit">rejgau</button>
