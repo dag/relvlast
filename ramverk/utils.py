@@ -48,28 +48,30 @@ def has(**properties):
     return decorator
 
 
-class ForcePropertiesCalled(object):
-    """Iterate over all attributes on instance creation, forcing properties
-    to be called and cached properties to be initiated."""
+class EagerCachedProperties(object):
+    """Visit all cached properties during instance allocation, forcing them
+    to fix their value."""
 
     def __new__(cls, *args, **kwargs):
-        self = super(ForcePropertiesCalled, cls).__new__(cls, *args, **kwargs)
-        for name in dir(self):
-            getattr(self, name)
+        self = super(EagerCachedProperties, cls).__new__(cls, *args, **kwargs)
+        for name, value in vars(cls).iteritems():
+            if isinstance(value, cached_property):
+                getattr(self, name)
         return self
 
 
-class AttributeRepr(object):
+class ReprAttributes(object):
     """Add an informative :func:`repr` to an object, listing attributes and
     their values."""
 
     def __repr__(self):
         name = self.__class__.__name__
-        attrs = ((name, getattr(self, name))
-                for name in dir(self) if not name.startswith('_'))
-        attrs = ', '.join('{0}={1!r}'.format(name, value)
-                for (name, value) in attrs
-                if not isroutine(value) and not isclass(value))
+        ns = dict(vars(self.__class__), **vars(self))
+        attrs = ', '.join('{0}={1!r}'.format(name, getattr(self, name))
+                          for (name, value) in ns.iteritems()
+                          if not name.startswith('_')
+                          and not isroutine(value)
+                          and not isclass(value))
         if not attrs:
             return '<{0}>'.format(name)
         return '<{0} {1}>'.format(name, attrs)

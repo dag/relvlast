@@ -8,7 +8,7 @@ from ramverk.rendering   import JSONMixin
 from ramverk.routing     import endpoint, RoutingMixin
 from ramverk.transaction import TransactionMixin
 from ramverk.utils       import Bunch, request_property
-from ramverk.utils       import has, ForcePropertiesCalled, AttributeRepr
+from ramverk.utils       import EagerCachedProperties, ReprAttributes, has
 from ramverk.wrappers    import ResponseUsingMixin
 from tests               import mocking
 
@@ -189,14 +189,14 @@ def has_properties():
 
 
 @unit.test
-def force_properties_called():
+def eager_cached_properties():
 
     @has(listing=list)
     class LazyModel(object):
         pass
 
     @has(listing=list)
-    class EagerModel(ForcePropertiesCalled):
+    class EagerModel(EagerCachedProperties):
         pass
 
     eager = EagerModel()
@@ -209,9 +209,9 @@ def force_properties_called():
 @unit.test
 def attribute_repr():
 
-    assert repr(AttributeRepr()) == '<AttributeRepr>'
+    assert repr(ReprAttributes()) == '<ReprAttributes>'
 
-    class Object(AttributeRepr):
+    class Object(ReprAttributes):
 
         initial = 42
 
