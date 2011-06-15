@@ -635,3 +635,5 @@ Common Utilities
     :class:`ForcePropertiesCalled`.
 
   .. autoclass:: ForcePropertiesCalled
+
+  .. autoclass:: AttributeRepr

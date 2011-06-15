@@ -8,7 +8,7 @@ from ramverk.rendering   import JSONMixin
 from ramverk.routing     import endpoint, RoutingMixin
 from ramverk.transaction import TransactionMixin
 from ramverk.utils       import Bunch, request_property
-from ramverk.utils       import has, ForcePropertiesCalled
+from ramverk.utils       import has, ForcePropertiesCalled, AttributeRepr
 from ramverk.wrappers    import ResponseUsingMixin
 from tests               import mocking
 
@@ -204,3 +204,20 @@ def force_properties_called():
 
     assert 'listing' in vars(eager)
     assert 'listing' not in vars(lazy)
+
+
+@unit.test
+def attribute_repr():
+
+    class Object(AttributeRepr):
+
+        initial = 42
+
+        def not_methods(self):
+            pass
+
+    instance = Object()
+    instance.extra = 144
+
+    assert repr(instance) in ('<Object initial=42, extra=144>',
+                              '<Object extra=144, initial=42>')

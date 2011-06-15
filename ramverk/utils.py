@@ -1,3 +1,4 @@
+from inspect import ismethod
 from functools import update_wrapper
 from werkzeug.utils import cached_property
 
@@ -56,3 +57,15 @@ class ForcePropertiesCalled(object):
         for name in dir(self):
             getattr(self, name)
         return self
+
+
+class AttributeRepr(object):
+    """Add an informative :func:`repr` to an object, listing attributes and
+    their values."""
+
+    def __repr__(self):
+        attrs = ', '.join('{0}={1!r}'.format(name, getattr(self, name))
+                for name in dir(self)
+                if not name.startswith('_')
+                and not ismethod(getattr(self, name)))
+        return '<{0} {1}>'.format(self.__class__.__name__, attrs)
