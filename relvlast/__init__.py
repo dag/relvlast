@@ -1,3 +1,8 @@
+from __future__          import absolute_import
+
+from relvlast.babel      import patch
+patch()
+
 from pkg_resources       import resource_filename
 from flatland.out.genshi import setup as setup_flatland
 from genshi.filters      import Translator

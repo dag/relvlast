@@ -57,7 +57,7 @@ def epio(args):
 def localedata():
     """Install custom locale data for Babel."""
     import yaml, babel, copy, cPickle as pickle
-    for source in path('localedata').files('*.yml'):
+    for source in path('relvlast/localedata').files('*.yml'):
         data = copy.deepcopy(babel.localedata.load('en'))
         babel.localedata.merge(data, yaml.load(source.bytes()))
         with pushd(babel.localedata._dirname):
