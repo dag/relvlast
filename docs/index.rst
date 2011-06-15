@@ -619,3 +619,16 @@ Common Utilities
     :show-inheritance:
 
   .. autoclass:: request_property
+
+  .. autofunction:: has
+
+    This is useful for setting attribute defaults for mutable types or
+    deferred values. Example::
+
+      @has(comments=list, timestamp=datetime.utcnow)
+      class Post(object):
+          author = None
+
+    Note that the values aren't initialized until asked for - in the
+    example above the timestamp isn't necessarily that of the post
+    creation.

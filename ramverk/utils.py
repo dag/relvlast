@@ -1,4 +1,5 @@
 from functools import update_wrapper
+from werkzeug.utils import cached_property
 
 
 class Bunch(dict):
@@ -31,3 +32,16 @@ class request_property(object):
         if not hasattr(instance.local, name):
             setattr(instance.local, name, self.method(instance))
         return getattr(instance.local, name)
+
+
+def has(**properties):
+    """Class decorator sugar for adding simple cached properties. Keyword
+    arguments name the properties and the values are factory callables for
+    constructing new values."""
+    def decorator(class_):
+        for name, factory in properties.iteritems():
+            def new(self, factory=factory):
+                return factory()
+            setattr(class_, name, cached_property(new, name))
+        return class_
+    return decorator

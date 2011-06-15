@@ -7,7 +7,7 @@ from ramverk.application import BaseApplication
 from ramverk.rendering   import JSONMixin
 from ramverk.routing     import endpoint, RoutingMixin
 from ramverk.transaction import TransactionMixin
-from ramverk.utils       import Bunch, request_property
+from ramverk.utils       import Bunch, request_property, has
 from ramverk.wrappers    import ResponseUsingMixin
 from tests               import mocking
 
@@ -168,3 +168,20 @@ def endpoint_scanning():
     app.scan()
     assert app.endpoints == dict(first_endpoint=first_endpoint,
                                  second_endpoint=second_endpoint)
+
+
+@unit.test
+def has_properties():
+
+    @has(listing=list, mapping=dict)
+    class DataModel(object):
+        pass
+
+    one, two = DataModel(), DataModel()
+    assert isinstance(one.listing, list)
+    assert isinstance(one.mapping, dict)
+    assert not one.listing and not one.mapping
+    assert one.listing is one.listing
+    assert one.mapping is one.mapping
+    assert one.listing is not two.listing
+    assert one.mapping is not two.mapping
