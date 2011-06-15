@@ -1,5 +1,6 @@
 -e git://github.com/mitsuhiko/werkzeug#egg=Werkzeug-dev
 Flatland==dev
+Babel
 Genshi
 Logbook
 ZODB3

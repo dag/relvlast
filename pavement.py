@@ -1,6 +1,6 @@
 from inspect        import isclass
 from werkzeug.utils import import_string
-from paver.easy     import options, Bunch, task, sh, pushd
+from paver.easy     import options, Bunch, task, sh, pushd, path, info
 from paver.tasks    import help
 from paver.doctools import doc_clean, html
 from ramverk.paver  import serve, shell
@@ -63,3 +63,17 @@ def deploy():
     with pushd('relvlast/compiled'):
         sh('pyscss -o main.css main.scss')
     sh('epio upload')
+
+
+@task
+def localedata():
+    """Install custom locale data for Babel."""
+    import yaml, babel, copy, cPickle as pickle
+    for source in path('localedata').files('*.yml'):
+        data = copy.deepcopy(babel.localedata.load('en'))
+        babel.localedata.merge(data, yaml.load(source.bytes()))
+        with pushd(babel.localedata._dirname):
+            target = source.stripext().basename() + '.dat'
+            with open(target, 'wb') as stream:
+                info('writing ' + target)
+                pickle.dump(data, stream, -1)
