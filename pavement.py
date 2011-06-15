@@ -1,6 +1,7 @@
 from inspect        import isclass
 from werkzeug.utils import import_string
-from paver.easy     import options, Bunch, task, sh, pushd, path, info
+from paver.easy     import options, Bunch, sh, pushd, path, info
+from paver.easy     import task, consume_args
 from paver.tasks    import help
 from paver.doctools import doc_clean, html
 from ramverk.paver  import serve, shell
@@ -43,6 +44,13 @@ def deploy():
     with pushd('relvlast/compiled'):
         sh('pyscss -o main.css main.scss')
     sh('epio upload')
+
+
+@task
+@consume_args
+def epio(args):
+    commands = ' '.join(args)
+    sh('epio run_command paver ramverk.app=deployments.epio:app ' + commands)
 
 
 @task
