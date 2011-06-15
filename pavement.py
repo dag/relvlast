@@ -57,3 +57,10 @@ def localedata():
             with open(target, 'wb') as stream:
                 info('writing ' + target)
                 pickle.dump(data, stream, -1)
+
+
+@task
+def translations():
+    sh('pybabel extract -F babel.ini -o messages.pot relvlast')
+    sh('pybabel update -i messages.pot -d relvlast/translations')
+    sh('pybabel compile -d relvlast/translations')

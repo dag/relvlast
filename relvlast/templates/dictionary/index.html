@@ -6,10 +6,10 @@
   <body>
     <h1>vlaste fu la lojban</h1>
     <dl py:for="word in words">
-      <section>
+      <div>
         <dt><a href="${path('dictionary:word', word=word.id)}">$word.id</a></dt>
         <dd>${creole(word.definition)}</dd>
-      </section>
+      </div>
     </dl>
     <nav class="pages">
       <ol py:for="page in xrange(1, total + 1)">

@@ -38,13 +38,13 @@
         method="POST">
         <fieldset>
           <dl>
-            ${field(form.type, 'vlatai')}
+            ${field(form.type, _('vlatai'))}
             <py:if test="word.class_">
-              ${field(form.class_, "selma'o")}
+              ${field(form.class_, _("selma'o"))}
             </py:if>
-            ${field(form.definition, 'smuni')}
+            ${field(form.definition, _('smuni'))}
             <py:if test="word.notes">
-              ${field(form.notes, 'notci')}
+              ${field(form.notes, _('notci'))}
             </py:if>
           </dl>
         </fieldset>

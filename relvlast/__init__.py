@@ -1,7 +1,11 @@
+from pkg_resources       import resource_filename
 from flatland.out.genshi import setup as setup_flatland
+from genshi.filters      import Translator
 from creoleparser        import Parser, creole11_base
+from werkzeug.local      import LocalProxy
 from werkzeug.routing    import Rule
 from babel               import Locale
+from babel.support       import Translations
 from ramverk.fullstack   import Application
 from ramverk.utils       import request_property
 from relvlast.objects    import Root
@@ -17,11 +21,17 @@ class Relvlast(Application):
     def update_template_context(self, context):
         context = super(Relvlast, self).update_template_context(context)
         context.setdefault('creole', self.creole_parser.generate)
+        context.setdefault('_', self.translations.gettext)
         return context
 
     @request_property
     def locale(self):
         return Locale(self.route_values.get('locale', 'jbo'))
+
+    @request_property
+    def translations(self):
+        dirname = resource_filename(self.module, 'translations')
+        return Translations.load(dirname, [self.locale])
 
     def path(self, endpoint, **values):
         values.setdefault('locale', self.locale.language)
@@ -41,3 +51,4 @@ class Relvlast(Application):
 
     def template_loaded(self, template):
         setup_flatland(template)
+        Translator(LocalProxy(lambda: self.translations)).setup(template)

@@ -5,3 +5,5 @@ build
 .coverage
 htmlcov
 relvlast/compiled/*.css
+messages.pot
+*.mo
