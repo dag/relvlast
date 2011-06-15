@@ -631,4 +631,7 @@ Common Utilities
 
     Note that the values aren't initialized until asked for - in the
     example above the timestamp isn't necessarily that of the post
-    creation.
+    creation. A solution for that case is to inherit from
+    :class:`ForcePropertiesCalled`.
+
+  .. autoclass:: ForcePropertiesCalled

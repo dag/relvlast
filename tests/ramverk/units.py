@@ -7,7 +7,8 @@ from ramverk.application import BaseApplication
 from ramverk.rendering   import JSONMixin
 from ramverk.routing     import endpoint, RoutingMixin
 from ramverk.transaction import TransactionMixin
-from ramverk.utils       import Bunch, request_property, has
+from ramverk.utils       import Bunch, request_property
+from ramverk.utils       import has, ForcePropertiesCalled
 from ramverk.wrappers    import ResponseUsingMixin
 from tests               import mocking
 
@@ -185,3 +186,21 @@ def has_properties():
     assert one.mapping is one.mapping
     assert one.listing is not two.listing
     assert one.mapping is not two.mapping
+
+
+@unit.test
+def force_properties_called():
+
+    @has(listing=list)
+    class LazyModel(object):
+        pass
+
+    @has(listing=list)
+    class EagerModel(ForcePropertiesCalled):
+        pass
+
+    eager = EagerModel()
+    lazy = LazyModel()
+
+    assert 'listing' in vars(eager)
+    assert 'listing' not in vars(lazy)

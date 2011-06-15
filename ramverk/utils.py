@@ -45,3 +45,14 @@ def has(**properties):
             setattr(class_, name, cached_property(new, name))
         return class_
     return decorator
+
+
+class ForcePropertiesCalled(object):
+    """Iterate over all attributes on instance creation, forcing properties
+    to be called and cached properties to be initiated."""
+
+    def __new__(cls, *args, **kwargs):
+        self = super(ForcePropertiesCalled, cls).__new__(cls, *args, **kwargs)
+        for name in dir(self):
+            getattr(self, name)
+        return self
