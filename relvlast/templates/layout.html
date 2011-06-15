@@ -1,6 +1,6 @@
 <?python
 
-  locales = ['en', 'jbo']
+  locales = ['en', 'jbo', 'es', 'eo']
 
   webfonts = [
     'EB Garamond',
@@ -51,7 +51,7 @@
       <footer>
         <ul>
           <li py:for="code in locales">
-            <a href="${cross_locale_path(code)}">${locale.languages[code]}</a>
+            <a href="${cross_locale_path(code)}">${locale_name(code)}</a>
           </li>
         </ul>
       </footer>

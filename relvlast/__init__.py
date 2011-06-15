@@ -27,11 +27,15 @@ class Relvlast(Application):
         return self.path(self.local.endpoint,
                          **dict(self.route_values, locale=locale))
 
+    def locale_name(self, locale):
+        return self.locale.languages.get(locale, Locale(locale).display_name)
+
     def update_template_context(self, context):
         context = super(Relvlast, self).update_template_context(context)
         context.setdefault('creole', self.creole_parser.generate)
         context.setdefault('locale', self.locale)
         context.setdefault('cross_locale_path', self.cross_locale_path)
+        context.setdefault('locale_name', self.locale_name)
         context.setdefault('_', self.translations.gettext)
         return context
 
