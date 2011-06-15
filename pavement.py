@@ -21,41 +21,20 @@ def cover():
 @task
 def import_words():
     """Import data exported to XML from jbovlaste."""
-    import re
-    from lxml import objectify
-    from BTrees.OOBTree import OOBTree
-    from relvlast import Relvlast
-    from relvlast.objects import Word
+    from relvlast.importing import words_from_xml
+    from relvlast.objects   import Root
 
     app = import_string(options.ramverk.app)
     if isclass(app):
         app = app()
 
-    def creolify(text):
-        return re.sub(r'\$(.+?)_(.+?)\$', r'##\1,,\2,,##', str(text))
-
-    def linkify(text):
-        return re.sub(r'\{(.+?)\}', r'[[\1]]', str(text))
-
-    tree = objectify.parse('exports/jbo.xml')
-    root = tree.getroot()
-
-    with app:
-        app.db.words = OOBTree()
-        for valsi in root.direction.valsi:
-            id = valsi.attrib['word']
-            type = valsi.attrib['type']
-            class_ = str(getattr(valsi, 'selmaho', ''))
-            affixes = tuple(str(affix)
-                            for affix in getattr(valsi, 'rafsi', []))
-            defn = creolify(valsi.definition)
-            notes = linkify(creolify(getattr(valsi, 'notes', '')))
-            app.db.words[id] = Word(id=id,
-                                    type=type,
-                                    class_=class_,
-                                    affixes=affixes,
-                                    definition=defn,
-                                    notes=notes)
+    for source in path('exports').files('*.xml'):
+        locale = source.stripext().basename()
+        info('importing ' + locale)
+        with app:
+            if locale not in app.root_object:
+                app.root_object[locale] = Root()
+            app.root_object[locale].words = words_from_xml(source)
 
 
 @task

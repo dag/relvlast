@@ -1,6 +1,7 @@
 from flatland.out.genshi import setup as setup_flatland
 from creoleparser        import Parser, creole11_base
-from werkzeug.utils      import cached_property
+from werkzeug.routing    import Rule
+from babel               import Locale
 from ramverk.fullstack   import Application
 from ramverk.utils       import request_property
 from relvlast.objects    import Root
@@ -8,7 +9,7 @@ from relvlast.objects    import Root
 
 class Relvlast(Application):
 
-    @cached_property
+    @request_property
     def creole_parser(self):
         return Parser(creole11_base(
             wiki_links_base_url=self.path('dictionary:index')))
@@ -19,14 +20,24 @@ class Relvlast(Application):
         return context
 
     @request_property
+    def locale(self):
+        return Locale(self.route_values.get('locale', 'jbo'))
+
+    def path(self, endpoint, **values):
+        values.setdefault('locale', self.locale.language)
+        return super(Relvlast, self).path(endpoint, **values)
+
+    @request_property
     def db(self):
-        if 'relvlast' not in self.root_object:
-            self.root_object['relvlast'] = Root()
-        return self.root_object['relvlast']
+        locale = self.locale.language
+        if locale not in self.root_object:
+            self.root_object[locale] = Root()
+        return self.root_object[locale]
 
     def setup(self):
-        self.scan('relvlast.frontend')
-        self.scan('relvlast.dictionary', '/vlaste', 'dictionary:')
+        self.route(Rule('/', redirect_to='jbo'))
+        self.scan('relvlast.frontend', '/<locale>')
+        self.scan('relvlast.dictionary', '/<locale>/vlaste', 'dictionary:')
 
     def template_loaded(self, template):
         setup_flatland(template)
