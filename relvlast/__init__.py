@@ -23,9 +23,15 @@ class Relvlast(Application):
         return Parser(creole11_base(
             wiki_links_base_url=self.path('dictionary:index')))
 
+    def cross_locale_path(self, locale):
+        return self.path(self.local.endpoint,
+                         **dict(self.route_values, locale=locale))
+
     def update_template_context(self, context):
         context = super(Relvlast, self).update_template_context(context)
         context.setdefault('creole', self.creole_parser.generate)
+        context.setdefault('locale', self.locale)
+        context.setdefault('cross_locale_path', self.cross_locale_path)
         context.setdefault('_', self.translations.gettext)
         return context
 

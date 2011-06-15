@@ -1,5 +1,7 @@
 <?python
 
+  locales = ['en', 'jbo']
+
   webfonts = [
     'EB Garamond',
     'Buda:light',
@@ -45,6 +47,14 @@
         </ul>
       </nav>
       ${select('*|text()')}
+
+      <footer>
+        <ul>
+          <li py:for="code in locales">
+            <a href="${cross_locale_path(code)}">${locale.languages[code]}</a>
+          </li>
+        </ul>
+      </footer>
     </body>
   </py:match>
 </html>

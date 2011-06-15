@@ -1,6 +1,7 @@
 from __future__    import absolute_import
 from pkg_resources import resource_exists, resource_stream
 from babel         import localedata
+import yaml
 
 
 _exists = localedata.exists
