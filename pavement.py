@@ -20,6 +20,7 @@ def cover():
 
 @task
 def import_words():
+    """Import data exported to XML from jbovlaste."""
     import re
     from lxml import objectify
     from BTrees.OOBTree import OOBTree
@@ -36,7 +37,7 @@ def import_words():
     def linkify(text):
         return re.sub(r'\{(.+?)\}', r'[[\1]]', str(text))
 
-    tree = objectify.parse('jvs.xml')
+    tree = objectify.parse('exports/jbo.xml')
     root = tree.getroot()
 
     with app:
