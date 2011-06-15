@@ -1,4 +1,4 @@
-from inspect import ismethod
+from inspect import isclass, isroutine
 from functools import update_wrapper
 from werkzeug.utils import cached_property
 
@@ -64,8 +64,12 @@ class AttributeRepr(object):
     their values."""
 
     def __repr__(self):
-        attrs = ', '.join('{0}={1!r}'.format(name, getattr(self, name))
-                for name in dir(self)
-                if not name.startswith('_')
-                and not ismethod(getattr(self, name)))
-        return '<{0} {1}>'.format(self.__class__.__name__, attrs)
+        name = self.__class__.__name__
+        attrs = ((name, getattr(self, name))
+                for name in dir(self) if not name.startswith('_'))
+        attrs = ', '.join('{0}={1!r}'.format(name, value)
+                for (name, value) in attrs
+                if not isroutine(value) and not isclass(value))
+        if not attrs:
+            return '<{0}>'.format(name)
+        return '<{0} {1}>'.format(name, attrs)

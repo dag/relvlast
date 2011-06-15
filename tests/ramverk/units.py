@@ -209,9 +209,14 @@ def force_properties_called():
 @unit.test
 def attribute_repr():
 
+    assert repr(AttributeRepr()) == '<AttributeRepr>'
+
     class Object(AttributeRepr):
 
         initial = 42
+
+        class not_classes(object):
+            pass
 
         def not_methods(self):
             pass
