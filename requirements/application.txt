@@ -3,6 +3,7 @@ Flatland==dev
 Babel
 Genshi
 Logbook
+PyYAML
 ZODB3
 creoleparser
 pyScss
