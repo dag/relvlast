@@ -32,14 +32,13 @@ class TemplatingMixinBase(RenderingMixinBase):
     """Base class for templating mixins."""
 
     def update_template_context(self, context):
-        """Add templating "globals" to `context`. Override to add your own
-        globals.  Includes `request`, `url` and `path` from the
+        """Add templating "globals" to `context` in-place. Override to add
+        your own globals.  Includes `request`, `url` and `path` from the
         application, and the application as `app`, by default."""
         context.setdefault('app', self)
         context.setdefault('request', self.request)
         context.setdefault('url', self.url)
         context.setdefault('path', self.path)
-        return context
 
 
 class JSONMixin(RenderingMixinBase):

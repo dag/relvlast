@@ -12,8 +12,8 @@ class Root(Persistent):
 class TestApp(Application):
 
     def update_template_context(self, context):
+        super(TestApp, self).update_template_context(context)
         context.setdefault('injected', 42)
-        return super(TestApp, self).update_template_context(context)
 
     @request_property
     def db(self):
