@@ -3,8 +3,8 @@ from werkzeug.utils   import cached_property
 from ramverk.routing  import URLMapMixin
 
 
-def compiled(route_values, compilers):
-    filename = route_values['name']
+def compiled(segments, compilers):
+    filename = segments.name
     compiler_name = filename[filename.index('.'):]
     compiler = compilers[compiler_name]
     return compiler(filename)

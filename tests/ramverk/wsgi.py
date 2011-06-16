@@ -65,7 +65,7 @@ def module(client):
 
 
 @wsgi.test
-def route_values(client):
+def segments(client):
     response = client.get('/page/fubar/')
     assert response.data == 'fubar'
 

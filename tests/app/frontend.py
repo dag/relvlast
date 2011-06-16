@@ -23,5 +23,5 @@ def index(log, request, render, db, redirect):
 
 
 @endpoint
-def page(response, route_values):
-    return response(route_values['page'])
+def page(response, segments):
+    return response(segments.page)

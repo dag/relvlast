@@ -25,7 +25,7 @@ class Relvlast(Application):
 
     @request_property
     def locale(self):
-        return Locale(self.route_values.get('locale', 'jbo'))
+        return Locale(self.segments.get('locale', 'jbo'))
 
     @request_property
     def db(self):
@@ -63,7 +63,7 @@ class Relvlast(Application):
 
     def cross_locale_path(self, locale):
         return self.path(self.local.endpoint,
-                         **dict(self.route_values, locale=locale))
+                         **dict(self.segments, locale=locale))
 
     def locale_name(self, locale):
         return self.locale.languages.get(locale, Locale(locale).display_name)

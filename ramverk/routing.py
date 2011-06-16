@@ -5,7 +5,7 @@ from werkzeug.exceptions import NotFound
 from werkzeug.routing    import Map, Submount, Subdomain, EndpointPrefix
 from werkzeug.utils      import cached_property, redirect, import_string
 
-from ramverk.utils       import request_property
+from ramverk.utils       import Bunch, request_property
 
 
 def router(generator):
@@ -107,9 +107,10 @@ class URLMapMixin(object):
         return {}
 
     @property
-    def route_values(self):
-        """The values that matched the route in the :attr:`url_map`."""
-        return self.local.route_values
+    def segments(self):
+        """The values that matched the route in the :attr:`url_map` as a
+        :class:`~ramverk.utils.Bunch`."""
+        return Bunch(self.local.endpoint_args)
 
     def call_view(self, view, **kwargs):
         """Call the `view` callable with `kwargs` using view semantics: the
@@ -125,11 +126,11 @@ class URLMapMixin(object):
         """Match the environment to an endpoint and then :meth:`call_view`
         the corresponding view."""
         try:
-            endpoint, values = self.url_adapter.match()
+            endpoint, args = self.url_adapter.match()
         except NotFound:
             return super(URLMapMixin, self).respond()
         self.local.endpoint = endpoint
-        self.local.route_values = values
+        self.local.endpoint_args = args
         view = self.endpoints[endpoint]
         return self.call_view(view)
 

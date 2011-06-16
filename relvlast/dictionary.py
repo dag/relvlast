@@ -24,8 +24,9 @@ def index(request, render, translations):
 
 
 @endpoint
-def word(render, db, translations, route_values, request, redirect):
-    id = route_values['word']
+def word(render, db, translations, segments, request, redirect):
+    id = segments.word
+
     try:
         translation = translations.words.latest(id)
         word = db.properties.words.latest(id)
