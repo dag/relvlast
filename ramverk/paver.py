@@ -19,19 +19,17 @@ options.serve   = Bunch(hostname='localhost',
           ('no-evalex', 'E', 'disable exception evaluation')])
 def serve():
     """Run a development server."""
+    from logging        import getLogger, DEBUG
     from logbook.compat import redirect_logging
-    from werkzeug       import _internal
 
     redirect_logging()
+    getLogger().setLevel(DEBUG)
+
     appfactory = import_string(options.ramverk.app)
 
     opts = options.serve
     app = appfactory(debug=opts.debug)
     app.log_handler.push_application()
-
-    def _log(type, message, *args, **kwargs):
-        getattr(app.log, type)(message, *args, **kwargs)
-    _internal._log = _log
 
     from werkzeug.serving import run_simple
     run_simple(opts.hostname, int(opts.port), app,
