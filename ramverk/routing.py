@@ -62,6 +62,12 @@ class RoutingScannerMixin(object):
 class RoutingHelpersMixin(object):
     """Add some convenient helpers for applications with URL dispatch."""
 
+    @property
+    def segments(self):
+        """The values that matched the route in the :attr:`url_map` as a
+        :class:`~ramverk.utils.Bunch`."""
+        return Bunch(self.local.endpoint_args)
+
     @cached_property
     def app(self): #pragma: no cover
         """Reference to itself, to allow views to access the
@@ -105,12 +111,6 @@ class URLMapMixin(object):
     def endpoints(self):
         """Mapping of endpoints to views."""
         return {}
-
-    @property
-    def segments(self):
-        """The values that matched the route in the :attr:`url_map` as a
-        :class:`~ramverk.utils.Bunch`."""
-        return Bunch(self.local.endpoint_args)
 
     def call_view(self, view, **kwargs):
         """Call the `view` callable with `kwargs` using view semantics: the
