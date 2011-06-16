@@ -75,3 +75,29 @@ class ReprAttributes(object):
         if not attrs:
             return '<{0}>'.format(name)
         return '<{0} {1}>'.format(name, attrs)
+
+
+class InitFromArgs(object):
+    """Add a convenience :meth:`__init__` based on :attr:`__args__` that
+    accepts both positional and keyword arguments, setting unspecified args
+    to none."""
+
+    __args__ = ()
+
+    def __init__(self, *args, **kwargs):
+        for name in self.__args__:
+            setattr(self, name, None)
+        vars(self).update(zip(self.__args__, args))
+        vars(self).update(kwargs)
+        self.__create__()
+
+    def __create__(self):
+        """Called after :meth:`__init__` for cleaner overriding."""
+
+
+def args(*names):
+    """Class decorator sugar for setting :attr:`__args__`."""
+    def decorator(class_):
+        class_.__args__ = names
+        return class_
+    return decorator

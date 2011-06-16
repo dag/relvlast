@@ -9,6 +9,7 @@ from ramverk.routing     import endpoint, RoutingMixin
 from ramverk.transaction import TransactionMixin
 from ramverk.utils       import Bunch, request_property
 from ramverk.utils       import EagerCachedProperties, ReprAttributes, has
+from ramverk.utils       import InitFromArgs, args
 from ramverk.wrappers    import ResponseUsingMixin
 from tests               import mocking
 
@@ -226,3 +227,27 @@ def attribute_repr():
 
     assert repr(instance) in ('<Object initial=42, extra=144>',
                               '<Object extra=144, initial=42>')
+
+
+@unit.test
+def init_from_args():
+
+    @args('x', 'y')
+    class Point(InitFromArgs):
+        pass
+
+    assert vars(Point()) == dict(x=None, y=None)
+    assert vars(Point(2)) == dict(x=2, y=None)
+    assert vars(Point(2, 3)) == dict(x=2, y=3)
+    assert vars(Point(2, y=3)) == dict(x=2, y=3)
+    assert vars(Point(x=2, y=3)) == dict(x=2, y=3)
+    assert vars(Point(y=3, x=2)) == dict(x=2, y=3)
+    assert vars(Point(y=3)) == dict(x=None, y=3)
+
+    @args('x', 'y')
+    class CustomInit(InitFromArgs):
+
+        def __create__(self):
+            self.z = 3
+
+    assert vars(CustomInit(1, 2)) == dict(x=1, y=2, z=3)

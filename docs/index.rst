@@ -632,8 +632,30 @@ Common Utilities
     Note that the values aren't initialized until asked for - in the
     example above the timestamp isn't necessarily that of the post
     creation. A solution for that case is to inherit from
-    :class:`ForcePropertiesCalled`.
+    :class:`EagerCachedProperties`.
 
-  .. autoclass:: ForcePropertiesCalled
+  .. autoclass:: EagerCachedProperties
 
-  .. autoclass:: AttributeRepr
+  .. autoclass:: ReprAttributes
+
+  .. autoclass:: InitFromArgs
+    :members: __create__
+
+  .. autofunction:: args
+
+    Example::
+
+      @args('question', 'answer')
+      class QA(InitFromArgs):
+          pass
+
+    >>> vars(QA())
+    {'answer': None, 'question': None}
+    >>> vars(QA('What is the ultimate answer?'))
+    {'answer': None, 'question': 'What is the ultimate answer?'}
+    >>> vars(QA('What is the ultimate answer?', 42))
+    {'answer': 42, 'question': 'What is the ultimate answer?'}
+    >>> vars(QA(answer=42, question='What is the ultimate answer?'))
+    {'answer': 42, 'question': 'What is the ultimate answer?'}
+    >>> vars(QA(answer=42))
+    {'answer': 42, 'question': None}
