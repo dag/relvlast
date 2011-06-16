@@ -5,7 +5,7 @@
 
   <body>
     <h1>$word.id</h1>
-    <article py:if="'galfi' not in request.args">
+    <article>
       <dl class="word-data">
         <section>
           <dt>vlatai</dt>
@@ -21,37 +21,13 @@
         </section>
         <section>
           <dt>smuni</dt>
-          <dd>${creole(word.definition)}</dd>
+          <dd>${creole(translation.definition)}</dd>
         </section>
-        <section py:if="word.notes">
+        <section py:if="translation.notes">
           <dt>notci</dt>
-          <dd>${creole(word.notes)}</dd>
+          <dd>${creole(translation.notes)}</dd>
         </section>
       </dl>
-      <footer>
-        <p><a href="${path('dictionary:word', word=word.id, galfi='')}">galfi</a></p>
-      </footer>
-    </article>
-
-    <article py:if="'galfi' in request.args">
-      <form action="${path('dictionary:word', word=word.id)}"
-        method="POST">
-        <fieldset>
-          <dl>
-            ${field(form.type, _('vlatai'))}
-            <py:if test="word.class_">
-              ${field(form.class_, _("selma'o"))}
-            </py:if>
-            ${field(form.definition, _('smuni'))}
-            <py:if test="word.notes">
-              ${field(form.notes, _('notci'))}
-            </py:if>
-          </dl>
-        </fieldset>
-        <footer>
-          <button type="submit">rejgau</button>
-        </footer>
-      </form>
     </article>
   </body>
 </html>

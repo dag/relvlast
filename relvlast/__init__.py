@@ -18,10 +18,48 @@ from relvlast.objects    import Root
 
 class Relvlast(Application):
 
+    def setup(self):
+        self.route(Rule('/', redirect_to='jbo'))
+        self.scan('relvlast.frontend', '/<locale>')
+        self.scan('relvlast.dictionary', '/<locale>/vlaste', 'dictionary:')
+
+    @request_property
+    def locale(self):
+        return Locale(self.route_values.get('locale', 'jbo'))
+
+    @request_property
+    def db(self):
+        return self.root_object.setdefault('root', Root())
+
+    @property
+    def translations(self):
+        return self.db.translations[self.locale.language]
+
+    def update_template_context(self, context):
+        super(Relvlast, self).update_template_context(context)
+        context.setdefault('creole', self.creole_parser.generate)
+        context.setdefault('locale', self.locale)
+        context.setdefault('cross_locale_path', self.cross_locale_path)
+        context.setdefault('locale_name', self.locale_name)
+        context.setdefault('_', self.message_catalog.gettext)
+
+    def template_loaded(self, template):
+        setup_flatland(template)
+        Translator(LocalProxy(lambda: self.message_catalog)).setup(template)
+
+    @request_property
+    def message_catalog(self):
+        dirname = resource_filename(self.module, 'translations')
+        return Translations.load(dirname, [self.locale])
+
     @request_property
     def creole_parser(self):
         return Parser(creole11_base(
             wiki_links_base_url=self.path('dictionary:index')))
+
+    def path(self, endpoint, **values):
+        values.setdefault('locale', self.locale.language)
+        return super(Relvlast, self).path(endpoint, **values)
 
     def cross_locale_path(self, locale):
         return self.path(self.local.endpoint,
@@ -29,41 +67,3 @@ class Relvlast(Application):
 
     def locale_name(self, locale):
         return self.locale.languages.get(locale, Locale(locale).display_name)
-
-    def update_template_context(self, context):
-        context = super(Relvlast, self).update_template_context(context)
-        context.setdefault('creole', self.creole_parser.generate)
-        context.setdefault('locale', self.locale)
-        context.setdefault('cross_locale_path', self.cross_locale_path)
-        context.setdefault('locale_name', self.locale_name)
-        context.setdefault('_', self.translations.gettext)
-        return context
-
-    @request_property
-    def locale(self):
-        return Locale(self.route_values.get('locale', 'jbo'))
-
-    @request_property
-    def translations(self):
-        dirname = resource_filename(self.module, 'translations')
-        return Translations.load(dirname, [self.locale])
-
-    def path(self, endpoint, **values):
-        values.setdefault('locale', self.locale.language)
-        return super(Relvlast, self).path(endpoint, **values)
-
-    @request_property
-    def db(self):
-        locale = self.locale.language
-        if locale not in self.root_object:
-            self.root_object[locale] = Root()
-        return self.root_object[locale]
-
-    def setup(self):
-        self.route(Rule('/', redirect_to='jbo'))
-        self.scan('relvlast.frontend', '/<locale>')
-        self.scan('relvlast.dictionary', '/<locale>/vlaste', 'dictionary:')
-
-    def template_loaded(self, template):
-        setup_flatland(template)
-        Translator(LocalProxy(lambda: self.translations)).setup(template)

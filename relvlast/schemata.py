@@ -12,11 +12,7 @@ class Page(Form):
     body  = CreoleArea
 
 
-class Word(Form):
+class Translation(Form):
 
-    id = TextInput
-    type = TextInput
-    class_ = TextInput
-    affixes = List.of(String).using(optional=True)
     definition = CreoleInput
     notes = CreoleInput

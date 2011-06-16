@@ -1,43 +1,96 @@
-from pkg_resources  import resource_string
-from werkzeug.utils import cached_property
+from datetime       import datetime
 from persistent     import Persistent
 from BTrees.OOBTree import OOBTree
-from ramverk.utils  import ForcePropertiesCalled, AttributeRepr, has
-from relvlast       import schemata
+from BTrees.IOBTree import IOBTree
+from ramverk.utils  import EagerCachedProperties, ReprAttributes, has
+from ramverk.utils  import InitFromArgs, args
 
 
-class Object(ForcePropertiesCalled, AttributeRepr, Persistent):
+class Base(EagerCachedProperties, ReprAttributes):
+
     pass
 
 
-@has(words=OOBTree)
-class Root(Object):
+class Object(Base, InitFromArgs, Persistent):
 
-    @cached_property
-    def start(self):
-        return Page("la lojban bangu fi lo si'o zifre",
-                    resource_string('relvlast', 'lojban.creole'))
+    pass
 
 
+class Collection(Base, OOBTree):
+
+    pass
+
+
+class List(Base, IOBTree):
+
+    @property
+    def last(self):
+        if not self:
+            return None
+        return self[self.maxKey()]
+
+    @property
+    def id(self):
+        if not self:
+            return 0
+        return self.maxKey()
+
+    def save(self, object):
+        self[self.id + 1] = object
+
+
+@args('object')
+@has(timestamp=datetime.utcnow)
+class Version(Object):
+
+    pass
+
+
+class VersionedObjects(Collection):
+
+    def save(self, name, object, *args, **kwargs):
+        if name not in self:
+            self[name] = List()
+        version = Version(object, *args, **kwargs)
+        self[name].save(version)
+        return version
+
+    def latest(self, name):
+        return self[name].last.object
+
+
+@args('of', 'definition', 'notes')
+class Translation(Object):
+
+    pass
+
+
+@args('id', 'type', 'class_', 'affixes')
+class WordProperties(Object):
+
+    pass
+
+
+@args('title', 'body')
 class Page(Object):
 
-    schema = schemata.Page
-
-    def __init__(self, title, body):
-        self.title, self.body = title, body
+    pass
 
 
-class Word(Object):
+@args('locale')
+@has(words=VersionedObjects, pages=VersionedObjects)
+class Language(Object):
 
-    schema = schemata.Word
+    pass
 
-    id = None
-    type = None
-    class_ = None
-    affixes = ()
-    definition = None
-    notes = None
 
-    def __init__(self, **attrs):
-        for name, value in attrs.iteritems():
-            setattr(self, name, value)
+@has(words=VersionedObjects, pages=VersionedObjects)
+class Properties(Object):
+
+    pass
+
+
+@has(translations=Collection, properties=Properties)
+class Root(Object):
+
+    pass

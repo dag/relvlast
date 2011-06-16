@@ -23,19 +23,16 @@ def cover():
 def import_words():
     """Import data exported to XML from jbovlaste."""
     from relvlast.importing import words_from_xml
-    from relvlast.objects   import Root
 
     app = import_string(options.ramverk.app)
     if isclass(app):
         app = app()
 
-    for source in path('exports').files('*.xml'):
-        locale = source.stripext().basename()
-        info('importing ' + locale)
-        with app:
-            if locale not in app.root_object:
-                app.root_object[locale] = Root()
-            app.root_object[locale].words = words_from_xml(source)
+    with app:
+        for source in path('exports').files('*.xml'):
+            locale = source.stripext().basename()
+            info('importing ' + locale)
+            words_from_xml(source, app.db, locale)
 
 
 @task

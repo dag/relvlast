@@ -5,27 +5,8 @@
 
   <body>
     <h1>$page.title</h1>
-    <article py:if="'galfi' not in request.args">
+    <article>
       ${creole(page.body)}
-      <footer>
-        <p><a href="${path('index', galfi='')}">galfi</a></p>
-      </footer>
-    </article>
-
-    <article py:if="'galfi' in request.args">
-      <form action="${path('index')}"
-        method="POST">
-        <fieldset>
-          <dl>
-            ${field(form.title, _('cmene'))}
-            ${field(form.body, _('papri'), spellcheck='false', cols='60', rows='10')}
-          </dl>
-        </fieldset>
-        <div id="preview-f_body"/>
-        <footer>
-          <button type="submit">rejgau</button>
-        </footer>
-      </form>
     </article>
   </body>
 </html>
