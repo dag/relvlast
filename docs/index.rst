@@ -1,6 +1,11 @@
 Ramverk
 =======
 
+.. toctree::
+  :hidden:
+
+  relvlast
+
 
 Sample Application: Hello World with Writable Greeting
 ------------------------------------------------------
