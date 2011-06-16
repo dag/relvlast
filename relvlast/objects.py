@@ -78,7 +78,7 @@ class Page(Object):
 
 
 @args('locale')
-@has(words=VersionedObjects, pages=VersionedObjects)
+@has(words=VersionedObjects)
 class Language(Object):
 
     pass
