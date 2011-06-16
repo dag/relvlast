@@ -16,7 +16,7 @@ Graph of the Persistent Object Tree
 
   Properties -> words -> VersionedObjects;
 
-  VersionedObjects -> "save(name, object)";
+  VersionedObjects -> "save(name, object)" -> Version;
   VersionedObjects -> "latest(name)" -> Object;
   VersionedObjects -> "[name]" -> List;
 
