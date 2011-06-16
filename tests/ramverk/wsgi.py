@@ -10,10 +10,8 @@ wsgi = Tests(contexts=[wsgiclient])
 def first_get_to_index(client):
     response = client.get('/')
     assert client.application.log_handler.formatted_records\
-        == ['[DEBUG] TestApp: beginning transaction',
-            '[DEBUG] TestApp: connecting ZODB',
+        == ['[DEBUG] TestApp: connecting ZODB',
              '[INFO] TestApp: in index view',
-            '[DEBUG] TestApp: committing transaction',
             '[DEBUG] TestApp: disconnecting ZODB']
     assert response.status_code == 200
     assert response.data == dedent("""\

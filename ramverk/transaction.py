@@ -15,18 +15,12 @@ class TransactionMixin(object):
         return TransactionManager()
 
     def __enter__(self):
-        if __debug__:
-            self.log.debug('beginning transaction')
         self.transaction_manager.begin()
         return super(TransactionMixin, self).__enter__()
 
     def __exit__(self, *exc_info):
         if exc_info == (None, None, None) and not self.transaction_manager.isDoomed():
-            if __debug__:
-                self.log.debug('committing transaction')
             self.transaction_manager.commit()
         else:
-            if __debug__:
-                self.log.debug('aborting transaction')
             self.transaction_manager.abort()
         return super(TransactionMixin, self).__exit__(*exc_info)
