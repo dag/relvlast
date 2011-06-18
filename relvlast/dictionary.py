@@ -1,16 +1,8 @@
 from werkzeug.exceptions import NotFound
-from werkzeug.routing    import Rule
-from ramverk.routing     import router, endpoint
-from relvlast.objects    import Translation
+from ramverk.routing     import get
 
 
-@router
-def urls():
-    yield Rule('/', endpoint='index')
-    yield Rule('/<word>/', endpoint='word')
-
-
-@endpoint
+@get('/')
 def index(request, render, translations):
     words = translations.words.values()
     page = request.args.get('papri', 1, type=int)
@@ -23,7 +15,7 @@ def index(request, render, translations):
                   total=total)
 
 
-@endpoint
+@get('/<word>/')
 def word(render, db, translations, segments, request, redirect):
     id = segments.word
 

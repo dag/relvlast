@@ -2,7 +2,7 @@ from inspect             import getargspec
 
 from venusian            import Scanner, attach
 from werkzeug.exceptions import NotFound
-from werkzeug.routing    import Map, Submount, Subdomain, EndpointPrefix
+from werkzeug.routing    import Map, Rule, Submount, Subdomain, EndpointPrefix
 from werkzeug.utils      import cached_property, redirect, import_string
 
 from ramverk.utils       import Bunch, request_property
@@ -34,6 +34,51 @@ def endpoint(view):
         scanner.app.endpoints[name] = ob
     attach(view, register_endpoint, category='ramverk.routing')
     return view
+
+
+def route(*args, **kwargs):
+    """Route a single rule to the decorated endpoint view."""
+    def decorator(view):
+        def route_endpoint(scanner, name, ob):
+            kwargs.setdefault('endpoint', name)
+            rule = Rule(*args, **kwargs)
+            if scanner.submount is not None:
+                rule = Submount(scanner.submount, [rule])
+            if scanner.endpoint_prefix is not None:
+                rule = EndpointPrefix(scanner.endpoint_prefix, [rule])
+            if scanner.subdomain is not None:
+                rule = Subdomain(scanner.subdomain, [rule])
+            scanner.app.route(rule)
+            if scanner.endpoint_prefix is not None:
+                name = scanner.endpoint_prefix + name
+            scanner.app.endpoints[name] = ob
+        attach(view, route_endpoint, category='ramverk.routing')
+        return view
+    return decorator
+
+
+def get(*args, **kwargs):
+    """Like :func:`route` with method defaulting to GET."""
+    kwargs.setdefault('methods', ('GET',))
+    return route(*args, **kwargs)
+
+
+def post(*args, **kwargs):
+    """Like :func:`route` with method defaulting to POST."""
+    kwargs.setdefault('methods', ('POST',))
+    return route(*args, **kwargs)
+
+
+def put(*args, **kwargs):
+    """Like :func:`route` with method defaulting to PUT."""
+    kwargs.setdefault('methods', ('PUT',))
+    return route(*args, **kwargs)
+
+
+def delete(*args, **kwargs):
+    """Like :func:`route` with method defaulting to DELETE."""
+    kwargs.setdefault('methods', ('DELETE',))
+    return route(*args, **kwargs)
 
 
 class RoutingScannerMixin(object):

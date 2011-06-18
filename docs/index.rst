@@ -16,7 +16,7 @@ First we need some boring imports::
   from werkzeug.routing  import Rule
   from ramverk.fullstack import Application
   from ramverk.utils     import request_property
-  from ramverk.routing   import router, endpoint
+  from ramverk.routing   import router, endpoint, get, post
 
 .. sidebar:: ZODB
 
@@ -83,6 +83,18 @@ function.
       if request.method == 'POST':
           db.greeting = request.form.get('greeting')
           return redirect('index')
+
+Optionally we could have written that in a style reminiscent of the Bottle
+framework which is more limiting but sufficient for most situations::
+
+  @get('/')
+  def greet_visitor(render, db):
+      return render('index.html', greeting=db.greeting)
+
+  @post('/')
+  def set_greeting(db, request, redirect):
+      db.greeting = request.form.get('greeting')
+      return redirect('greet_visitor')
 
 .. sidebar:: Genshi
 
@@ -345,6 +357,16 @@ The call stack for WSGI requests with URL dispatch adds this:
   .. autofunction:: router
 
   .. autofunction:: endpoint
+
+  .. autofunction:: route
+
+  .. autofunction:: get
+
+  .. autofunction:: post
+
+  .. autofunction:: put
+
+  .. autofunction:: delete
 
   .. autoclass:: RoutingScannerMixin
     :members:

@@ -1,11 +1,10 @@
 from werkzeug.routing import Rule
-from ramverk.routing  import router, endpoint
+from ramverk.routing  import router, endpoint, get
 
 
 @router
 def urls():
     yield Rule('/', endpoint='index', methods=('GET', 'POST'))
-    yield Rule('/page/<page>/', endpoint='page')
 
 
 @endpoint
@@ -22,6 +21,6 @@ def index(log, request, render, db, redirect):
         return redirect('index')
 
 
-@endpoint
+@get('/page/<page>/')
 def page(response, segments):
     return response(segments.page)
