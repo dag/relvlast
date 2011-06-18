@@ -58,7 +58,8 @@ class Relvlast(Application):
             wiki_links_base_url=self.path('dictionary:index')))
 
     def path(self, endpoint, **values):
-        values.setdefault('locale', self.locale.language)
+        if self.url_map.is_endpoint_expecting(endpoint, 'locale'):
+            values.setdefault('locale', self.locale.language)
         return super(Relvlast, self).path(endpoint, **values)
 
     def cross_locale_path(self, locale):
