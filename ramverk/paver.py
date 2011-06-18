@@ -44,16 +44,17 @@ def shell():
     """Enter a [b]python shell set up for the app."""
     from werkzeug.test import create_environ
     appfactory = import_string(options.ramverk.app)
-    app = appfactory()
+    app = appfactory(debug=True)
     app.bind_to_environ(create_environ())
 
     locals = dict(app=app)
     if options.shell.locals:
         locals.update(vars(import_string(options.shell.locals)))
 
-    try:
-        from bpython import embed
-        embed(locals)
-    except ImportError:
-        from code import interact
-        interact(local=locals)
+    with app:
+        try:
+            from bpython import embed
+            embed(locals)
+        except ImportError:
+            from code import interact
+            interact(local=locals)
