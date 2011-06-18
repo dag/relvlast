@@ -22,8 +22,8 @@ class BaseApplication(object):
     def __init__(self, **settings):
         """Create a new application object using `settings`."""
         self.settings.update(settings)
-        self.setup_mixins()
-        self.setup()
+        self.__create__()
+        self.configure()
 
     @cached_property
     def settings(self):
@@ -44,13 +44,15 @@ class BaseApplication(object):
         from logging import getLogger
         return getLogger(self.settings.name)
 
-    def setup_mixins(self):
+    def __create__(self):
         """Called after :meth:`__init__` and meant to be hooked by
-        cooperative mixins."""
+        cooperative mixins who are expected to call :func:`super` as
+        needed."""
 
-    def setup(self):
-        """Called after :meth:`__init__` and meant to be overridden by
-        applications to do post-init setup."""
+    def configure(self):
+        """Called after :meth:`__init__` and meant to be overloaded by
+        applications who do not need to call :func:`super`, to configure
+        new instances."""
 
     @cached_property
     def local(self):

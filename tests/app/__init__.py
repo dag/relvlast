@@ -21,7 +21,7 @@ class TestApp(Application):
             self.persistent['testapp'] = Root()
         return self.persistent['testapp']
 
-    def setup(self):
+    def configure(self):
         self.log_handler = TestHandler()
         self.scan('tests.app.frontend')
         self.scan('tests.app.module', '/module', 'module:')

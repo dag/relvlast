@@ -18,7 +18,7 @@ from relvlast.objects    import Root
 
 class Relvlast(Application):
 
-    def setup(self):
+    def configure(self):
         self.route(Rule('/', redirect_to='jbo'))
         self.scan('relvlast.frontend', '/<locale>')
         self.scan('relvlast.dictionary', '/<locale>/vlaste', 'dictionary:')

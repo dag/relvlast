@@ -13,10 +13,10 @@ def compiled(segments, compilers):
 class CompilerMixinBase(URLMapMixin):
     """Base class for compiler mixins."""
 
-    def setup_mixins(self):
+    def __create__(self):
         self.route(Rule('/compiled/<path:name>', endpoint='compiled'))
         self.endpoints['compiled'] = compiled
-        super(CompilerMixinBase, self).setup_mixins()
+        super(CompilerMixinBase, self).__create__()
 
     @cached_property
     def compilers(self):

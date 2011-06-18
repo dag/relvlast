@@ -54,7 +54,7 @@ the router and endpoint we'll add next.
       def db(self):
           return self.persistent.setdefault('greeter', Root())
 
-      def setup(self):
+      def configure(self):
           self.scan()
 
 This "scan" will look for functions decorated as routers and endpoints in
@@ -325,6 +325,8 @@ Minimal Base for Applications
       defaults and such.
 
       :default: The name of the class.
+
+    .. automethod:: __create__
 
     .. automethod:: __enter__
 
@@ -606,7 +608,7 @@ WSGI Middlewares
 .. automodule:: ramverk.wsgi
 
   .. autoclass:: SharedDataMiddlewareMixin
-    :members:
+    :members: __create__, shared_data
 
   .. autofunction:: mixin_from_middleware
 

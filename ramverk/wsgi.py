@@ -52,11 +52,11 @@ def middleware_mixin(mixin):
 class SharedDataMiddlewareMixin(object):
     """Serve static files for an application."""
 
-    def setup_mixins(self):
+    def __create__(self):
         """Configures a build-only endpoint called `static` if the
         application has a :meth:`~ramverk.routing.URLMapMixin.route`
         method."""
-        super(SharedDataMiddlewareMixin, self).setup_mixins()
+        super(SharedDataMiddlewareMixin, self).__create__()
         if hasattr(self, 'route'):
             self.route(Rule('/static/<path:name>',
                        endpoint='static',
