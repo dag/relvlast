@@ -52,9 +52,7 @@ the router and endpoint we'll add next.
 
       @request_property
       def db(self):
-          if 'greeter' not in self.root_object:
-              self.root_object['greeter'] = Root()
-          return self.root_object['greeter']
+          return self.root_object.setdefault('greeter', Root())
 
       def setup(self):
           self.scan()
