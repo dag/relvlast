@@ -502,7 +502,6 @@ Compiling Static Resources On-Demand
 
   .. autoclass:: CompilerMixinBase
     :members:
-    :show-inheritance:
 
     A "compiler" is like a middleground between static files and renderers.
     Unlike renderers there is no "context", everything needed to compile
