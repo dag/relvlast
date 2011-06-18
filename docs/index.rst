@@ -113,14 +113,12 @@ We also need to write the :file:`index.html` template:
     <body>
       <h1>$greeting, World!</h1>
 
-      <form
-       method="POST"
-       action="${path('index')}">
+      <form action="${path('index')}"
+        method="POST">
 
-        <input
-         type="text"
-         name="greeting"
-         placeholder="Enter a greeting"/>
+        <input name="greeting"
+          placeholder="Enter a greeting"
+          type="text"/>
 
       </form>
     </body>
