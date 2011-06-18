@@ -4,6 +4,7 @@ from werkzeug.utils import import_string
 
 
 options.ramverk = Bunch()
+options.shell   = Bunch(locals=None)
 options.serve   = Bunch(hostname='localhost',
                         port=8008,
                         no_reloader=False,
@@ -46,9 +47,13 @@ def shell():
     app = appfactory()
     app.bind_to_environ(create_environ())
 
+    locals = dict(app=app)
+    if options.shell.locals:
+        locals.update(vars(import_string(options.shell.locals)))
+
     try:
         from bpython import embed
-        embed(dict(app=app))
+        embed(locals)
     except ImportError:
         from code import interact
-        interact(local=dict(app=app))
+        interact(local=locals)
