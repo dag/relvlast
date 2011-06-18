@@ -487,7 +487,7 @@ Templating with Genshi
 
     Example::
 
-      def setup(self):
+      def configure(self):
           self.renderers['.svg'] = GenshiRenderer(self, 'xml', 'svg', 'image/svg+xml')
 
 .. autoclass:: ramverk.rendering.TemplatingMixinBase
