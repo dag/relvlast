@@ -43,7 +43,7 @@ storage.
 Now, we'll write the class for our application. We're using the "fullstack"
 base to get all the bells and whistles and some nice defaults. Our
 "virtual" root is simply a property, cached for each request, that reads a
-specific key in the real root object. We also scan the module to register
+specific key in the persistent mapping. We also scan the module to register
 the router and endpoint we'll add next.
 
 ::
@@ -52,7 +52,7 @@ the router and endpoint we'll add next.
 
       @request_property
       def db(self):
-          return self.root_object.setdefault('greeter', Root())
+          return self.persistent.setdefault('greeter', Root())
 
       def setup(self):
           self.scan()

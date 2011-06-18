@@ -27,7 +27,7 @@ class ZODBMixin(object):
         return self.__db.open(transaction_manager=self.transaction_manager)
 
     @property
-    def root_object(self):
+    def persistent(self):
         """The root object of the storage, which is a
         :class:`~persistent.mapping.PersistentMapping` and behaves like a
         :class:`dict`."""

@@ -11,23 +11,23 @@ def transactions(app):
     manager = app.transaction_manager
 
     with app:
-        app.root_object[1] = 42
+        app.persistent[1] = 42
     with app:
-        assert app.root_object[1] == 42
+        assert app.persistent[1] == 42
 
     with app:
-        app.root_object[2] = 43
+        app.persistent[2] = 43
         manager.doom()
-        assert 2 in app.root_object
+        assert 2 in app.persistent
     with app:
-        assert 2 not in app.root_object
+        assert 2 not in app.persistent
 
     with app:
-        app.root_object[3] = 44
+        app.persistent[3] = 44
         manager.abort()
-        assert 3 not in app.root_object
+        assert 3 not in app.persistent
     with app:
-        assert 3 not in app.root_object
+        assert 3 not in app.persistent
 
     with patch('transaction.manager.begin') as begin:
         begin.expects_call()

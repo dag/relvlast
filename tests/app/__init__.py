@@ -17,9 +17,9 @@ class TestApp(Application):
 
     @request_property
     def db(self):
-        if 'testapp' not in self.root_object:
-            self.root_object['testapp'] = Root()
-        return self.root_object['testapp']
+        if 'testapp' not in self.persistent:
+            self.persistent['testapp'] = Root()
+        return self.persistent['testapp']
 
     def setup(self):
         self.log_handler = TestHandler()

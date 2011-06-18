@@ -29,7 +29,7 @@ class Relvlast(Application):
 
     @request_property
     def db(self):
-        return self.root_object.setdefault('root', Root())
+        return self.persistent.setdefault('root', Root())
 
     @property
     def translations(self):
