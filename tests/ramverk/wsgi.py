@@ -69,6 +69,12 @@ def segments(client):
 
 
 @wsgi.test
+def relative_endpoint(client):
+    response = client.get('/relative-endpoint/')
+    assert response.data == '/page/fubar/'
+
+
+@wsgi.test
 def compiled_scss(client):
     response = client.get('/compiled/style.css')
     assert response.mimetype == 'text/css'

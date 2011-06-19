@@ -21,7 +21,7 @@ class Relvlast(Application):
     def configure(self):
         self.route(Rule('/', redirect_to='jbo'))
         self.scan('relvlast.frontend', '/<locale>')
-        self.scan('relvlast.dictionary', '/<locale>/vlaste', 'dictionary:')
+        self.scan('relvlast.dictionary', '/<locale>/vlaste')
 
     @request_property
     def locale(self):
@@ -55,9 +55,10 @@ class Relvlast(Application):
     @request_property
     def creole_parser(self):
         return Parser(creole11_base(
-            wiki_links_base_url=self.path('dictionary:index')))
+            wiki_links_base_url=self.path(':index')))
 
     def path(self, endpoint, **values):
+        endpoint = self.absolute_endpoint(endpoint)
         if self.url_map.is_endpoint_expecting(endpoint, 'locale'):
             values.setdefault('locale', self.locale.language)
         return super(Relvlast, self).path(endpoint, **values)

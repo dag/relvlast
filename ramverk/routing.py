@@ -8,15 +8,17 @@ from werkzeug.utils      import cached_property, redirect, import_string
 from ramverk.utils       import Bunch, request_property
 
 
+def _endpoint_name(function):
+    return ':'.join((function.__module__, function.__name__))
+
+
 def router(generator):
     """Decorate a callable as a router, i.e. returns an iterable of rules
     and rule factories."""
     def route(scanner, name, ob):
-        rules = ob()
+        rules = [EndpointPrefix(ob.__module__ + ':', ob())]
         if scanner.submount is not None:
             rules = [Submount(scanner.submount, rules)]
-        if scanner.endpoint_prefix is not None:
-            rules = [EndpointPrefix(scanner.endpoint_prefix, rules)]
         if scanner.subdomain is not None:
             rules = [Subdomain(scanner.subdomain, rules)]
         for rule in rules:
@@ -29,9 +31,8 @@ def endpoint(view):
     """Decorate a callable as a view for the endpoint with the same
     name."""
     def register_endpoint(scanner, name, ob):
-        if scanner.endpoint_prefix is not None:
-            name = scanner.endpoint_prefix + name
-        scanner.app.endpoints[name] = ob
+        endpoint = _endpoint_name(ob)
+        scanner.app.endpoints[endpoint] = ob
     attach(view, register_endpoint, category='ramverk.routing')
     return view
 
@@ -40,18 +41,15 @@ def route(*args, **kwargs):
     """Route a single rule to the decorated endpoint view."""
     def decorator(view):
         def route_endpoint(scanner, name, ob):
-            kwargs.setdefault('endpoint', name)
+            endpoint = _endpoint_name(ob)
+            kwargs.setdefault('endpoint', endpoint)
             rule = Rule(*args, **kwargs)
             if scanner.submount is not None:
                 rule = Submount(scanner.submount, [rule])
-            if scanner.endpoint_prefix is not None:
-                rule = EndpointPrefix(scanner.endpoint_prefix, [rule])
             if scanner.subdomain is not None:
                 rule = Subdomain(scanner.subdomain, [rule])
             scanner.app.route(rule)
-            if scanner.endpoint_prefix is not None:
-                name = scanner.endpoint_prefix + name
-            scanner.app.endpoints[name] = ob
+            scanner.app.endpoints[endpoint] = ob
         attach(view, route_endpoint, category='ramverk.routing')
         return view
     return decorator
@@ -87,16 +85,12 @@ class RoutingScannerMixin(object):
 
     def scan(self, package=None,
                    submount=None,
-                   endpoint_prefix=None,
                    subdomain=None,
                    categories=('ramverk.routing',)):
         """Scan `package` (or otherwise the
         :attr:`~ramverk.application.BaseApplication.module`) for routers
         and endpoints."""
-        scanner = Scanner(app=self,
-                          submount=submount,
-                          endpoint_prefix=endpoint_prefix,
-                          subdomain=subdomain)
+        scanner = Scanner(app=self, submount=submount, subdomain=subdomain)
         if package is None:
             package = self.module
         if isinstance(package, basestring):
@@ -119,12 +113,22 @@ class RoutingHelpersMixin(object):
         application."""
         return self
 
+    def absolute_endpoint(self, endpoint):
+        if endpoint.startswith('.'):
+            return self.module + endpoint
+        if endpoint.startswith(':') and ':' in self.local.endpoint:
+            module = self.local.endpoint.split(':', 1)[0]
+            return module + endpoint
+        return endpoint
+
     def url(self, endpoint, **values):
         """Build a URL for a route to `endpoint` with `values`."""
+        endpoint = self.absolute_endpoint(endpoint)
         return self.url_adapter.build(endpoint, values, force_external=True)
 
     def path(self, endpoint, **values):
         """Like :meth:`url` but as an absolute path."""
+        endpoint = self.absolute_endpoint(endpoint)
         return self.url_adapter.build(endpoint, values)
 
     def redirect(self, endpoint, **values):
@@ -170,14 +174,19 @@ class URLMapMixin(object):
     def respond(self):
         """Match the environment to an endpoint and then :meth:`call_view`
         the corresponding view."""
+        if not self.local.endpoint:
+            return super(URLMapMixin, self).respond()
+        view = self.endpoints[self.local.endpoint]
+        return self.call_view(view)
+
+    def bind_to_environ(self, environ):
+        super(URLMapMixin, self).bind_to_environ(environ)
         try:
             endpoint, args = self.url_adapter.match()
         except NotFound:
-            return super(URLMapMixin, self).respond()
+            endpoint, args = None, {}
         self.local.endpoint = endpoint
         self.local.endpoint_args = args
-        view = self.endpoints[endpoint]
-        return self.call_view(view)
 
 
 class RoutingMixin(RoutingScannerMixin,

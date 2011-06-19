@@ -80,7 +80,7 @@ function.
 
       if request.method == 'POST':
           db.greeting = request.form.get('greeting')
-          return redirect('index')
+          return redirect(':index')
 
 Optionally we could have written that in a style reminiscent of the Bottle
 framework which is more limiting but sufficient for most situations::
@@ -92,7 +92,14 @@ framework which is more limiting but sufficient for most situations::
   @post('/')
   def set_greeting(db, request, redirect):
       db.greeting = request.form.get('greeting')
-      return redirect('greet_visitor')
+      return redirect(':greet_visitor')
+
+The argument to the redirect function is an endpoint name. Scanned
+endpoints are named by the fully qualified dotted name of the view function
+and a prefixing colon means "relative to current endpoint". A dot prefix is
+also allowed which prepends the module of the application to the endpoint
+and is useful when the application is a Python package with views spread
+out in modules.
 
 .. sidebar:: Genshi
 

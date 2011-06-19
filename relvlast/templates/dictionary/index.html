@@ -8,7 +8,7 @@
     <h1>vlaste fu la lojban</h1>
     <dl py:for="word in words" py:with="word = word.last.object">
       <div>
-        <dt><a href="${path('dictionary:word', word=word.of)}">$word.of</a></dt>
+        <dt><a href="${path(':word', word=word.of)}">$word.of</a></dt>
         <dd>${creole(word.definition)}</dd>
       </div>
     </dl>

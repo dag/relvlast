@@ -168,8 +168,10 @@ def endpoint_scanning():
     app = App()
     assert not app.endpoints
     app.scan()
-    assert app.endpoints == dict(first_endpoint=first_endpoint,
-                                 second_endpoint=second_endpoint)
+    assert app.endpoints == {
+        'tests.ramverk.units:first_endpoint': first_endpoint,
+        'tests.ramverk.units:second_endpoint': second_endpoint
+    }
 
 
 @unit.test

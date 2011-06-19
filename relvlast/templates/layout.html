@@ -42,8 +42,8 @@
     <body py:attrs="select('@*')">
       <nav>
         <ul>
-          <li><a href="${path('index')}">pamo'o</a></li>
-          <li><a href="${path('dictionary:index')}">vlaste</a></li>
+          <li><a href="${path('.frontend:index')}">pamo'o</a></li>
+          <li><a href="${path('.dictionary:index')}">vlaste</a></li>
         </ul>
       </nav>
       ${select('*|text()')}

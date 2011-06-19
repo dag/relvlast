@@ -18,9 +18,14 @@ def index(log, request, render, db, redirect):
 
     if request.method == 'POST':
         db.greeting = request.form.get('greeting')
-        return redirect('index')
+        return redirect(':index')
 
 
 @get('/page/<page>/')
 def page(response, segments):
     return response(segments.page)
+
+
+@get('/relative-endpoint/')
+def relative_endpoint(response, path):
+    return response(path(':page', page='fubar'))
