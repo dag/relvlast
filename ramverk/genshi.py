@@ -37,7 +37,7 @@ class GenshiRenderer(object):
             rendering = serialize(self.serializer)
         else:
             rendering = serialize(self.serializer, doctype=self.doctype)
-        return self.app.response(rendering).using(mimetype=self.mimetype)
+        return self.app.response(rendering, mimetype=self.mimetype)
 
     def __repr__(self): #pragma: no cover
         attrs = ('{0}={1!r}'.format(k, v)
@@ -47,9 +47,7 @@ class GenshiRenderer(object):
 
 
 class GenshiMixin(TemplatingMixinBase):
-    """Add Genshi templating to an application. Requires a
-    :attr:`~ramverk.application.BaseApplication.response` implementing
-    :class:`~ramverk.wrappers.ResponseUsingMixin`."""
+    """Add Genshi templating to an application."""
 
     @cached_property
     def renderers(self):
