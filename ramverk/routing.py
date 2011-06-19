@@ -4,7 +4,7 @@ from inspect             import getargspec
 from venusian            import attach
 from werkzeug.exceptions import NotFound
 from werkzeug.routing    import Map, Rule, Submount, Subdomain, EndpointPrefix
-from werkzeug.utils      import cached_property, redirect
+from werkzeug.utils      import cached_property, redirect, import_string
 
 from ramverk.utils       import Bunch, request_property
 
@@ -23,11 +23,6 @@ def _add_rules(scanner, rules, ob):
         scanner.app.url_map.add(rule)
 
 
-def _add_endpoint(scanner, ob):
-    endpoint = _endpoint_name(ob)
-    scanner.app.endpoints[endpoint] = ob
-
-
 def router(generator):
     """Decorate a callable as a router, i.e. returns an iterable of rules
     and rule factories."""
@@ -37,15 +32,6 @@ def router(generator):
     return generator
 
 
-def endpoint(view):
-    """Decorate a callable as a view for the endpoint with the same
-    name."""
-    def register_endpoint(scanner, name, ob):
-        _add_endpoint(scanner, ob)
-    attach(view, register_endpoint, category='ramverk')
-    return view
-
-
 def route(*args, **kwargs):
     """Route a single rule to the decorated endpoint view."""
     def decorator(view):
@@ -53,7 +39,6 @@ def route(*args, **kwargs):
             kwargs.setdefault('endpoint', name)
             rule = Rule(*args, **kwargs)
             _add_rules(scanner, [rule], ob)
-            _add_endpoint(scanner, ob)
         attach(view, route_endpoint, category='ramverk')
         return view
     return decorator
@@ -136,10 +121,6 @@ class URLMapMixin(object):
         """Adapter for :attr:`url_map` bound to the current request."""
         return self.url_map.bind_to_environ(self.local.environ)
 
-    @cached_property
-    def endpoints(self):
-        """Mapping of endpoints to views."""
-        return {} 
     def call_view(self, view, **kwargs):
         """Call the `view` callable with `kwargs` using view semantics: the
         default is to fetch missing arguments in the view's signature, from
@@ -163,7 +144,7 @@ class URLMapMixin(object):
             endpoint, args = self.match_request_to_endpoint()
         except NotFound:
             return super(URLMapMixin, self).respond()
-        view = self.endpoints[endpoint]
+        view = import_string(endpoint)
         return self.call_view(view)
 
 

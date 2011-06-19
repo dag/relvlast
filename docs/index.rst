@@ -16,7 +16,7 @@ First we need some boring imports::
   from werkzeug.routing  import Rule
   from ramverk.fullstack import Application
   from ramverk.utils     import request_property
-  from ramverk.routing   import router, endpoint, get, post
+  from ramverk.routing   import router, get, post
 
 .. sidebar:: ZODB
 
@@ -72,7 +72,6 @@ function.
   def urls():
       yield Rule('/', endpoint='index', methods=('GET', 'POST'))
 
-  @endpoint
   def index(request, render, db, redirect):
 
       if request.method == 'GET':
@@ -349,19 +348,10 @@ Minimal Base for Applications
 Dispatching Requests by URL
 ---------------------------
 
-The call stack for WSGI requests with URL dispatch adds this:
-
-.. digraph:: dispatch
-
-  "endpoint name" [fontname="Ubuntu Italic"];
-  "view function" [fontname="Ubuntu Italic"];
-  respond -> url_adapter -> "endpoint name" -> endpoints -> "view function" -> call_view;
 
 .. automodule:: ramverk.routing
 
   .. autofunction:: router
-
-  .. autofunction:: endpoint
 
   .. autofunction:: route
 
@@ -372,9 +362,6 @@ The call stack for WSGI requests with URL dispatch adds this:
   .. autofunction:: put
 
   .. autofunction:: delete
-
-  .. autoclass:: RoutingScannerMixin
-    :members:
 
   .. autoclass:: RoutingHelpersMixin
     :members:

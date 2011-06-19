@@ -1,5 +1,5 @@
 from werkzeug.routing import Rule
-from ramverk.routing  import router, endpoint, get
+from ramverk.routing  import router, get
 
 
 @router
@@ -7,7 +7,6 @@ def urls():
     yield Rule('/', endpoint='index', methods=('GET', 'POST'))
 
 
-@endpoint
 def index(log, request, render, db, redirect):
     log.info('in index view')
 

@@ -6,7 +6,7 @@ from werkzeug.wrappers   import BaseResponse
 from ramverk.application import BaseApplication
 from ramverk.rendering   import JSONMixin
 from ramverk.venusian    import VenusianMixin
-from ramverk.routing     import endpoint, RoutingMixin
+from ramverk.routing     import RoutingMixin
 from ramverk.transaction import TransactionMixin
 from ramverk.utils       import Bunch, request_property
 from ramverk.utils       import EagerCachedProperties, ReprAttributes, has
@@ -148,31 +148,6 @@ def json_renderer():
 
     with raises(TypeError):
         App().render('json', response=response)
-
-
-@endpoint
-def first_endpoint():
-    pass
-
-
-@endpoint
-def second_endpoint():
-    pass
-
-
-@unit.test
-def endpoint_scanning():
-
-    class App(RoutingMixin, VenusianMixin, BaseApplication):
-        pass
-
-    app = App()
-    assert not app.endpoints
-    app.scan()
-    assert app.endpoints == {
-        'tests.ramverk.units:first_endpoint': first_endpoint,
-        'tests.ramverk.units:second_endpoint': second_endpoint
-    }
 
 
 @unit.test

@@ -1,5 +1,5 @@
 from werkzeug.routing import Rule
-from ramverk.routing  import router, endpoint
+from ramverk.routing  import router
 
 
 @router
