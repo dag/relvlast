@@ -166,22 +166,21 @@ class URLMapMixin(object):
                       if name not in kwargs)
         return view(**kwargs)
 
+    def match_request_to_endpoint(self):
+        endpoint, args = self.url_adapter.match()
+        self.local.endpoint = endpoint
+        self.local.endpoint_args = args
+        return endpoint, args
+
     def respond(self):
         """Match the environment to an endpoint and then :meth:`call_view`
         the corresponding view."""
-        if not self.local.endpoint:
-            return super(URLMapMixin, self).respond()
-        view = self.endpoints[self.local.endpoint]
-        return self.call_view(view)
-
-    def bind_to_environ(self, environ):
-        super(URLMapMixin, self).bind_to_environ(environ)
         try:
-            endpoint, args = self.url_adapter.match()
+            endpoint, args = self.match_request_to_endpoint()
         except NotFound:
-            endpoint, args = None, {}
-        self.local.endpoint = endpoint
-        self.local.endpoint_args = args
+            return super(URLMapMixin, self).respond()
+        view = self.endpoints[endpoint]
+        return self.call_view(view)
 
 
 class RoutingMixin(RoutingScannerMixin,
