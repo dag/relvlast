@@ -14,6 +14,7 @@ from ramverk.routing     import RoutingMixin
 from ramverk.scss        import SCSSMixin
 from ramverk.transaction import TransactionMixin
 from ramverk.utils       import request_property
+from ramverk.venusian    import VenusianMixin
 from ramverk.wrappers    import ResponseUsingMixin
 from ramverk.wsgi        import SharedDataMiddlewareMixin
 from ramverk.zodb        import ZODBMixin
@@ -32,6 +33,7 @@ class Application(LogbookMixin,
                   JSONMixin,
                   SCSSMixin,
                   RoutingMixin,
+                  VenusianMixin,
                   SharedDataMiddlewareMixin,
                   BaseApplication):
     """Full-stack application."""

@@ -5,6 +5,7 @@ from fudge               import Fake
 from werkzeug.wrappers   import BaseResponse
 from ramverk.application import BaseApplication
 from ramverk.rendering   import JSONMixin
+from ramverk.venusian    import VenusianMixin
 from ramverk.routing     import endpoint, RoutingMixin
 from ramverk.transaction import TransactionMixin
 from ramverk.utils       import Bunch, request_property
@@ -162,7 +163,7 @@ def second_endpoint():
 @unit.test
 def endpoint_scanning():
 
-    class App(RoutingMixin, BaseApplication):
+    class App(RoutingMixin, VenusianMixin, BaseApplication):
         pass
 
     app = App()

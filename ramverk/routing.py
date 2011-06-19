@@ -1,9 +1,10 @@
+from __future__          import absolute_import
 from inspect             import getargspec
 
-from venusian            import Scanner, attach
+from venusian            import attach
 from werkzeug.exceptions import NotFound
 from werkzeug.routing    import Map, Rule, Submount, Subdomain, EndpointPrefix
-from werkzeug.utils      import cached_property, redirect, import_string
+from werkzeug.utils      import cached_property, redirect
 
 from ramverk.utils       import Bunch, request_property
 
@@ -17,13 +18,13 @@ def router(generator):
     and rule factories."""
     def route(scanner, name, ob):
         rules = [EndpointPrefix(ob.__module__ + ':', ob())]
-        if scanner.submount is not None:
+        if hasattr(scanner, 'submount'):
             rules = [Submount(scanner.submount, rules)]
-        if scanner.subdomain is not None:
+        if hasattr(scanner, 'subdomain'):
             rules = [Subdomain(scanner.subdomain, rules)]
         for rule in rules:
             scanner.app.url_map.add(rule)
-    attach(generator, route, category='ramverk.routing')
+    attach(generator, route, category='ramverk')
     return generator
 
 
@@ -33,7 +34,7 @@ def endpoint(view):
     def register_endpoint(scanner, name, ob):
         endpoint = _endpoint_name(ob)
         scanner.app.endpoints[endpoint] = ob
-    attach(view, register_endpoint, category='ramverk.routing')
+    attach(view, register_endpoint, category='ramverk')
     return view
 
 
@@ -44,13 +45,13 @@ def route(*args, **kwargs):
             endpoint = _endpoint_name(ob)
             kwargs.setdefault('endpoint', endpoint)
             rule = Rule(*args, **kwargs)
-            if scanner.submount is not None:
+            if hasattr(scanner, 'submount'):
                 rule = Submount(scanner.submount, [rule])
-            if scanner.subdomain is not None:
+            if hasattr(scanner, 'subdomain'):
                 rule = Subdomain(scanner.subdomain, [rule])
             scanner.app.url_map.add(rule)
             scanner.app.endpoints[endpoint] = ob
-        attach(view, route_endpoint, category='ramverk.routing')
+        attach(view, route_endpoint, category='ramverk')
         return view
     return decorator
 
@@ -77,25 +78,6 @@ def delete(*args, **kwargs):
     """Like :func:`route` with method defaulting to DELETE."""
     kwargs.setdefault('methods', ('DELETE',))
     return route(*args, **kwargs)
-
-
-class RoutingScannerMixin(object):
-    """Add support for scanning for :func:`router` and :func:`endpoint`
-    functions to an application with URL dispatch."""
-
-    def scan(self, package=None,
-                   submount=None,
-                   subdomain=None,
-                   categories=('ramverk.routing',)):
-        """Scan `package` (or otherwise the
-        :attr:`~ramverk.application.BaseApplication.module`) for routers
-        and endpoints."""
-        scanner = Scanner(app=self, submount=submount, subdomain=subdomain)
-        if package is None:
-            package = self.module
-        if isinstance(package, basestring):
-            package = import_string(package)
-        scanner.scan(package, categories)
 
 
 class RoutingHelpersMixin(object):
@@ -154,8 +136,7 @@ class URLMapMixin(object):
     @cached_property
     def endpoints(self):
         """Mapping of endpoints to views."""
-        return {}
-
+        return {} 
     def call_view(self, view, **kwargs):
         """Call the `view` callable with `kwargs` using view semantics: the
         default is to fetch missing arguments in the view's signature, from
@@ -183,7 +164,5 @@ class URLMapMixin(object):
         return self.call_view(view)
 
 
-class RoutingMixin(RoutingScannerMixin,
-                   RoutingHelpersMixin,
-                   URLMapMixin):
+class RoutingMixin(RoutingHelpersMixin, URLMapMixin):
     """Add complete URL dispatching to an application."""
