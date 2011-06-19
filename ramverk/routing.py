@@ -13,17 +13,26 @@ def _endpoint_name(function):
     return ':'.join((function.__module__, function.__name__))
 
 
+def _add_rules(scanner, rules, ob):
+    rules = [EndpointPrefix(ob.__module__ + ':', rules)]
+    if hasattr(scanner, 'submount'):
+        rules = [Submount(scanner.submount, rules)]
+    if hasattr(scanner, 'subdomain'):
+        rules = [Subdomain(scanner.subdomain, rules)]
+    for rule in rules:
+        scanner.app.url_map.add(rule)
+
+
+def _add_endpoint(scanner, ob):
+    endpoint = _endpoint_name(ob)
+    scanner.app.endpoints[endpoint] = ob
+
+
 def router(generator):
     """Decorate a callable as a router, i.e. returns an iterable of rules
     and rule factories."""
     def route(scanner, name, ob):
-        rules = [EndpointPrefix(ob.__module__ + ':', ob())]
-        if hasattr(scanner, 'submount'):
-            rules = [Submount(scanner.submount, rules)]
-        if hasattr(scanner, 'subdomain'):
-            rules = [Subdomain(scanner.subdomain, rules)]
-        for rule in rules:
-            scanner.app.url_map.add(rule)
+        _add_rules(scanner, ob(), ob)
     attach(generator, route, category='ramverk')
     return generator
 
@@ -32,8 +41,7 @@ def endpoint(view):
     """Decorate a callable as a view for the endpoint with the same
     name."""
     def register_endpoint(scanner, name, ob):
-        endpoint = _endpoint_name(ob)
-        scanner.app.endpoints[endpoint] = ob
+        _add_endpoint(scanner, ob)
     attach(view, register_endpoint, category='ramverk')
     return view
 
@@ -42,15 +50,10 @@ def route(*args, **kwargs):
     """Route a single rule to the decorated endpoint view."""
     def decorator(view):
         def route_endpoint(scanner, name, ob):
-            endpoint = _endpoint_name(ob)
-            kwargs.setdefault('endpoint', endpoint)
+            kwargs.setdefault('endpoint', name)
             rule = Rule(*args, **kwargs)
-            if hasattr(scanner, 'submount'):
-                rule = Submount(scanner.submount, [rule])
-            if hasattr(scanner, 'subdomain'):
-                rule = Subdomain(scanner.subdomain, [rule])
-            scanner.app.url_map.add(rule)
-            scanner.app.endpoints[endpoint] = ob
+            _add_rules(scanner, [rule], ob)
+            _add_endpoint(scanner, ob)
         attach(view, route_endpoint, category='ramverk')
         return view
     return decorator
