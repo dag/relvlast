@@ -79,8 +79,8 @@ class GenshiMixin(TemplatingMixinBase):
         :class:`~genshi.template.loader.TemplateLoader`."""
         return TemplateLoader(self.template_loaders.genshi,
                               auto_reload=self.settings.debug,
-                              callback=self.template_loaded)
+                              callback=self.configure_genshi_template)
 
-    def template_loaded(self, template):
+    def configure_genshi_template(self, template):
         """Called when `template` is first loaded; override to do Babel and
         Flatland installation and such."""

@@ -43,7 +43,7 @@ class Relvlast(Application):
         context.setdefault('locale_name', self.locale_name)
         context.setdefault('_', self.message_catalog.gettext)
 
-    def template_loaded(self, template):
+    def configure_genshi_template(self, template):
         setup_flatland(template)
         Translator(LocalProxy(lambda: self.message_catalog)).setup(template)
 

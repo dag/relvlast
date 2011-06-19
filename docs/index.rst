@@ -467,7 +467,7 @@ Templating with Genshi
 
     .. autoattribute:: genshi_loader
 
-    .. automethod:: template_loaded
+    .. automethod:: configure_genshi_template
 
   .. autoclass:: GenshiRenderer
 
