@@ -118,7 +118,7 @@ We also need to write the :file:`index.html` template:
     <body>
       <h1>$greeting, World!</h1>
 
-      <form action="${path('index')}"
+      <form action="${path(':index')}"
         method="POST">
 
         <input name="greeting"
