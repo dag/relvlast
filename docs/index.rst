@@ -463,7 +463,9 @@ Templating with Genshi
 
     .. _NewTextTemplate: http://genshi.readthedocs.org/en/latest/text-templates/
 
-    .. automethod:: _GenshiMixin__loader
+    .. autoattribute:: template_loaders
+
+    .. autoattribute:: genshi_loader
 
     .. automethod:: template_loaded
 

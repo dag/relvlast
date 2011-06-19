@@ -4,6 +4,7 @@ except ImportError: #pragma: no cover
     import json
 
 from werkzeug.utils import cached_property
+from ramverk.utils  import Bunch
 
 
 class RenderingMixinBase(object):
@@ -39,6 +40,12 @@ class TemplatingMixinBase(RenderingMixinBase):
         context.setdefault('request', self.request)
         context.setdefault('url', self.url)
         context.setdefault('path', self.path)
+
+    @cached_property
+    def template_loaders(self):
+        """A :class:`~ramverk.utils.Bunch` of template engines mapping to
+        lists of loaders."""
+        return Bunch()
 
 
 class JSONMixin(RenderingMixinBase):

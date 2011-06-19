@@ -30,8 +30,7 @@ class GenshiRenderer(object):
 
     def __call__(self, template_name, **context):
         self.app.update_template_context(context)
-        loader = self.app._GenshiMixin__loader
-        template = loader.load(template_name, cls=self.class_)
+        template = self.app.genshi_loader.load(template_name, cls=self.class_)
         stream = template.generate(**context)
         serialize = stream.serialize if self.lazy else stream.render
         if self.doctype is None:
@@ -67,11 +66,18 @@ class GenshiMixin(TemplatingMixinBase):
         return renderers
 
     @cached_property
-    def __loader(self):
-        """A :func:`~genshi.template.loader.package`
-        :class:`~genshi.template.loader.TemplateLoader` for the
-        ``templates/`` directory under the module of the application."""
-        return TemplateLoader([loader.package(self.module, 'templates')],
+    def template_loaders(self):
+        """Adds a :func:`~genshi.template.loader.package` loader for the
+        :file:`{application module}/templates` directory."""
+        loaders = super(GenshiMixin, self).template_loaders
+        loaders.genshi = [loader.package(self.module, 'templates')]
+        return loaders
+
+    @cached_property
+    def genshi_loader(self):
+        """The ``template_loaders.genshi`` loaders wrapped in a
+        :class:`~genshi.template.loader.TemplateLoader`."""
+        return TemplateLoader(self.template_loaders.genshi,
                               auto_reload=self.settings.debug,
                               callback=self.template_loaded)
 
