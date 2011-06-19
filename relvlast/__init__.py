@@ -19,7 +19,7 @@ from relvlast.objects    import Root
 class Relvlast(Application):
 
     def configure(self):
-        self.route(Rule('/', redirect_to='jbo'))
+        self.url_map.add(Rule('/', redirect_to='jbo'))
         self.scan('relvlast.frontend', '/<locale>')
         self.scan('relvlast.dictionary', '/<locale>/vlaste')
 

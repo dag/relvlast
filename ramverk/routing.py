@@ -22,7 +22,7 @@ def router(generator):
         if scanner.subdomain is not None:
             rules = [Subdomain(scanner.subdomain, rules)]
         for rule in rules:
-            scanner.app.route(rule)
+            scanner.app.url_map.add(rule)
     attach(generator, route, category='ramverk.routing')
     return generator
 
@@ -48,7 +48,7 @@ def route(*args, **kwargs):
                 rule = Submount(scanner.submount, [rule])
             if scanner.subdomain is not None:
                 rule = Subdomain(scanner.subdomain, [rule])
-            scanner.app.route(rule)
+            scanner.app.url_map.add(rule)
             scanner.app.endpoints[endpoint] = ob
         attach(view, route_endpoint, category='ramverk.routing')
         return view
@@ -145,11 +145,6 @@ class URLMapMixin(object):
     def url_map(self):
         """Map of URLs to :attr:`endpoints`."""
         return Map()
-
-    def route(self, rulefactory):
-        """Add a :class:`~werkzeug.routing.Rule` or rule factory to
-        :attr:`url_map`."""
-        self.url_map.add(rulefactory)
 
     @request_property
     def url_adapter(self):

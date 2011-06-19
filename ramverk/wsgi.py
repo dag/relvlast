@@ -54,13 +54,12 @@ class SharedDataMiddlewareMixin(object):
 
     def __create__(self):
         """Configures a build-only endpoint called `static` if the
-        application has a :meth:`~ramverk.routing.URLMapMixin.route`
-        method."""
+        application has a :attr:`url_map`."""
         super(SharedDataMiddlewareMixin, self).__create__()
-        if hasattr(self, 'route'):
-            self.route(Rule('/static/<path:name>',
-                       endpoint='static',
-                       build_only=True))
+        if hasattr(self, 'url_map'):
+            self.url_map.add(Rule('/static/<path:name>',
+                                  endpoint='static',
+                                  build_only=True))
 
     @cached_property
     def shared_data(self):

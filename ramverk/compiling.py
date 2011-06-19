@@ -7,10 +7,10 @@ class CompilerMixinBase(object):
 
     def __create__(self):
         super(CompilerMixinBase, self).__create__()
-        if hasattr(self, 'route'):
-            self.route(Rule('/compiled/<path:name>',
-                            endpoint='compiled',
-                            build_only=True))
+        if hasattr(self, 'url_map'):
+            self.url_map.add(Rule('/compiled/<path:name>',
+                                  endpoint='compiled',
+                                  build_only=True))
 
     @cached_property
     def compilers(self):
