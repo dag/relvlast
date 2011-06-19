@@ -20,8 +20,8 @@ class Relvlast(Application):
 
     def configure(self):
         self.url_map.add(Rule('/', redirect_to='jbo'))
-        self.scan('relvlast.frontend', '/<locale>')
-        self.scan('relvlast.dictionary', '/<locale>/vlaste')
+        self.scan('relvlast.frontend', submount='/<locale>')
+        self.scan('relvlast.dictionary', submount='/<locale>/vlaste')
 
     @request_property
     def locale(self):
