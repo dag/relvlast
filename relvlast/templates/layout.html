@@ -20,41 +20,30 @@
   ]
 
 ?>
-<html xmlns:py="http://genshi.edgewall.org/"
-  xmlns:xi="http://www.w3.org/2001/XInclude"
-  py:strip="">
+<html py:strip=True>
 
-  <xi:include href="functions.html"/>
+  <xi:include href=functions.html />
 
-  <head>
-    <title>la lojban</title>
-    <script py:for="src in javascripts"
-      src="$src"
-      type="text/javascript"/>
-    <link py:for="href in stylesheets"
-      href="$href"
-      rel="stylesheet"
-      type="text/css"
-      media="all"/>
-  </head>
+  <title>la lojban</title>
 
-  <py:match path="body" once="true">
-    <body py:attrs="select('@*')">
-      <nav>
-        <ul>
-          <li><a href="${path('.frontend:index')}">pamo'o</a></li>
-          <li><a href="${path('.dictionary:index')}">vlaste</a></li>
-        </ul>
-      </nav>
-      ${select('*|text()')}
+  <script py:for="src in javascripts"
+    src=$src type=text/javascript />
 
-      <footer>
-        <ul>
-          <li py:for="code in locales">
-            <a href="${cross_locale_path(code)}">${locale_name(code)}</a>
-          </li>
-        </ul>
-      </footer>
-    </body>
-  </py:match>
-</html>
+  <link py:for="href in stylesheets"
+    href=$href rel=stylesheet type=text/css media=all />
+
+  <body py:match=body py:attrs="select('@*')">
+
+    <nav>
+      <ul>
+        <li><a href="${path('.frontend:index')}">pamo'o</li>
+        <li><a href="${path('.dictionary:index')}">vlaste</li>
+    </nav>
+
+    ${select('*|text()')}
+
+    <footer>
+      <ul>
+        <li py:for="code in locales">
+          <a href="${cross_locale_path(code)}">${locale_name(code)}</li>
+    </footer>

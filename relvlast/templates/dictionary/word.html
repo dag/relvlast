@@ -1,33 +1,27 @@
-<html xmlns:py="http://genshi.edgewall.org/"
-  xmlns:xi="http://www.w3.org/2001/XInclude">
-
-  <xi:include href="../layout.html"/>
+<html>
+  <xi:include href=../layout.html />
 
   <body>
     <h1>$word.id</h1>
     <article>
-      <dl class="word-data">
+      <dl class=word-data>
         <section>
           <dt>vlatai</dt>
-          <dd>${word.type}</dd>
+          <dd>${word.type}
         </section>
-        <section py:if="word.class_">
+        <section py:if=word.class_>
           <dt>selma'o</dt>
-          <dd><code>$word.class_</code></dd>
+          <dd><code>$word.class_
         </section>
-        <section py:if="word.affixes">
+        <section py:if=word.affixes>
           <dt>rafsi</dt>
-          <dd>${', '.join(word.affixes)}</dd>
+          <dd>${', '.join(word.affixes)}
         </section>
         <section>
           <dt>smuni</dt>
-          <dd>${creole(translation.definition)}</dd>
+          <dd>${creole(translation.definition)}
         </section>
-        <section py:if="translation.notes">
+        <section py:if=translation.notes>
           <dt>notci</dt>
-          <dd>${creole(translation.notes)}</dd>
+          <dd>${creole(translation.notes)}
         </section>
-      </dl>
-    </article>
-  </body>
-</html>

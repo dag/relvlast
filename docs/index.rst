@@ -469,7 +469,7 @@ Templating with Genshi
         - :class:`HTML <genshi.output.HTMLSerializer>`
         - HTML 5
         - :mimetype:`text/html`
-        - MarkupTemplate_
+        - :class:`HTMLTemplate`
       * - ``'.xhtml'``
         - :class:`XML <genshi.output.XMLSerializer>`
         - XHTML 1.1
@@ -540,6 +540,13 @@ Templating with Genshi
 
       def configure(self):
           self.renderers['.svg'] = GenshiRenderer(self, 'xml', 'svg', 'image/svg+xml')
+
+  .. autoclass:: HTMLTemplate
+
+    This allows for less verbose HTML templates by allowing unclosed tags
+    and unquoted attributes and not requiring all namespaces be declarated
+    explicitly, but is less predictable and generic than the more strict
+    XML dialect.
 
 .. autoclass:: ramverk.rendering.TemplatingMixinBase
   :members:

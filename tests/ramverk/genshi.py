@@ -53,3 +53,15 @@ def text_template(app):
     response = app.render('newtext.txt')
     assert response.content_type == 'text/plain; charset=utf-8'
     assert response.data == 'The answer to the ultimate question is 42\n'
+
+
+@genshi.test
+def html_template(app):
+    response = app.render('html-template.html', paragraphs=['One', 'Two'])
+    assert response.data == dedent("""\
+        <!DOCTYPE html>
+        <html>
+          <body>
+            <p>One
+        </p><p>Two
+        </p></body></html>""")

@@ -1,13 +1,5 @@
-<html xmlns:py="http://genshi.edgewall.org/"
-  xmlns:xi="http://www.w3.org/2001/XInclude"
-  xmlns:form="http://ns.discorporate.us/flatland/genshi"
-  py:strip="">
+<html py:strip=True>
 
   <py:def function="field(field, label, **attributes)">
-    <form:with auto-domid="on"
-      auto-for="on">
-      <xi:include href="$field.properties.template"/>
-    </form:with>
-  </py:def>
-
-</html>
+    <form:with auto-domid=on auto-for=on>
+      <xi:include href=$field.properties.template />

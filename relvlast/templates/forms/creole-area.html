@@ -1,9 +1,3 @@
-<div xmlns:py="http://genshi.edgewall.org/"
-  xmlns:form="http://ns.discorporate.us/flatland/genshi">
-  <dt><label form:bind="field">$label</label></dt>
-  <dd>
-    <textarea form:bind="form.body"
-      py:attrs="attributes"
-      class="creole"/>
-  </dd>
-</div>
+<div>
+  <dt><label form:bind=field>$label</dt>
+  <dd><textarea form:bind=form.body py:attrs=attributes class=creole />

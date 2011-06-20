@@ -1,7 +1,35 @@
 from __future__        import absolute_import
-from genshi.template   import TemplateLoader, loader, NewTextTemplate
+from genshi            import HTML
+from genshi.filters    import Transformer
+from genshi.template   import TemplateLoader, loader
+from genshi.template   import MarkupTemplate, NewTextTemplate
 from werkzeug.utils    import cached_property
 from ramverk.rendering import TemplatingMixinBase
+
+
+namespace_filter = (Transformer('//html')
+    .attr('xmlns:py', 'http://genshi.edgewall.org/')
+    .attr('xmlns:xi', 'http://www.w3.org/2001/XInclude')
+    .attr('xmlns:i18n', 'http://genshi.edgewall.org/i18n')
+    .attr('xmlns:form', 'http://ns.discorporate.us/flatland/genshi'))
+
+
+class HTMLTemplate(MarkupTemplate):
+    """A :class:`~genshi.template.markup.MarkupTemplate` parsing with
+    :class:`~genshi.input.HTMLParser` and injecting the common namespace
+    prefixes `py`, `xi`, `i18n` and `form` (for flatland)."""
+
+    def __init__(self, source, filepath=None, filename=None, loader=None,
+                 encoding=None, lookup='strict', allow_exec=True):
+        if hasattr(source, 'read'):
+            source = source.read()
+        elif hasattr(source, 'render'):
+            source = source.render()
+        stream = HTML(source) | namespace_filter
+        source = stream.render()
+        super(HTMLTemplate, self).__init__(source,
+            filepath=filepath, filename=filename, loader=loader,
+            encoding=encoding, lookup=lookup, allow_exec=allow_exec)
 
 
 class GenshiRenderer(object):
@@ -54,7 +82,7 @@ class GenshiMixin(TemplatingMixinBase):
         R = GenshiRenderer
         renderers = super(GenshiMixin, self).renderers
         renderers.update({
-            '.html' : R(self, 'html', 'html5'),
+            '.html' : R(self, 'html', 'html5',   'text/html', HTMLTemplate),
             '.xhtml': R(self, 'xml',  'xhtml11', 'application/xhtml+xml'),
             '.atom' : R(self, 'xml',   None,     'application/atom+xml'),
             '.svg'  : R(self, 'xml',  'svg',     'image/svg+xml'),
