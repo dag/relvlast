@@ -18,7 +18,7 @@ class SCSSMixin(CompilerMixinBase):
         return compilers
 
     @cached_property
-    def __parser(self):
+    def _SCSSMixin__parser(self):
         parser = scss.Scss()
         parser.scss_opts.update(compress=False)
         return parser

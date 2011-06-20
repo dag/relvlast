@@ -14,7 +14,7 @@ class ZODBMixin(object):
     package, for example ``self.transaction_manager.doom()``."""
 
     @cached_property
-    def __db(self):
+    def _ZODBMixin__db(self):
         """The :class:`connection pool <ZODB.DB>`."""
         return DB(self.settings['storage']())
 
