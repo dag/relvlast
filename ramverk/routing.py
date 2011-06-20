@@ -84,6 +84,11 @@ class RoutingHelpersMixin(object):
         return self
 
     def absolute_endpoint(self, endpoint):
+        """Expand the relative `endpoint` description to a fully qualified
+        endpoint name. Given an application in ``myapp`` and a current
+        endpoint of ``myapp.frontend:index``, ``:about`` resolves to
+        ``myapp.frontend:about`` and ``.backend:index`` to
+        ``myapp.backend:index``."""
         if endpoint.startswith('.'):
             return self.module + endpoint
         if endpoint.startswith(':') and ':' in self.local.endpoint:
@@ -92,7 +97,8 @@ class RoutingHelpersMixin(object):
         return endpoint
 
     def url(self, endpoint, **values):
-        """Build a URL for a route to `endpoint` with `values`."""
+        """Expand the `endpoint` with :meth:`absolute_endpoint` and build a
+        URL for a route to the endpoint with `values`."""
         endpoint = self.absolute_endpoint(endpoint)
         return self.url_adapter.build(endpoint, values, force_external=True)
 
