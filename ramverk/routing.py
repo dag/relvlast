@@ -24,8 +24,8 @@ def _add_rules(scanner, rules, ob):
 
 
 def router(generator):
-    """Decorate a callable as a router, i.e. returns an iterable of rules
-    and rule factories."""
+    """Decorator for use with :class:`~ramverk.venusian.VenusianMixin` for
+    callables that return an iterable of routing rules."""
     def route(scanner, name, ob):
         _add_rules(scanner, ob(), ob)
     attach(generator, route, category='ramverk')
@@ -33,7 +33,7 @@ def router(generator):
 
 
 def route(*args, **kwargs):
-    """Route a single rule to the decorated endpoint view."""
+    """Venusian decorator for routing a single URL rule."""
     def decorator(view):
         def route_endpoint(scanner, name, ob):
             kwargs.setdefault('endpoint', name)

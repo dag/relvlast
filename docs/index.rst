@@ -353,7 +353,31 @@ Dispatching Requests by URL
 
   .. autofunction:: router
 
+    Endpoints will be prefixed with the module of the decorated callable
+    plus a colon. The scan can optionally take the keywords `submount` and
+    `subdomain` as strings which will wrap the rules in the corresponding
+    rule factories. Example::
+
+      @router
+      def urls():
+          yield Rule('/', endpoint='index')
+
+      def index(response):
+          return response('Howdy')
+
+      class App(Application):
+          def configure(self):
+              self.scan(submount='/<locale>')
+
   .. autofunction:: route
+
+    The dotted name of the decorated callable will be used as the endpoint
+    and a :class:`~werkzeug.routing.Rule` using the arguments of the
+    decorator will be created and added. Example::
+
+      @route('/')
+      def index(response):
+          return response('Howdy')
 
   .. autofunction:: get
 
@@ -372,6 +396,10 @@ Dispatching Requests by URL
   .. autoclass:: RoutingMixin
     :members:
     :show-inheritance:
+
+
+.. automodule:: ramverk.venusian
+  :members:
 
 
 Rendering Content
