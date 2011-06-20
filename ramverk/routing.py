@@ -34,13 +34,13 @@ def router(generator):
 
 def route(*args, **kwargs):
     """Venusian decorator for routing a single URL rule."""
-    def decorator(view):
+    def decorator(endpoint):
         def route_endpoint(scanner, name, ob):
             kwargs.setdefault('endpoint', name)
             rule = Rule(*args, **kwargs)
             _add_rules(scanner, [rule], ob)
-        attach(view, route_endpoint, category='ramverk')
-        return view
+        attach(endpoint, route_endpoint, category='ramverk')
+        return endpoint
     return decorator
 
 
@@ -127,15 +127,15 @@ class URLMapMixin(object):
         """Adapter for :attr:`url_map` bound to the current request."""
         return self.url_map.bind_to_environ(self.local.environ)
 
-    def call_view(self, view, **kwargs):
-        """Call the `view` callable with `kwargs` using view semantics: the
-        default is to fetch missing arguments in the view's signature, from
+    def call_as_endpoint(self, callable, **kwargs):
+        """Call the `callable` with `kwargs` using endpoint semantics: the
+        default is to fetch missing arguments in the callable's signature, from
         the attributes of the application."""
-        wants = getargspec(view).args
+        wants = getargspec(callable).args
         kwargs.update((name, getattr(self, name))
                       for name in wants
                       if name not in kwargs)
-        return view(**kwargs)
+        return callable(**kwargs)
 
     def match_request_to_endpoint(self):
         endpoint, args = self.url_adapter.match()
@@ -144,14 +144,13 @@ class URLMapMixin(object):
         return endpoint, args
 
     def respond(self):
-        """Match the environment to an endpoint and then :meth:`call_view`
-        the corresponding view."""
+        """Match the request to an endpoint and call it with
+        :meth:`call_as_endpoint` to produce a response."""
         try:
             endpoint, args = self.match_request_to_endpoint()
         except NotFound:
             return super(URLMapMixin, self).respond()
-        view = import_string(endpoint)
-        return self.call_view(view)
+        return self.call_as_endpoint(import_string(endpoint))
 
 
 class RoutingMixin(RoutingHelpersMixin, URLMapMixin):
