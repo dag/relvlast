@@ -1,5 +1,5 @@
 from __future__          import absolute_import
-from inspect             import getargspec
+from inspect             import isclass, ismethod, getargspec
 
 from venusian            import attach
 from werkzeug.exceptions import NotFound
@@ -131,7 +131,15 @@ class URLMapMixin(object):
         """Call the `callable` with `kwargs` using endpoint semantics: the
         default is to fetch missing arguments in the callable's signature, from
         the attributes of the application."""
+        if isclass(callable):
+            wants = getargspec(callable.__init__).args[1:]
+            initargs = dict(kwargs, **dict((name, getattr(self, name))
+                                           for name in wants
+                                           if name not in kwargs))
+            callable = callable(**initargs).__call__
         wants = getargspec(callable).args
+        if ismethod(callable):
+            wants = wants[1:]
         kwargs.update((name, getattr(self, name))
                       for name in wants
                       if name not in kwargs)
@@ -155,3 +163,11 @@ class URLMapMixin(object):
 
 class RoutingMixin(RoutingHelpersMixin, URLMapMixin):
     """Add complete URL dispatching to an application."""
+
+
+class MethodDispatch(object):
+    """Dispatch a class-based endpoint by HTTP method."""
+
+    def __call__(self, request, call_as_endpoint):
+        method = getattr(self, request.method.lower())
+        return call_as_endpoint(method)

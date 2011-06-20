@@ -1,5 +1,5 @@
 from werkzeug.routing import Rule
-from ramverk.routing  import router, get
+from ramverk.routing  import MethodDispatch, router, route, get
 
 
 @router
@@ -28,3 +28,15 @@ def page(response, segments):
 @get('/relative-endpoint/')
 def relative_endpoint(response, path):
     return response(path(':page', page='fubar'))
+
+
+@route('/classic/')
+class Classic(MethodDispatch):
+
+    renderer = 'json'
+
+    def __init__(self, db):
+        self.greeting = db.greeting
+
+    def get(self, render):
+        return render(self.renderer, greeting=self.greeting)

@@ -34,6 +34,13 @@ def get_and_render_json(client):
 
 
 @wsgi.test
+def method_dispatch_class(client):
+    response = client.get('/classic/')
+    assert response.mimetype == 'application/json'
+    assert response.data == '{"greeting": "Welcome"}'
+
+
+@wsgi.test
 def post_to_and_get_index(client):
     response = client.post('/', data={'greeting': 'Hello'},
                                 follow_redirects=True)

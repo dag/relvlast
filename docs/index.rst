@@ -16,7 +16,7 @@ First we need some boring imports::
   from werkzeug.routing  import Rule
   from ramverk.fullstack import Application
   from ramverk.utils     import request_property
-  from ramverk.routing   import router, get, post
+  from ramverk.routing   import MethodDispatch, router, route, get, post
 
 .. sidebar:: ZODB
 
@@ -92,6 +92,18 @@ framework which is more limiting but sufficient for most situations::
   def set_greeting(db, request, redirect):
       db.greeting = request.form.get('greeting')
       return redirect(':greet_visitor')
+
+Or why not a class::
+
+  @route('/')
+  class Index(MethodDispatch):
+
+      def get(self, render, db):
+          return render('index.html', greeting=db.greeting)
+
+      def post(self, db, request, redirect):
+          db.greeting = request.form.get('greeting')
+          return redirect(':Index')
 
 The argument to the redirect function is an endpoint name. Scanned
 endpoints are named by the fully qualified dotted name of the view function
@@ -396,6 +408,21 @@ Dispatching Requests by URL
   .. autoclass:: RoutingMixin
     :members:
     :show-inheritance:
+
+  .. autoclass:: MethodDispatch
+
+    Example::
+
+      @route('/')
+      class Index(MethodDispatch):
+
+          renderer = 'index.html'
+
+          def __init__(self, db):
+              self.greeting = db.greeting
+
+          def get(self, render):
+              return render(self.renderer, greeting=self.greeting)
 
 
 .. automodule:: ramverk.venusian
