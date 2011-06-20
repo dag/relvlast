@@ -734,3 +734,74 @@ Common Utilities
     {'answer': 42, 'question': 'What is the ultimate answer?'}
     >>> vars(QA(answer=42))
     {'answer': 42, 'question': None}
+
+
+Glossary
+--------
+
+.. centered:: Technologies
+
+.. glossary::
+
+  Werkzeug
+    `Werkzeug <http://werkzeug.pocoo.org/>`_ is a swiss army knife for
+    WSGI, similar in scope to `Paste <http://pythonpaste.org/>`_ and `WebOb
+    <http://pythonpaste.org/webob/>`_. Ramverk uses Werkzeug's
+    request/response wrappers and its routing module for URL dispatch,
+    among other things.
+
+  Genshi
+    `Genshi <http://genshi.edgewall.org/>`_ is primarily an engine for XML
+    templating, useful for generating XML-like content for the web, such as
+    HTML or Atom feeds. It is an optional mixin in Ramverk and included
+    with the full-stack.
+
+  SCSS
+    `SCSS <http://sass-lang.com/>`_ or "Sassy CSS" is a superset of CSS
+    that adds rule nesting, mixins, constants and other such things making
+    stylesheets more maintainable.
+
+  ZODB
+    `ZODB <http://zodb.readthedocs.org/en/latest/>`_ is a scalable
+    :mod:`pickle`, adding transactions and support for multi-process
+    setups.
+
+  Venusian
+    `Venusian <http://docs.pylonsproject.org/projects/venusian/dev/>`_ is a
+    library for implementing decorators that are activated by scanning.
+    This allows decorators to be reusable and decoupled from applications
+    without the use of a global registry.
+
+  Logbook
+    `Logbook <http://packages.python.org/Logbook/>`_ is a modern logging
+    system for Python built with the demands of complex web deployments in
+    mind.
+
+  Paver
+    `Paver <http://paver.github.com/paver/>`_ is a tool for scripting tasks
+    with Python and is useful for managing a project in development.
+
+
+.. centered:: Terminology
+
+.. glossary::
+  :sorted:
+
+  dotted name
+    String representation of the import path to an object, in the form
+    ``package.module:member.attribute`` or any variation thereof. These can
+    be dereferenced with :func:`~werkzeug.utils.import_string` and are used
+    for endpoints in Ramverk.
+
+  endpoint name
+    Identifier associated with URL rules, in Ramverk usually a
+    :term:`dotted name` for the :term:`endpoint` function or class.
+
+  endpoint
+    In Ramverk, a function or class that responds to a request matching a
+    URL rule. In :term:`Werkzeug`, an arbitrary object otherwise the same
+    as an :term:`endpoint name`.
+
+  relative endpoint
+    A partial endpoint name, expanded to its full form using the endpoint
+    of the current request and the module name of the application.
