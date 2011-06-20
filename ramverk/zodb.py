@@ -16,7 +16,7 @@ class ZODBMixin(object):
     @cached_property
     def _ZODBMixin__db(self):
         """The :class:`connection pool <ZODB.DB>`."""
-        return DB(self.settings['storage']())
+        return DB(self.settings.storage())
 
     @request_property
     def _ZODBMixin__connection(self):
