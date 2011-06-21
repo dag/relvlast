@@ -114,12 +114,13 @@ out in modules.
 
 .. sidebar:: Genshi
 
-  Genshi templates are XML streams which means that we don't have to worry
-  about escaping markup and don't need to bother with ensuring well-formed
-  output. It also means we can change the serialization and doctype on the
-  fly, extract messages for translation directly from the markup and that
-  we can apply filters and transformations on the stream before it renders.
-  This comes at the cost of speed but for most uses it is fast enough.
+  Genshi templates are XML/HTML streams which means that we don't have to
+  worry about escaping markup and don't need to bother with ensuring
+  well-formed output. It also means we can change the serialization and
+  doctype on the fly, extract messages for translation directly from the
+  markup and that we can apply filters and transformations on the stream
+  before it renders. This comes at the cost of speed but for most uses it
+  is fast enough.
 
 We also need to write the :file:`index.html` template:
 
@@ -130,15 +131,11 @@ We also need to write the :file:`index.html` template:
       <h1>$greeting, World!</h1>
 
       <form action="${path(':index')}"
-        method="POST">
+        method=POST>
 
-        <input name="greeting"
+        <input name=greeting
           placeholder="Enter a greeting"
-          type="text"/>
-
-      </form>
-    </body>
-  </html>
+          type=text>
 
 For a development server we can use Paver and write a :file:`pavement.py`::
 
