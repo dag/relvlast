@@ -471,36 +471,35 @@ Templating with Genshi
         - :class:`XML <genshi.output.XMLSerializer>`
         - XHTML 1.1
         - :mimetype:`application/xhtml+xml`
-        - MarkupTemplate_
+        - :class:`CompactTemplate`
       * - ``'.atom'``
         - :class:`XML <genshi.output.XMLSerializer>`
         -
         - :mimetype:`application/atom+xml`
-        - MarkupTemplate_
+        - :class:`CompactTemplate`
       * - ``'.svg'``
         - :class:`XML <genshi.output.XMLSerializer>`
         - SVG
         - :mimetype:`image/svg+xml`
-        - MarkupTemplate_
+        - :class:`CompactTemplate`
       * - ``'.xml'``
         - :class:`XML <genshi.output.XMLSerializer>`
         -
         - :mimetype:`application/xml`
-        - MarkupTemplate_
+        - :class:`CompactTemplate`
       * - ``'.txt'``
         - :class:`Text <genshi.output.TextSerializer>`
         -
         - :mimetype:`text/plain`
-        - NewTextTemplate_
+        - `NewTextTemplate <http://genshi.readthedocs.org/en/latest/text-templates/>`_
 
     .. admonition:: Notes
 
       * None of the preconfigured renderers serialize lazily by default.
       * You probably don't want to use the XHTML renderer.
-
-    .. _MarkupTemplate: http://genshi.readthedocs.org/en/latest/xml-templates/
-
-    .. _NewTextTemplate: http://genshi.readthedocs.org/en/latest/text-templates/
+      * See the documentation for `XML templates
+        <http://genshi.readthedocs.org/en/latest/xml-templates/>`_ for both
+        :class:`HTMLTemplate` and :class:`CompactTemplate`.
 
     .. autoattribute:: template_loaders
 
@@ -537,6 +536,11 @@ Templating with Genshi
 
       def configure(self):
           self.renderers['.svg'] = GenshiRenderer(self, 'xml', 'svg', 'image/svg+xml')
+
+  .. autoclass:: CompactTemplate
+
+    Less talkative than XML while still as predictable and consistent, but
+    less standard and familiar than either XML or HTML.
 
   .. autoclass:: HTMLTemplate
 

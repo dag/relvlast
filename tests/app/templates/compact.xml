@@ -1,0 +1,5 @@
+<html
+  <body
+    <p
+      @py:for=name in names
+      "Hello, $name

@@ -1,12 +1,41 @@
 from __future__        import absolute_import
-from genshi            import HTML
+from genshi.core       import Stream
 from genshi.filters    import Transformer
+from genshi.input      import HTML, ET
 from genshi.template   import TemplateLoader, loader
 from genshi.template   import MarkupTemplate, NewTextTemplate
 from werkzeug.utils    import cached_property
 from ramverk.rendering import TemplatingMixinBase
 
+try:
+    from compactxml import expand_to_string
+except ImportError:
+    pass
 
+
+XMLNS = dict(py='http://genshi.edgewall.org/',
+             xi='http://www.w3.org/2001/XInclude',
+             i18n='http://genshi.edgewall.org/i18n',
+             form='http://ns.discorporate.us/flatland/genshi')
+
+
+class CompactTemplate(MarkupTemplate):
+    """A :class:`~genshi.template.markup.MarkupTemplate` parsing with
+    `compactxml <http://packages.python.org/compactxml/>`_ with the
+    namespace prefixes `py`, `xi`, `i18n` and `form` (for flatland)
+    preconfigured."""
+
+    def __init__(self, source, filepath=None, filename=None, loader=None,
+                 encoding=None, lookup='strict', allow_exec=True):
+        if hasattr(source, 'render'):
+            source = source.render()
+        source = expand_to_string(source, XMLNS, prettyPrint=True)
+        super(CompactTemplate, self).__init__(source,
+            filepath=filepath, filename=filename, loader=loader,
+            encoding=encoding, lookup=lookup, allow_exec=allow_exec)
+
+
+# TODO use the XMLNS mapping
 namespace_filter = (Transformer('//html')
     .attr('xmlns:py', 'http://genshi.edgewall.org/')
     .attr('xmlns:xi', 'http://www.w3.org/2001/XInclude')
@@ -45,14 +74,13 @@ class GenshiRenderer(object):
     """Set a mimetype on the returned response object."""
 
     class_ = None
-    """Template class if not
-    :class:`~genshi.template.markup.MarkupTemplate`."""
+    """Template class if not :class:`CompactTemplate`."""
 
     lazy = False
     """Serialize lazily, can misbehave with databases."""
 
     def __init__(self, app, serializer=None, doctype=None,
-                 mimetype=None, class_=None, lazy=False):
+                 mimetype=None, class_=CompactTemplate, lazy=False):
         self.app, self.serializer, self.doctype = app, serializer, doctype
         self.mimetype, self.class_, self.lazy = mimetype, class_, lazy
 
