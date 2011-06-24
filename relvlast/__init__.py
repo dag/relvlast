@@ -12,13 +12,24 @@ from werkzeug.routing    import Rule
 from babel               import Locale
 from babel.support       import Translations
 from ramverk.fullstack   import Application
+from ramverk.genshi      import CompactTemplate
 from ramverk.utils       import request_property
 from relvlast.objects    import Root
+
+
+class CompactHTMLTemplate(CompactTemplate):
+
+    namespaces = dict(
+        py='http://genshi.edgewall.org/',
+        xi='http://www.w3.org/2001/XInclude',
+        i18n='http://genshi.edgewall.org/i18n',
+        form='http://ns.discorporate.us/flatland/genshi')
 
 
 class Relvlast(Application):
 
     def configure(self):
+        self.renderers['.html'].class_ = CompactHTMLTemplate
         self.url_map.add(Rule('/', redirect_to='jbo'))
         self.scan('relvlast.frontend', submount='/<locale>')
         self.scan('relvlast.dictionary', submount='/<locale>/vlaste')

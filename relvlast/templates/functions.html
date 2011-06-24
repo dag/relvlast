@@ -1,5 +1,10 @@
-<html py:strip=True>
+<html
+    @py:strip
 
-  <py:def function="field(field, label, **attributes)">
-    <form:with auto-domid=on auto-for=on>
-      <xi:include href=$field.properties.template />
+    <py:def
+        @function=field(field, label, **attributes)
+        <form:with
+            @auto-domid=on
+            @auto-for=on
+            <xi:include
+                @href=$field.properties.template

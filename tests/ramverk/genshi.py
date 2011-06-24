@@ -70,4 +70,9 @@ def html_template(app):
 @genshi.test
 def compact_template(app):
     response = app.render('compact.xml', names=['World', 'Friend'])
-    assert response.data == '<html><body><p>Hello, World</p><p>Hello, Friend</p></body></html>'
+    assert response.data == dedent("""\
+        <html>
+          <body>
+            <p>Hello, World</p><p>Hello, Friend</p>
+          </body>
+        </html>""")

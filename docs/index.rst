@@ -114,7 +114,7 @@ out in modules.
 
 .. sidebar:: Genshi
 
-  Genshi templates are XML/HTML streams which means that we don't have to
+  Genshi templates are markup streams which means that we don't have to
   worry about escaping markup and don't need to bother with ensuring
   well-formed output. It also means we can change the serialization and
   doctype on the fly, extract messages for translation directly from the
@@ -122,20 +122,24 @@ out in modules.
   before it renders. This comes at the cost of speed but for most uses it
   is fast enough.
 
-We also need to write the :file:`index.html` template:
+We also need to write the :file:`index.html` template. We'll use
+:term:`Genshi` with the :term:`Compact XML` dialect:
 
-.. sourcecode:: html+genshi
+.. sourcecode:: compactxml+genshi
 
-  <html>
-    <body>
-      <h1>$greeting, World!</h1>
+    <html
+        <body
+            <h1
+                "$greeting, World!
 
-      <form action="${path(':index')}"
-        method=POST>
+            <form
+                @action=${path(':index')}
+                @method=POST
 
-        <input name=greeting
-          placeholder="Enter a greeting"
-          type=text>
+                <input
+                    @name=greeting
+                    @placeholder=Enter a greeting
+                    @type=text
 
 For a development server we can use Paver and write a :file:`pavement.py`::
 
@@ -538,9 +542,11 @@ Templating with Genshi
           self.renderers['.svg'] = GenshiRenderer(self, 'xml', 'svg', 'image/svg+xml')
 
   .. autoclass:: CompactTemplate
+    :members:
 
     Less talkative than XML while still as predictable and consistent, but
-    less standard and familiar than either XML or HTML.
+    less standard and familiar than either XML or HTML. Subclass to
+    override the option attributes.
 
   .. autoclass:: HTMLTemplate
 
@@ -763,6 +769,10 @@ Glossary
     templating, useful for generating XML-like content for the web, such as
     HTML or Atom feeds. It is an optional mixin in Ramverk and included
     with the full-stack.
+
+  Compact XML
+    `Compact XML <http://packages.python.org/compactxml/>`_ is a language
+    that compiles to XML, using indentation for nesting similar to Python.
 
   SCSS
     `SCSS <http://sass-lang.com/>`_ or "Sassy CSS" is a superset of CSS

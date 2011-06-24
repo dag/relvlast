@@ -1,21 +1,35 @@
-<html>
-  <xi:include href=../layout.html />
+<html
+    <xi:include
+        @href=../layout.html
 
-  <body>
-    <h1>vlaste fu la lojban</h1>
+    <body
+        <h1
+            "vlaste fu la lojban
 
-    <dl py:for="word in words" py:with="word = word.last.object">
-      <div>
-        <dt><a href="${path(':word', word=word.of)}">$word.of</dt>
-        <dd>${creole(word.definition)}
-    </dl>
+        <dl
+            @py:for=word in words
+            @py:with=word = word.last.object
+            <div
+                <dt
+                    <a
+                        @href=${path(':word', word=word.of)}
+                        "$word.of
+                <dd
+                    "${creole(word.definition)}
 
-    <nav class=pages>
-      <ol>
-        <li py:for="page in xrange(1, total + 1)">
-          <?python
-            attrs = {}
-            if page == request.args.get('papri', 1, int):
-              attrs['class'] = 'active'
-          ?>
-          <a href="?papri=$page" py:attrs=attrs>$page</li>
+        <nav
+            @class=pages
+            <ol
+                <li
+                    @py:for=page in xrange(1, total + 1)
+                    <?python=
+                    \ attrs = {}
+                    \ if page == request.args.get('papri', 1, int):
+                    \     attrs['class'] = 'active'
+
+                    <a
+                        @href=?papri=$page
+                        @py:attrs=attrs
+                        "$page
+                    "
+                    \

@@ -1,3 +1,10 @@
-<div>
-  <dt><label form:bind=field>$label</dt>
-  <dd><textarea form:bind=form.body py:attrs=attributes class=creole />
+<div
+    <dt
+        <label
+            @form:bind=field
+            "$label
+    <dd
+        <textarea
+            @form:bind=form.body
+            @py:attrs=attributes
+            @class=creole

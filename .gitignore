@@ -2,6 +2,8 @@
 *.sw?
 relvlast.db*
 build
+dist
+*.egg-info
 .coverage
 htmlcov
 relvlast/compiled/*.css

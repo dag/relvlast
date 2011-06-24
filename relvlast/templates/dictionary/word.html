@@ -1,27 +1,44 @@
-<html>
-  <xi:include href=../layout.html />
+<html
+    <xi:include
+        @href=../layout.html
 
-  <body>
-    <h1>$word.id</h1>
-    <article>
-      <dl class=word-data>
-        <section>
-          <dt>vlatai</dt>
-          <dd>${word.type}
-        </section>
-        <section py:if=word.class_>
-          <dt>selma'o</dt>
-          <dd><code>$word.class_
-        </section>
-        <section py:if=word.affixes>
-          <dt>rafsi</dt>
-          <dd>${', '.join(word.affixes)}
-        </section>
-        <section>
-          <dt>smuni</dt>
-          <dd>${creole(translation.definition)}
-        </section>
-        <section py:if=translation.notes>
-          <dt>notci</dt>
-          <dd>${creole(translation.notes)}
-        </section>
+    <body
+        <h1
+            "$word.id
+
+        <article
+            <dl class=word-data
+
+                <section
+                    <dt
+                        "vlatai
+                    <dd
+                        "${word.type}
+
+                <section
+                    @py:if=word.class_
+                    <dt
+                        "selma'o
+                    <dd
+                        <code
+                            "$word.class_
+
+                <section
+                    @py:if=word.affixes
+                    <dt
+                        "rafsi
+                    <dd
+                        "${', '.join(word.affixes)}
+
+                <section
+                    <dt
+                        "smuni
+                    <dd
+                        "${creole(translation.definition)}
+
+                <section
+                    @py:if=translation.notes
+                    <dt
+                        "notci
+                    <dd
+                        "${creole(translation.notes)}

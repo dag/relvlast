@@ -1,49 +1,68 @@
-<?python
+<?python=
+\
+\ locales = ['en', 'jbo', 'es', 'eo']
+\
+\ webfonts = [
+\     'EB Garamond',
+\     'Buda:light',
+\ ]
+\
+\ stylesheets = [
+\     'http://fonts.googleapis.com/css?family='
+\         + '|'.join(webfonts).replace(' ', '+'),
+\     path('compiled', name='main.css'),
+\ ]
+\
+\ javascripts = [
+\     'https://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js',
+\     path('static', name='creole.js'),
+\     path('static', name='app.js'),
+\ ]
 
-  locales = ['en', 'jbo', 'es', 'eo']
+<html
+    @py:strip
 
-  webfonts = [
-    'EB Garamond',
-    'Buda:light',
-  ]
+    <xi:include
+        @href=functions.html
 
-  stylesheets = [
-    'http://fonts.googleapis.com/css?family='
-        + '|'.join(webfonts).replace(' ', '+'),
-    path('compiled', name='main.css'),
-  ]
+    <title
+        "la lojban
 
-  javascripts = [
-    'https://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js',
-    path('static', name='creole.js'),
-    path('static', name='app.js'),
-  ]
+    <script
+        @py:for=src in javascripts
+        @src=$src
+        @type=text/javascript
 
-?>
-<html py:strip=True>
+    <link
+        @py:for=href in stylesheets
+        @href=$href
+        @rel=stylesheet
+        @type=text/css
+        @media=all
 
-  <xi:include href=functions.html />
+    <body
+        @py:match=body
+        @py:attrs=select('@*')
 
-  <title>la lojban</title>
+        <nav
+            <ul
+                <li
+                    <a
+                        @href=${path('.frontend:index')}
+                        "pamo'o
+                <li
+                    <a
+                        @href=${path('.dictionary:index')}
+                        "vlaste
 
-  <script py:for="src in javascripts"
-    src=$src type=text/javascript />
+        "${select('*|text()')}
 
-  <link py:for="href in stylesheets"
-    href=$href rel=stylesheet type=text/css media=all>
-
-  <body py:match=body py:attrs="select('@*')">
-
-    <nav>
-      <ul>
-        <li><a href="${path('.frontend:index')}">pamo'o</li>
-        <li><a href="${path('.dictionary:index')}">vlaste</li>
-    </nav>
-
-    ${select('*|text()')}
-
-    <footer>
-      <ul>
-        <li py:for="code in locales">
-          <a href="${cross_locale_path(code)}">${locale_name(code)}</li>
-    </footer>
+        <footer
+            <ul
+                <li
+                    @py:for=code in locales
+                    <a
+                        @href=${cross_locale_path(code)}
+                        "${locale_name(code)}
+                    "
+                    \

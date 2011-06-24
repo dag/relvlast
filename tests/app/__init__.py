@@ -1,6 +1,7 @@
 from persistent        import Persistent
 from logbook           import TestHandler
 from ramverk.fullstack import Application
+from ramverk.genshi    import HTMLTemplate
 from ramverk.utils     import request_property
 
 
@@ -23,6 +24,7 @@ class TestApp(Application):
 
     def configure(self):
         self.log_handler = TestHandler()
+        self.renderers['.html'].class_ = HTMLTemplate
         self.scan('tests.app.frontend')
         self.scan('tests.app.module', submount='/module')
         self.scan('tests.app.subdomain', subdomain='en')

@@ -13,29 +13,31 @@ except ImportError:
     pass
 
 
-XMLNS = dict(py='http://genshi.edgewall.org/',
-             xi='http://www.w3.org/2001/XInclude',
-             i18n='http://genshi.edgewall.org/i18n',
-             form='http://ns.discorporate.us/flatland/genshi')
-
-
 class CompactTemplate(MarkupTemplate):
     """A :class:`~genshi.template.markup.MarkupTemplate` parsing with
-    `compactxml <http://packages.python.org/compactxml/>`_ with the
-    namespace prefixes `py`, `xi`, `i18n` and `form` (for flatland)
-    preconfigured."""
+    :term:`Compact XML` using preconfigured namespace prefixes."""
+
+    namespaces = dict(
+        py='http://genshi.edgewall.org/',
+        xi='http://www.w3.org/2001/XInclude')
+    """Mapping of namespace prefixes to namespace URIs to be included in
+    templates, by default including `py` and `xi`."""
+
+    pretty_print = True
+    """Whether the rendered markup should be pretty-printed with
+    whitespace."""
 
     def __init__(self, source, filepath=None, filename=None, loader=None,
                  encoding=None, lookup='strict', allow_exec=True):
         if hasattr(source, 'render'):
             source = source.render()
-        source = expand_to_string(source, XMLNS, prettyPrint=True)
+        source = expand_to_string(source, self.namespaces,
+                                  prettyPrint=self.pretty_print)
         super(CompactTemplate, self).__init__(source,
             filepath=filepath, filename=filename, loader=loader,
             encoding=encoding, lookup=lookup, allow_exec=allow_exec)
 
 
-# TODO use the XMLNS mapping
 namespace_filter = (Transformer('//html')
     .attr('xmlns:py', 'http://genshi.edgewall.org/')
     .attr('xmlns:xi', 'http://www.w3.org/2001/XInclude')
@@ -110,7 +112,7 @@ class GenshiMixin(TemplatingMixinBase):
         R = GenshiRenderer
         renderers = super(GenshiMixin, self).renderers
         renderers.update({
-            '.html' : R(self, 'html', 'html5',   'text/html', HTMLTemplate),
+            '.html' : R(self, 'html', 'html5',   'text/html'),
             '.xhtml': R(self, 'xml',  'xhtml11', 'application/xhtml+xml'),
             '.atom' : R(self, 'xml',   None,     'application/atom+xml'),
             '.svg'  : R(self, 'xml',  'svg',     'image/svg+xml'),
