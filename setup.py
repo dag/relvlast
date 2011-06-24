@@ -8,7 +8,7 @@ setup(
     install_requires=[
         'Babel',
         'Genshi',
-        'Logbook'
+        'Logbook',
         'Paver',
         'PyYAML',
         'Werkzeug',
