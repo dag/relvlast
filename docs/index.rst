@@ -501,7 +501,7 @@ Templating with Genshi
         - :class:`HTML <genshi.output.HTMLSerializer>`
         - HTML 5
         - :mimetype:`text/html`
-        - :class:`HTMLTemplate`
+        - :class:`CompactTemplate`
       * - ``'.xhtml'``
         - :class:`XML <genshi.output.XMLSerializer>`
         - XHTML 1.1
