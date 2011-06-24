@@ -3,11 +3,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='Ramverk',
-    packages=find_packages(),
-
-    install_requires=[
-    ],
-
+    packages=find_packages(exclude=('deployments', 'tests')),
     entry_points = {
         'pygments.lexers': [
             'compactxml = ramverk.pygments:CompactXmlLexer',
