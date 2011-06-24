@@ -496,7 +496,7 @@ Templating with Genshi
         - Serializer
         - Doctype
         - Mimetype
-        - Class
+        - Dialect
       * - ``'.html'``
         - :class:`HTML <genshi.output.HTMLSerializer>`
         - HTML 5
@@ -562,7 +562,7 @@ Templating with Genshi
 
     .. autoattribute:: mimetype
 
-    .. autoattribute:: class_
+    .. autoattribute:: dialect
 
     .. autoattribute:: lazy
 

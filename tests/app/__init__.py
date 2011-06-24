@@ -24,7 +24,7 @@ class TestApp(Application):
 
     def configure(self):
         self.log_handler = TestHandler()
-        self.renderers['.html'].class_ = HTMLTemplate
+        self.renderers['.html'].dialect = HTMLTemplate
         self.scan('tests.app.frontend')
         self.scan('tests.app.module', submount='/module')
         self.scan('tests.app.subdomain', subdomain='en')

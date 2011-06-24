@@ -29,7 +29,7 @@ class CompactHTMLTemplate(CompactTemplate):
 class Relvlast(Application):
 
     def configure(self):
-        self.renderers['.html'].class_ = CompactHTMLTemplate
+        self.renderers['.html'].dialect = CompactHTMLTemplate
         self.url_map.add(Rule('/', redirect_to='jbo'))
         self.scan('relvlast.frontend', submount='/<locale>')
         self.scan('relvlast.dictionary', submount='/<locale>/vlaste')

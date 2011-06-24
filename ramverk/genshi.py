@@ -75,20 +75,20 @@ class GenshiRenderer(object):
     mimetype = None
     """Set a mimetype on the returned response object."""
 
-    class_ = None
+    dialect = None
     """Template class if not :class:`CompactTemplate`."""
 
     lazy = False
     """Serialize lazily, can misbehave with databases."""
 
     def __init__(self, app, serializer=None, doctype=None,
-                 mimetype=None, class_=CompactTemplate, lazy=False):
+                 mimetype=None, dialect=CompactTemplate, lazy=False):
         self.app, self.serializer, self.doctype = app, serializer, doctype
-        self.mimetype, self.class_, self.lazy = mimetype, class_, lazy
+        self.mimetype, self.dialect, self.lazy = mimetype, dialect, lazy
 
     def __call__(self, template_name, **context):
         self.app.update_template_context(context)
-        template = self.app.genshi_loader.load(template_name, cls=self.class_)
+        template = self.app.genshi_loader.load(template_name, cls=self.dialect)
         stream = template.generate(**context)
         serialize = stream.serialize if self.lazy else stream.render
         if self.doctype is None:
