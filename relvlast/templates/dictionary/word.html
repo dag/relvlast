@@ -3,42 +3,45 @@
         @href=../layout.html
 
     <body
-        <h1
-            "$word.id
+        ?indent restart
 
-        <article
-            <dl class=word-data
+<h1
+    "$word.id
 
-                <section
-                    <dt
-                        "vlatai
-                    <dd
-                        "${word.type}
+<article
+    <dl class=word-data
+        ?indent restart
 
-                <section
-                    @py:if=word.class_
-                    <dt
-                        "selma'o
-                    <dd
-                        <code
-                            "$word.class_
+<section
+    <dt
+        "vlatai
+    <dd
+        "${word.type}
 
-                <section
-                    @py:if=word.affixes
-                    <dt
-                        "rafsi
-                    <dd
-                        "${', '.join(word.affixes)}
+<section
+    @py:if=word.class_
+    <dt
+        "selma'o
+    <dd
+        <code
+            "$word.class_
 
-                <section
-                    <dt
-                        "smuni
-                    <dd
-                        "${creole(translation.definition)}
+<section
+    @py:if=word.affixes
+    <dt
+        "rafsi
+    <dd
+        "${', '.join(word.affixes)}
 
-                <section
-                    @py:if=translation.notes
-                    <dt
-                        "notci
-                    <dd
-                        "${creole(translation.notes)}
+<section
+    <dt
+        "smuni
+    <dd
+        "${creole(translation.definition)}
+
+<section
+    @py:if=translation.notes
+    <dt
+        "notci
+    <dd
+        "${creole(translation.notes)}

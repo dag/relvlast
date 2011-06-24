@@ -160,17 +160,19 @@ We also need to write the :file:`index.html` template. We'll use
 
     <html
         <body
-            <h1
-                "$greeting, World!
+            ?indent restart
 
-            <form
-                @action=${path(':index')}
-                @method=POST
+    <h1
+        "$greeting, World!
 
-                <input
-                    @name=greeting
-                    @placeholder=Enter a greeting
-                    @type=text
+    <form
+        @action=${path(':index')}
+        @method=POST
+
+        <input
+            @name=greeting
+            @placeholder=Enter a greeting
+            @type=text
 
 For a development server we can use Paver and write a :file:`pavement.py`::
 

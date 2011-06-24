@@ -3,33 +3,35 @@
         @href=../layout.html
 
     <body
-        <h1
-            "vlaste fu la lojban
+        ?indent restart
 
-        <dl
-            @py:for=word in words
-            @py:with=word = word.last.object
-            <div
-                <dt
-                    <a
-                        @href=${path(':word', word=word.of)}
-                        "$word.of
-                <dd
-                    "${creole(word.definition)}
+<h1
+    "vlaste fu la lojban
 
-        <nav
-            @class=pages
-            <ol
-                <li
-                    @py:for=page in xrange(1, total + 1)
-                    <?python=
-                    \ attrs = {}
-                    \ if page == request.args.get('papri', 1, int):
-                    \     attrs['class'] = 'active'
+<dl
+    @py:for=word in words
+    @py:with=word = word.last.object
+    <div
+        <dt
+            <a
+                @href=${path(':word', word=word.of)}
+                "$word.of
+        <dd
+            "${creole(word.definition)}
 
-                    <a
-                        @href=?papri=$page
-                        @py:attrs=attrs
-                        "$page
-                    "
-                    \
+<nav
+    @class=pages
+    <ol
+        <li
+            @py:for=page in xrange(1, total + 1)
+            <?python=
+            \ attrs = {}
+            \ if page == request.args.get('papri', 1, int):
+            \     attrs['class'] = 'active'
+
+            <a
+                @href=?papri=$page
+                @py:attrs=attrs
+                "$page
+            "
+            \

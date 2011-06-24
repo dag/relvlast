@@ -14,6 +14,8 @@ class CompactXmlLexer(RegexLexer):
         'root': [
             (r'^\s+', Whitespace),
             (r'(["\'])(.+)', bygroups(Operator, Other)),
+            (r'(\?)(\S+)(.+)',
+                bygroups(Operator, Keyword.Declaration, Comment.Preproc)),
             (r'(<)(\S+)', bygroups(Operator, Name.Tag)),
             (r'(@)([^=]+)', bygroups(Operator, Name.Attribute)),
             (r'(=)(.+)', bygroups(Operator, Other)),
