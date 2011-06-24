@@ -13,8 +13,6 @@ setup(
         'PyYAML',
         'Werkzeug',
         'ZODB3',
-        'compactxml',
-        'creoleparser',
         'pyScss',
         'venusian',
     ],
