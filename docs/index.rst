@@ -6,6 +6,36 @@ Ramverk
 
   relvlast
 
+:term:`Ramverk` is a :term:`Werkzeug` framework built around
+:term:`cooperative mixins <cooperative mixin>`. At the base is a WSGI
+application class implementing the "least common denominator". Framework
+components such as data persistence and markup templating are all
+composable mixins building on the application base that can be combined and
+cherry-picked to create a custom-tailored application. For the most part
+Ramverk is a collection of small pieces of glue for third-party
+technologies and Ramverk itself tries to do and be as little as possible.
+
+Though the source code is published on GitHub_, there are currently no
+plans to release Ramverk officially. Ramverk is being built as a custom
+Werkzeug configuration for me personally and this document serves as
+documentation for contributors to Ramverk applications and as a design
+document under construction, for discussing choices with other developers
+and as a memory aid for myself.
+
+.. _GitHub: https://github.com/dag/relvlast
+
+I welcome you to study my decisions and maybe learn from them, or
+conversely teach me why I should do something differently. I advice against
+using Ramverk for yourself however, unless you create your own fork. One
+upside to not comitting to a release is that I can change anything at any
+time and not bother myself with backwards-compatibility. In the end if
+something useful and stable emerges and there is interest, I'll reconsider
+releasing, but really, there's an abundance of great frameworks in
+existence and if you want something more custom I recommend you do like me
+and build your own glue around Werkzeug. It's easier than you might think
+and a fun, rewarding activity that gives you insight into what makes other
+frameworks tick and why they do what they do.
+
 
 Sample Application: Hello World with Writable Greeting
 ------------------------------------------------------
@@ -20,11 +50,12 @@ First we need some boring imports::
 
 .. sidebar:: ZODB
 
-  The ZODB is a transactional persistence system with ACID properties
-  acting as an object database for Python. Whoa, what now? Well, it lets
-  you use Python objects as if you ran a single process that never needed
-  restarting and had close-to infinite memory. Sounds like magic, right? In
-  reality it's just the :mod:`pickle` module with scalability added.
+  The :term:`ZODB` is a transactional persistence system with ACID
+  properties acting as an object database for Python. Whoa, what now? Well,
+  it lets you use Python objects as if you ran a single process that never
+  needed restarting and had close-to infinite memory. Sounds like magic,
+  right? In reality it's just the :mod:`pickle` module with scalability
+  added.
 
 We also make a persistent object that we will use as the root of our tree
 of persistent objects. The actual root of the persistent storage is a dict
@@ -43,8 +74,8 @@ storage.
 Now, we'll write the class for our application. We're using the "fullstack"
 base to get all the bells and whistles and some nice defaults. Our
 "virtual" root is simply a property, cached for each request, that reads a
-specific key in the persistent mapping. We also scan the module to register
-the router and endpoint we'll add next.
+specific key in the persistent mapping. We also :term:`scan <Venusian>` the
+module to register the :term:`router` and :term:`endpoint` we'll add next.
 
 ::
 
@@ -114,13 +145,13 @@ out in modules.
 
 .. sidebar:: Genshi
 
-  Genshi templates are markup streams which means that we don't have to
-  worry about escaping markup and don't need to bother with ensuring
-  well-formed output. It also means we can change the serialization and
-  doctype on the fly, extract messages for translation directly from the
-  markup and that we can apply filters and transformations on the stream
-  before it renders. This comes at the cost of speed but for most uses it
-  is fast enough.
+  :term:`Genshi` templates are markup streams which means that we don't
+  have to worry about escaping markup and don't need to bother with
+  ensuring well-formed output. It also means we can change the
+  serialization and doctype on the fly, extract messages for translation
+  directly from the markup and that we can apply filters and
+  transformations on the stream before it renders. This comes at the cost
+  of speed but for most uses it is fast enough.
 
 We also need to write the :file:`index.html` template. We'll use
 :term:`Genshi` with the :term:`Compact XML` dialect:
@@ -757,6 +788,10 @@ Glossary
 
 .. glossary::
 
+  Ramverk
+    Swedish for *framework* and a nod to :term:`Werkzeug` which in turn is
+    german for *utility*.
+
   Werkzeug
     `Werkzeug <http://werkzeug.pocoo.org/>`_ is a swiss army knife for
     WSGI, similar in scope to `Paste <http://pythonpaste.org/>`_ and `WebOb
@@ -823,3 +858,15 @@ Glossary
   relative endpoint
     A partial endpoint name, expanded to its full form using the endpoint
     of the current request and the module name of the application.
+
+  router
+    Callable returning an iterable of :class:`URL rules
+    <werkzeug.routing.Rule>`; usually a generator function.
+
+  mixin
+    Class meant to be *mixed in* with at least one base class in an
+    inheritance chain, and *not* used alone or as a base itself.
+
+  cooperative mixin
+    :term:`Mixin` that calls :func:`super` in overridden methods to
+    cooperate with other mixins and base classes.
