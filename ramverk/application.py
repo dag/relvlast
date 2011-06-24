@@ -71,7 +71,7 @@ class BaseApplication(object):
         Default raises :exc:`~werkzeug.exceptions.NotFound`."""
         raise NotFound
 
-    def error_response(self, error):
+    def respond_for_error(self, error):
         """Called to create a response for an
         :exc:`~werkzeug.exceptions.HTTPException` if one was raised during
         dispatch. Returns it as-is by default as they are basic responses.
@@ -82,7 +82,7 @@ class BaseApplication(object):
         """Called after :meth:`bind_to_environ` and before :meth:`respond`."""
 
     def __exit__(self, exc_type, exc_val, exc_tb):
-        """Called after :meth:`respond` and :meth:`error_response`;
+        """Called after :meth:`respond` and :meth:`respond_for_error`;
         arguments are `None` unless an exception was raised from the
         dispatch. Should return `True` to suppress that exception."""
 
@@ -99,5 +99,5 @@ class BaseApplication(object):
             try:
                 response = self.respond()
             except HTTPException as e:
-                response = self.error_response(e)
+                response = self.respond_for_error(e)
         return response
