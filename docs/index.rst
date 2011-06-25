@@ -817,6 +817,12 @@ Glossary
     `Compact XML <http://packages.python.org/compactxml/>`_ is a language
     that compiles to XML, using indentation for nesting similar to Python.
 
+  Flatland
+    `Flatland <http://readthedocs.org/docs/flatland/en/latest/>`_ is a
+    toolkit for processing and validating flat datastructures against
+    schemata defined in declarative Python code and is useful for
+    sanitizing user input in HTML forms among other things.
+
   SCSS
     `SCSS <http://sass-lang.com/>`_ or "Sassy CSS" is a superset of CSS
     that adds rule nesting, mixins, constants and other such things making
@@ -832,6 +838,11 @@ Glossary
     library for implementing decorators that are activated by scanning.
     This allows decorators to be reusable and decoupled from applications
     without the use of a global registry.
+
+  Babel
+    `Babel <http://babel.edgewall.org/>`_ is a toolkit for
+    internationalizing Python applications and includes a system for
+    extracting translation messages and a repository of locale data.
 
   Logbook
     `Logbook <http://packages.python.org/Logbook/>`_ is a modern logging

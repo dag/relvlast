@@ -39,8 +39,9 @@ class CompactTemplate(MarkupTemplate):
 
 class CompactHTMLTemplate(CompactTemplate):
     """Like :class:`CompactTemplate` with the extra namespace prefixes
-    `i18n` and (for Flatland) `form` meant for use with the HTML serializer
-    which will strip unused prefixes from the output."""
+    `i18n` (for :term:`Babel`) and `form` (for :term:`Flatland`) meant for
+    use with the HTML serializer which will strip unused prefixes from the
+    output."""
 
     namespaces = dict(
         py='http://genshi.edgewall.org/',
@@ -68,9 +69,9 @@ class HTMLTemplate(MarkupTemplate):
     def filter_html_stream(self, stream):
         """Apply filters to the HTML `stream`; this happens earlier than
         the usual markup stream which has to be well-formed XML. The
-        default injects the namespace prefixes `py`, `xi`, `i18n` and (for
-        Flatland) `form`. The HTML serializer will later strip unused
-        prefixes from the output."""
+        default injects the namespace prefixes `py`, `xi`, `i18n` (for
+        :term:`Babel`) and `form` (for :term:`Flatland`). The HTML
+        serializer will later strip unused prefixes from the output."""
         return stream | (Transformer('//html')
             .attr('xmlns:py', 'http://genshi.edgewall.org/')
             .attr('xmlns:xi', 'http://www.w3.org/2001/XInclude')
