@@ -768,7 +768,7 @@ Task Management with Paver
       Sets the :attr:`~ramverk.application.BaseApplication.settings.debug`
       setting for the served application.
 
-      :default: True
+      :default: :const:`True`
 
   .. autofunction:: shell()
 
@@ -778,10 +778,14 @@ Task Management with Paver
 
     .. _bpython: http://bpython-interpreter.org/
 
-    .. attribute:: options.shell.locals
+    .. attribute:: options.shell.namespace
 
       :term:`Dotted name` of a module to use as the namespace inside the
       shell.
+
+      :default:
+        The :attr:`~ramverk.application.BaseApplication.module` of the
+        :attr:`~ramverk.paver.options.ramverk.app`.
 
     .. attribute:: options.shell.fake_request
 

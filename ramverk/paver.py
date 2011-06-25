@@ -4,7 +4,7 @@ from werkzeug.utils import import_string
 
 
 options.ramverk = Bunch()
-options.shell   = Bunch(locals=None, fake_request=None)
+options.shell   = Bunch(namespace=None, fake_request=None)
 options.serve   = Bunch(hostname='localhost',
                         port=8008,
                         no_reloader=False,
@@ -47,8 +47,8 @@ def shell():
     app = appfactory(debug=True)
 
     locals = dict(app=app)
-    if options.shell.locals:
-        locals.update(vars(import_string(options.shell.locals)))
+    namespace = options.shell.namespace or app.module
+    locals.update(vars(import_string(namespace)))
 
     with app.request_context(create_environ(options.shell.fake_request)):
         with app:
