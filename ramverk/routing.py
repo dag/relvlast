@@ -67,11 +67,12 @@ def delete(*args, **kwargs):
 class RoutingHelpersMixin(object):
     """Add some convenient helpers for applications with URL dispatch."""
 
-    @property
+    @request_property
     def segments(self):
         """The values that matched the route in the :attr:`url_map` as a
         :class:`~ramverk.utils.Bunch`."""
-        return Bunch(self.local.endpoint_args)
+        endpoint, args = self.url_adapter_match_tuple
+        return Bunch(args)
 
     @cached_property
     def app(self): #pragma: no cover
@@ -87,8 +88,8 @@ class RoutingHelpersMixin(object):
         ``myapp.backend:index``."""
         if endpoint.startswith('.'):
             return self.module + endpoint
-        if endpoint.startswith(':') and ':' in self.local.endpoint:
-            module = self.local.endpoint.split(':', 1)[0]
+        if endpoint.startswith(':') and ':' in self.endpoint:
+            module = self.endpoint.split(':', 1)[0]
             return module + endpoint
         return endpoint
 
@@ -102,7 +103,7 @@ class RoutingHelpersMixin(object):
                     values=None, method=None,
                     force_external=False, append_unknown=True):
         if endpoint is None:
-            endpoint = self.local.endpoint
+            endpoint = self.endpoint
             values = dict(self.segments, **values)
         else:
             endpoint = self.absolute_endpoint(endpoint)
@@ -159,17 +160,21 @@ class URLMapMixin(object):
                       if name not in kwargs)
         return callable(**kwargs)
 
-    def match_request_to_endpoint(self):
-        endpoint, args = self.url_adapter.match()
-        self.local.endpoint = endpoint
-        self.local.endpoint_args = args
-        return endpoint, args
+    @request_property
+    def url_adapter_match_tuple(self):
+        return self.url_adapter.match()
+
+    @request_property
+    def endpoint(self):
+        """The endpoint matching the current request."""
+        endpoint, args = self.url_adapter_match_tuple
+        return endpoint
 
     def respond(self):
         """Match the request to an endpoint and call it with
         :meth:`call_as_endpoint` to produce a response."""
         try:
-            endpoint, args = self.match_request_to_endpoint()
+            endpoint = self.endpoint
         except NotFound:
             return super(URLMapMixin, self).respond()
         return self.call_as_endpoint(import_string(endpoint))

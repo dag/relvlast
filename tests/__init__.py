@@ -9,7 +9,6 @@ from tests.app        import TestApp
 def testapp():
     app = TestApp(storage=DemoStorage)
     with app.request_context(create_environ()):
-        app.match_request_to_endpoint()
         yield app
 
 
