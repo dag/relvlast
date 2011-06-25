@@ -42,6 +42,16 @@ def override_context(app):
 
 
 @genshi.test
+def stream_filtering(app):
+    response = app.render('filtering.html')
+    assert response.data == dedent("""\
+        <!DOCTYPE html>
+        <html>
+          <p>Filtered</p>
+        </html>""")
+
+
+@genshi.test
 def mutate_response(app):
     response = app.render('context.html').using(status=404, mimetype='text/css')
     assert response.status_code == 404

@@ -1,5 +1,6 @@
 from persistent        import Persistent
 from logbook           import TestHandler
+from genshi.filters    import Transformer
 from ramverk.fullstack import Application
 from ramverk.genshi    import HTMLTemplate
 from ramverk.utils     import request_property
@@ -28,3 +29,8 @@ class TestApp(Application):
         self.scan('tests.app.frontend')
         self.scan('tests.app.module', submount='/module')
         self.scan('tests.app.subdomain', subdomain='en')
+
+    def filter_genshi_stream(self, template, stream):
+        if template.filename == 'filtering.html':
+            return stream | Transformer('p/text()').replace('Filtered')
+        return stream

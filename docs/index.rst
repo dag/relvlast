@@ -544,6 +544,8 @@ Templating with Genshi
 
     .. automethod:: configure_genshi_template
 
+    .. automethod:: filter_genshi_stream
+
   .. autoclass:: GenshiRenderer
 
     .. autoattribute:: serializer
@@ -568,6 +570,7 @@ Templating with Genshi
 
     .. autoattribute:: lazy
 
+    .. automethod:: filter
 
     Example::
 
