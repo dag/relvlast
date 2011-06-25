@@ -582,6 +582,7 @@ Templating with Genshi
     override the option attributes.
 
   .. autoclass:: HTMLTemplate
+    :members:
 
     This allows for less verbose HTML templates by allowing unclosed tags
     and unquoted attributes and not requiring all namespaces be declarated
