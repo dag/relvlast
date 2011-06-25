@@ -798,7 +798,7 @@ Glossary
 
   Ramverk
     Swedish for *framework* and a nod to :term:`Werkzeug` which in turn is
-    german for *utility*.
+    German for *utility*.
 
   Werkzeug
     `Werkzeug <http://werkzeug.pocoo.org/>`_ is a swiss army knife for
