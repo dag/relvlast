@@ -738,15 +738,37 @@ Task Management with Paver
 
 .. automodule:: ramverk.paver
 
-  :file:`pavement.py`::
+  .. attribute:: options.ramverk.app
+
+    :term:`Dotted name` of your application class.
+
+  Example :file:`pavement.py`::
 
     from paver.easy    import options
     from ramverk.paver import serve, shell
 
-    options.ramverk.app = 'dotted.path.to:AppClass'
-
+    options.ramverk.app = 'my.own:Application'
 
   .. autofunction:: serve()
+
+    .. attribute:: options.serve.hostname
+
+      Host to listen on.
+
+      :default: ``localhost``
+
+    .. attribute:: options.serve.port
+
+      Port number to listen on.
+
+      :default: ``8008``
+
+    .. attribute:: options.serve.debug
+
+      Sets the :attr:`~ramverk.application.BaseApplication.settings.debug`
+      setting for the served application.
+
+      :default: True
 
   .. autofunction:: shell()
 
