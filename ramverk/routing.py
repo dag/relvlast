@@ -92,16 +92,29 @@ class RoutingHelpersMixin(object):
             return module + endpoint
         return endpoint
 
-    def url(self, endpoint, **values):
-        """Expand the `endpoint` with :meth:`absolute_endpoint` and build a
-        URL for a route to the endpoint with `values`."""
+    def update_endpoint_values(self, endpoint, values):
+        """Called to update `values` in-place when building a URL for
+        `endpoint`. Useful in combination with
+        :meth:`~werkzeug.routing.Map.is_endpoint_expecting` to set defaults
+        allowing you to avoid extraneous repetition."""
+
+    def __build_url(self, endpoint,
+                    values=None, method=None,
+                    force_external=False, append_unknown=True):
         endpoint = self.absolute_endpoint(endpoint)
-        return self.url_adapter.build(endpoint, values, force_external=True)
+        self.update_endpoint_values(endpoint, values)
+        return self.url_adapter.build(endpoint, values, method,
+                                      force_external, append_unknown)
+
+    def url(self, endpoint, **values):
+        """Build a URL for the route that matches `endpoint` (expanded with
+        :meth:`absolute_endpoint`) and `values` (updated with
+        :meth:`update_endpoint_values`)."""
+        return self.__build_url(endpoint, values, force_external=True)
 
     def path(self, endpoint, **values):
         """Like :meth:`url` but as an absolute path."""
-        endpoint = self.absolute_endpoint(endpoint)
-        return self.url_adapter.build(endpoint, values)
+        return self.__build_url(endpoint, values)
 
     def redirect(self, endpoint, **values):
         """Create a response that redirects to the route for `endpoint`

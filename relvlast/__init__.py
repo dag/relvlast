@@ -57,11 +57,9 @@ class Relvlast(Application):
         return Parser(creole11_base(
             wiki_links_base_url=self.path(':index')))
 
-    def path(self, endpoint, **values):
-        endpoint = self.absolute_endpoint(endpoint)
+    def update_endpoint_values(self, endpoint, values):
         if self.url_map.is_endpoint_expecting(endpoint, 'locale'):
             values.setdefault('locale', self.locale.language)
-        return super(Relvlast, self).path(endpoint, **values)
 
     def cross_locale_path(self, locale):
         return self.path(self.local.endpoint,
