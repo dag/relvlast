@@ -38,6 +38,18 @@ class CompactTemplate(MarkupTemplate):
             encoding=encoding, lookup=lookup, allow_exec=allow_exec)
 
 
+class CompactHTMLTemplate(CompactTemplate):
+    """Like :class:`CompactTemplate` with the extra namespace prefixes
+    `i18n` and (for Flatland) `form` meant for use with the HTML serializer
+    which will strip unused prefixes from the output."""
+
+    namespaces = dict(
+        py='http://genshi.edgewall.org/',
+        xi='http://www.w3.org/2001/XInclude',
+        i18n='http://genshi.edgewall.org/i18n',
+        form='http://ns.discorporate.us/flatland/genshi')
+
+
 class HTMLTemplate(MarkupTemplate):
     """A :class:`~genshi.template.markup.MarkupTemplate` parsing with
     :class:`~genshi.input.HTMLParser`."""
@@ -116,7 +128,7 @@ class GenshiMixin(TemplatingMixinBase):
         R = GenshiRenderer
         renderers = super(GenshiMixin, self).renderers
         renderers.update({
-            '.html' : R(self, 'html', 'html5',   'text/html'),
+            '.html' : R(self, 'html', 'html5',   'text/html', CompactHTMLTemplate),
             '.xhtml': R(self, 'xml',  'xhtml11', 'application/xhtml+xml'),
             '.atom' : R(self, 'xml',   None,     'application/atom+xml'),
             '.svg'  : R(self, 'xml',  'svg',     'image/svg+xml'),

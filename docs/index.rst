@@ -503,7 +503,7 @@ Templating with Genshi
         - :class:`HTML <genshi.output.HTMLSerializer>`
         - HTML 5
         - :mimetype:`text/html`
-        - :class:`CompactTemplate`
+        - :class:`CompactHTMLTemplate`
       * - ``'.xhtml'``
         - :class:`XML <genshi.output.XMLSerializer>`
         - XHTML 1.1
@@ -580,6 +580,8 @@ Templating with Genshi
     Less talkative than XML while still as predictable and consistent, but
     less standard and familiar than either XML or HTML. Subclass to
     override the option attributes.
+
+  .. autoclass:: CompactHTMLTemplate
 
   .. autoclass:: HTMLTemplate
     :members:
