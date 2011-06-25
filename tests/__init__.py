@@ -8,9 +8,9 @@ from tests.app        import TestApp
 @contextmanager
 def testapp():
     app = TestApp(storage=DemoStorage)
-    app.bind_to_environ(create_environ())
-    app.match_request_to_endpoint()
-    yield app
+    with app.request_context(create_environ()):
+        app.match_request_to_endpoint()
+        yield app
 
 
 @contextmanager

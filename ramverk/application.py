@@ -1,9 +1,12 @@
+from contextlib          import contextmanager
+
 from werkzeug.exceptions import HTTPException, NotFound
 from werkzeug.local      import Local, release_local
 from werkzeug.utils      import cached_property
 from werkzeug.wrappers   import BaseRequest, BaseResponse
 from werkzeug.wsgi       import responder
 
+from ramverk.local       import stack
 from ramverk.utils       import Bunch, request_property
 from ramverk.wrappers    import ResponseUsingMixin
 
@@ -55,9 +58,16 @@ class BaseApplication(object):
         new instances."""
 
     @cached_property
+    def local_stack(self):
+        """Stack of context-locals, by default the globally shared
+        :attr:`~ramverk.local.stack`."""
+        return stack
+
+    @property
     def local(self):
-        """Per-request container object."""
-        return Local()
+        """Per-request container object, by default the top-most object on
+        the :attr:`local_stack`."""
+        return self.local_stack.top
 
     @request_property
     def request(self):
@@ -78,26 +88,33 @@ class BaseApplication(object):
         Override for custom 404 pages etc."""
         return error
 
+    @contextmanager
+    def request_context(self, environ):
+        """Context manager in which :attr:`local` is bound to `environ`.
+        Default is to push a :class:`~ramverk.utils.Bunch` containing the
+        environment and application, on the :attr:`local_stack`."""
+        local = Bunch(application=self, environ=environ)
+        self.local_stack.push(local)
+        try:
+            yield local
+        finally:
+            self.local_stack.pop()
+
     def __enter__(self):
-        """Called after :meth:`bind_to_environ` and before :meth:`respond`."""
+        """Called inside :meth:`request_context` before :meth:`respond`."""
 
     def __exit__(self, exc_type, exc_val, exc_tb):
         """Called after :meth:`respond` and :meth:`respond_for_error`;
         arguments are `None` unless an exception was raised from the
         dispatch. Should return `True` to suppress that exception."""
 
-    def bind_to_environ(self, environ):
-        """Called to bind the application to the WSGI `environ`."""
-        release_local(self.local)
-        self.local.environ = environ
-
     @responder
     def __call__(self, environ, start_response):
         """WSGI interface to this application."""
-        self.bind_to_environ(environ)
-        with self:
-            try:
-                response = self.respond()
-            except HTTPException as e:
-                response = self.respond_for_error(e)
+        with self.request_context(environ):
+            with self:
+                try:
+                    response = self.respond()
+                except HTTPException as e:
+                    response = self.respond_for_error(e)
         return response

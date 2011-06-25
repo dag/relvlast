@@ -348,7 +348,6 @@ Minimal Base for Applications
 .. automodule:: ramverk.application
 
   .. autoclass:: BaseApplication
-    :members:
 
     The call stack for WSGI requests looks like this:
 
@@ -364,6 +363,13 @@ Minimal Base for Applications
     :param settings:
       Used to update :attr:`settings`.
 
+
+    .. centered:: Application
+
+    .. automethod:: configure
+
+    .. autoattribute:: settings
+
     .. attribute:: settings.debug
 
       Enable development niceties that shouldn't be enabled in production.
@@ -378,17 +384,63 @@ Minimal Base for Applications
 
       :default: The name of the class.
 
+    .. autoattribute:: module
+
+    .. autoattribute:: log
+
+
+    .. centered:: Context Locals
+
+    .. automethod:: request_context(environ)
+
+    .. autoattribute:: local_stack
+
+    .. autoattribute:: local
+
+    .. attribute:: local.environ
+
+      WSGI environment of the current request.
+
+    .. attribute:: local.application
+
+      This application object; mainly useful when :attr:`local_stack` is
+      shared between multiple applications, which is the default: inside
+      request contexts, :attr:`stack.top.application <ramverk.local.stack>`
+      is the active application.
+
+    .. autoattribute:: request
+
+
+    .. centered:: WSGI
+
+    .. autoattribute:: response
+
+    .. automethod:: respond
+
+    .. automethod:: respond_for_error
+
+    .. automethod:: __call__(environ, start_response)
+
+
+    .. centered:: Hooking-points for Mixins
+
     .. automethod:: __create__
 
     .. automethod:: __enter__
 
     .. automethod:: __exit__
 
-    .. automethod:: __call__(environ, start_response)
 
   .. autoclass:: Response
     :members:
     :show-inheritance:
+
+.. automodule:: ramverk.local
+
+  .. attribute:: stack
+
+    Shared :class:`~werkzeug.local.LocalStack` used as the default by
+    applications.
 
 
 Dispatching Requests by URL
