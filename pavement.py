@@ -15,7 +15,7 @@ options.shell   = Bunch(locals='relvlast.objects')
 @task
 def cover():
     """Measure test coverage."""
-    sh('coverage run -m attest')
+    sh('coverage run -m attest tests')
     sh('coverage report')
     sh('coverage html')
 
