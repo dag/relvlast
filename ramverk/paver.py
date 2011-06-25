@@ -4,7 +4,7 @@ from werkzeug.utils import import_string
 
 
 options.ramverk = Bunch()
-options.shell   = Bunch(locals=None)
+options.shell   = Bunch(locals=None, fake_request=None)
 options.serve   = Bunch(hostname='localhost',
                         port=8008,
                         no_reloader=False,
@@ -50,7 +50,7 @@ def shell():
     if options.shell.locals:
         locals.update(vars(import_string(options.shell.locals)))
 
-    with app.request_context(create_environ()):
+    with app.request_context(create_environ(options.shell.fake_request)):
         with app:
             try:
                 from bpython import embed

@@ -756,6 +756,17 @@ Task Management with Paver
 
     .. _bpython: http://bpython-interpreter.org/
 
+    .. attribute:: options.shell.locals
+
+      :term:`Dotted name` of a module to use as the namespace inside the
+      shell.
+
+    .. attribute:: options.shell.fake_request
+
+      Path to fake a request to before entering the shell.
+
+      :default: ``/``
+
 
 WSGI Middlewares
 ----------------

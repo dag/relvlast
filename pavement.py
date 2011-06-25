@@ -9,7 +9,8 @@ from ramverk.paver  import serve, shell
 
 options.ramverk = Bunch(app='relvlast:Relvlast')
 options.sphinx  = Bunch(builddir='../build')
-options.shell   = Bunch(locals='relvlast.objects')
+options.shell   = Bunch(locals='relvlast.objects',
+                        fake_request='/jbo/vlaste/')
 
 
 @task
