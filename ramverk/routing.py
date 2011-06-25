@@ -98,25 +98,30 @@ class RoutingHelpersMixin(object):
         :meth:`~werkzeug.routing.Map.is_endpoint_expecting` to set defaults
         allowing you to avoid extraneous repetition."""
 
-    def __build_url(self, endpoint,
+    def __build_url(self, endpoint=None,
                     values=None, method=None,
                     force_external=False, append_unknown=True):
-        endpoint = self.absolute_endpoint(endpoint)
-        self.update_endpoint_values(endpoint, values)
+        if endpoint is None:
+            endpoint = self.local.endpoint
+            values = dict(self.segments, **values)
+        else:
+            endpoint = self.absolute_endpoint(endpoint)
+            self.update_endpoint_values(endpoint, values)
         return self.url_adapter.build(endpoint, values, method,
                                       force_external, append_unknown)
 
-    def url(self, endpoint, **values):
+    def url(self, endpoint=None, **values):
         """Build a URL for the route that matches `endpoint` (expanded with
         :meth:`absolute_endpoint`) and `values` (updated with
-        :meth:`update_endpoint_values`)."""
+        :meth:`update_endpoint_values`). If the endpoint is :const:`None`,
+        the current URL is returned with the values used as overrides."""
         return self.__build_url(endpoint, values, force_external=True)
 
-    def path(self, endpoint, **values):
+    def path(self, endpoint=None, **values):
         """Like :meth:`url` but as an absolute path."""
         return self.__build_url(endpoint, values)
 
-    def redirect(self, endpoint, **values):
+    def redirect(self, endpoint=None, **values):
         """Create a response that redirects to the route for `endpoint`
         with `values`."""
         return redirect(self.path(endpoint, **values))

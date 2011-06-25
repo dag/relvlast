@@ -39,7 +39,6 @@ class Relvlast(Application):
         super(Relvlast, self).update_template_context(context)
         context.setdefault('creole', self.creole_parser.generate)
         context.setdefault('locale', self.locale)
-        context.setdefault('cross_locale_path', self.cross_locale_path)
         context.setdefault('locale_name', self.locale_name)
         context.setdefault('_', self.message_catalog.gettext)
 
@@ -60,10 +59,6 @@ class Relvlast(Application):
     def update_endpoint_values(self, endpoint, values):
         if self.url_map.is_endpoint_expecting(endpoint, 'locale'):
             values.setdefault('locale', self.locale.language)
-
-    def cross_locale_path(self, locale):
-        return self.path(self.local.endpoint,
-                         **dict(self.segments, locale=locale))
 
     def locale_name(self, locale):
         return self.locale.languages.get(locale, Locale(locale).display_name)

@@ -62,7 +62,7 @@
                 <li
                     @py:for=code in locales
                     <a
-                        @href=${cross_locale_path(code)}
+                        @href=${path(locale=code)}
                         "${locale_name(code)}
                     "
                     \
