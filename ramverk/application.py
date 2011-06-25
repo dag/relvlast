@@ -1,7 +1,6 @@
 from contextlib          import contextmanager
 
 from werkzeug.exceptions import HTTPException, NotFound
-from werkzeug.local      import Local, release_local
 from werkzeug.utils      import cached_property
 from werkzeug.wrappers   import BaseRequest, BaseResponse
 from werkzeug.wsgi       import responder
