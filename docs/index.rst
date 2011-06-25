@@ -431,10 +431,6 @@ Minimal Base for Applications
     .. automethod:: __exit__
 
 
-  .. autoclass:: Response
-    :members:
-    :show-inheritance:
-
 .. automodule:: ramverk.local
 
   .. attribute:: stack

@@ -8,19 +8,14 @@ from werkzeug.wsgi       import responder
 
 from ramverk.local       import stack
 from ramverk.utils       import Bunch, request_property
-from ramverk.wrappers    import ResponseUsingMixin
-
-
-class Response(ResponseUsingMixin, BaseResponse):
-    """A minimal response object."""
 
 
 class BaseApplication(object):
     """Base for applications."""
 
-    #: Factory for default response objects, by default a
-    #: :class:`~ramverk.application.Response`.
-    response = Response
+    response = BaseResponse
+    """Factory for response objects, defaulting to a minimal
+    :class:`~werkzeug.wrappers.BaseResponse`."""
 
     def __init__(self, **settings):
         """Create a new application object using `settings`."""
