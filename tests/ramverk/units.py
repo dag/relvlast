@@ -5,8 +5,6 @@ from fudge               import Fake
 from werkzeug.wrappers   import BaseResponse
 from ramverk.application import BaseApplication
 from ramverk.rendering   import JSONMixin
-from ramverk.venusian    import VenusianMixin
-from ramverk.routing     import RoutingMixin
 from ramverk.transaction import TransactionMixin
 from ramverk.utils       import Bunch, request_property
 from ramverk.utils       import EagerCachedProperties, ReprAttributes, has

@@ -1,4 +1,4 @@
-from flatland import Form, String, List
+from flatland import Form, String
 
 
 TextInput = String.with_properties(template='forms/text-input.html')

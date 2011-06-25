@@ -9,10 +9,6 @@ from werkzeug.utils      import cached_property, redirect, import_string
 from ramverk.utils       import Bunch, request_property
 
 
-def _endpoint_name(function):
-    return ':'.join((function.__module__, function.__name__))
-
-
 def _add_rules(scanner, rules, ob):
     rules = [EndpointPrefix(ob.__module__ + ':', rules)]
     if hasattr(scanner, 'submount'):

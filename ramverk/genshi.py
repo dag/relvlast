@@ -1,7 +1,6 @@
 from __future__        import absolute_import
-from genshi.core       import Stream
 from genshi.filters    import Transformer
-from genshi.input      import HTML, ET
+from genshi.input      import HTML
 from genshi.template   import TemplateLoader, loader
 from genshi.template   import MarkupTemplate, NewTextTemplate
 from werkzeug.utils    import cached_property
