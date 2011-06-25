@@ -386,6 +386,10 @@ Minimal Base for Applications
 
     .. autoattribute:: module
 
+      Used by mixins to locate templates and endpoints and such. Defaults
+      to the module the application class was defined in, which is usually
+      what you want.
+
     .. autoattribute:: log
 
 

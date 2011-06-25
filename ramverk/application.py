@@ -30,9 +30,8 @@ class BaseApplication(object):
 
     @property
     def module(self):
-        """Name of the module containing the application, for locating
-        templates and such. Defaults to ``__module__`` but needs to be set
-        to a fixed value for subclasses of complete applications."""
+        """:term:`Dotted name` of the module or package the application
+        belongs to."""
         return self.__module__
 
     @cached_property
