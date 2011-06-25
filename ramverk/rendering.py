@@ -66,4 +66,4 @@ class JSONMixin(RenderingMixinBase):
     def __render(self, _, **kwargs):
         serialized = json.dumps(kwargs, default=self.__default,
                                 indent=4 if self.settings.debug else None)
-        return self.response(serialized).using(mimetype='application/json')
+        return self.response(serialized, mimetype='application/json')
