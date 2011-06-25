@@ -1,3 +1,5 @@
 [run]
 source = ramverk
-omit   = ramverk/paver.py
+omit =
+    ramverk/paver.py
+    ramverk/pygments.py
