@@ -64,5 +64,6 @@ class JSONMixin(RenderingMixinBase):
         raise TypeError
 
     def __render(self, _, **kwargs):
-        return self.response(json.dumps(kwargs, default=self.__default))\
-                   .using(mimetype='application/json')
+        serialized = json.dumps(kwargs, default=self.__default,
+                                indent=4 if self.settings.debug else None)
+        return self.response(serialized).using(mimetype='application/json')
