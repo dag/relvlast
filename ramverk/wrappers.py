@@ -1,18 +1,15 @@
 from werkzeug.utils import get_content_type
 
 
-class ResponseUsingMixin(object):
-    """Add deferred setup for response objects."""
+class DeferredResponseInitMixin(object):
+    """Add a method for reinitializing response instances."""
 
-    def using(self, response=None,
-                    status=None,
-                    headers=None,
-                    mimetype=None,
-                    content_type=None,
-                    direct_passthrough=None):
-        """Convenience method that works like ``__init__`` on
-        already-created instances. Useful with things that return response
-        objects, for example ``return render(template).using(status=202)``."""
+    def using(self, response=None, status=None, headers=None,
+              mimetype=None, content_type=None, direct_passthrough=None):
+        """Convenience method that works like :meth:`__init__` for responses
+        that have already been created. Particularly useful as a complement
+        to the rendering machinery, for example ``return render('json',
+        error='authentication required').using(status=401)``."""
 
         if headers is not None:
             self.headers.extend(headers)

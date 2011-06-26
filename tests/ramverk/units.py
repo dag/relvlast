@@ -9,7 +9,7 @@ from ramverk.transaction import TransactionMixin
 from ramverk.utils       import Bunch, request_property
 from ramverk.utils       import EagerCachedProperties, ReprAttributes, has
 from ramverk.utils       import InitFromArgs, args
-from ramverk.wrappers    import ResponseUsingMixin
+from ramverk.wrappers    import DeferredResponseInitMixin
 from tests               import mocking
 
 
@@ -81,9 +81,9 @@ def doomed_transaction():
 
 
 @unit.test
-def response_using():
+def deferred_response_init():
 
-    class Response(ResponseUsingMixin, BaseResponse):
+    class Response(DeferredResponseInitMixin, BaseResponse):
         pass
 
     response = Response('hello').using(status=404)

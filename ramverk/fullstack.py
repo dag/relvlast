@@ -16,12 +16,12 @@ from ramverk.session     import SessionMixin, SecretKey
 from ramverk.transaction import TransactionMixin
 from ramverk.utils       import request_property
 from ramverk.venusian    import VenusianMixin
-from ramverk.wrappers    import ResponseUsingMixin
+from ramverk.wrappers    import DeferredResponseInitMixin
 from ramverk.wsgi        import SharedDataMiddlewareMixin
 from ramverk.zodb        import ZODBMixin
 
 
-class HTMLResponse(ResponseUsingMixin, Response):
+class HTMLResponse(DeferredResponseInitMixin, Response):
     """Full-fledged response object with a HTML mimetype default."""
 
     default_mimetype = 'text/html'
