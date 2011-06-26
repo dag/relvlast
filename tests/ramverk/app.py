@@ -46,9 +46,10 @@ def transactions(app):
 
 @app.test
 def url_building(app):
-    assert app.path(':index') == '/'
-    assert app.path('.module:index') == '/module/'
-    assert app.path('tests.app.module:index') == '/module/'
-    assert app.url('.module:index') == 'http://localhost/module/'
-    assert app.url('tests.app.module:index') == 'http://localhost/module/'
-    assert app.url('tests.app.subdomain:en_index') == 'http://en.localhost/'
+    path, url = app.request.path_to, app.request.url_for
+    assert path(':index') == '/'
+    assert path('.module:index') == '/module/'
+    assert path('tests.app.module:index') == '/module/'
+    assert url('.module:index') == 'http://localhost/module/'
+    assert url('tests.app.module:index') == 'http://localhost/module/'
+    assert url('tests.app.subdomain:en_index') == 'http://en.localhost/'

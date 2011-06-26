@@ -2,8 +2,8 @@ import errno
 import os
 
 from werkzeug.contrib.securecookie import SecureCookie
+from werkzeug.utils                import cached_property
 from ramverk.rendering             import json
-from ramverk.utils                 import request_property
 
 
 class SecureJSONCookie(SecureCookie):
@@ -13,20 +13,24 @@ class SecureJSONCookie(SecureCookie):
     serialization_method = json
 
 
-class SessionMixin(object):
-    """Add a session using a :class:`SecureJSONCookie` to an
-    application."""
+class RequestSessionMixin(object):
+    """Request mixin adding a signed session cookie."""
 
-    @request_property
+    @cached_property
     def session(self):
-        """Request-bound :class:`SecureJSONCookie` signed with
-        :attr:`settings.secret_key`."""
+        """A :class:`SecureJSONCookie` signed with the configured
+        :attr:`~SessionMixin.settings.secret_key`."""
         return SecureJSONCookie.load_cookie(
-            self.request, secret_key=self.settings.secret_key)
+            self, secret_key=self.app.settings.secret_key)
+
+
+class SessionMixin(object):
+    """Application mixin for automatic saving of the
+    :attr:`~RequestSessionMixin.session` as needed."""
 
     def respond(self):
         response = super(SessionMixin, self).respond()
-        self.session.save_cookie(response)
+        self.request.session.save_cookie(response)
         return response
 
 

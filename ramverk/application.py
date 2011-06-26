@@ -7,6 +7,11 @@ from werkzeug.wsgi       import responder
 
 from ramverk.local       import stack
 from ramverk.utils       import Bunch, request_property
+from ramverk.wrappers    import ApplicationBoundRequestMixin
+
+
+class Request(ApplicationBoundRequestMixin, BaseRequest):
+    """Minimal application-bound request object."""
 
 
 class BaseApplication(object):
@@ -65,8 +70,8 @@ class BaseApplication(object):
     @request_property
     def request(self):
         """The currently processed request wrapped in a
-        :class:`~werkzeug.wrappers.BaseRequest`."""
-        return BaseRequest(self.local.environ)
+        :class:`Request`."""
+        return Request(self.local.environ)
 
     def respond(self):
         """Called to return a response, or raise an HTTPException, after the
@@ -86,6 +91,7 @@ class BaseApplication(object):
         """Context manager in which :attr:`local` is bound to `environ`.
         Default is to push a :class:`~ramverk.utils.Bunch` containing the
         environment and application, on the :attr:`local_stack`."""
+        environ.setdefault('ramverk.application', self)
         local = Bunch(application=self, environ=environ)
         self.local_stack.push(local)
         try:

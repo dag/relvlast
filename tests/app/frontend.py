@@ -7,7 +7,7 @@ def urls():
     yield Rule('/', endpoint='index', methods=('GET', 'POST'))
 
 
-def index(log, request, render, db, redirect):
+def index(log, request, render, db):
     log.info('in index view')
 
     if request.method == 'GET':
@@ -17,17 +17,17 @@ def index(log, request, render, db, redirect):
 
     if request.method == 'POST':
         db.greeting = request.form.get('greeting')
-        return redirect(':index')
+        return request.redirect_to(':index')
 
 
 @get('/page/<page>/')
-def page(response, segments):
-    return response(segments.page)
+def page(response, request):
+    return response(request.segments.page)
 
 
 @get('/relative-endpoint/')
-def relative_endpoint(response, path):
-    return response(path(':page', page='fubar'))
+def relative_endpoint(response, request):
+    return response(request.path_to(':page', page='fubar'))
 
 
 @route('/classic/')
@@ -48,9 +48,9 @@ class Session(MethodDispatch):
     def __init__(self):
         pass
 
-    def post(self, session, request, redirect):
-        session['user'] = request.form['user']
-        return redirect(':Session')
+    def post(self, request):
+        request.session['user'] = request.form['user']
+        return request.redirect_to(':Session')
 
-    def get(self, response, session):
-        return response(session['user'])
+    def get(self, response, request):
+        return response(request.session['user'])

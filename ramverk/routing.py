@@ -6,7 +6,7 @@ from werkzeug.exceptions import NotFound
 from werkzeug.routing    import Map, Rule, Submount, Subdomain, EndpointPrefix
 from werkzeug.utils      import cached_property, redirect, import_string
 
-from ramverk.utils       import Bunch, request_property
+from ramverk.utils       import Bunch
 
 
 def _add_rules(scanner, rules, ob):
@@ -64,21 +64,36 @@ def delete(*args, **kwargs):
     return route(*args, **kwargs)
 
 
-class RoutingHelpersMixin(object):
-    """Add some convenient helpers for applications with URL dispatch."""
-
-    @request_property
-    def segments(self):
-        """The values that matched the route in the :attr:`url_map` as a
-        :class:`~ramverk.utils.Bunch`."""
-        endpoint, args = self.url_adapter_match_tuple
-        return Bunch(args)
+class URLMapAdapterRequestMixin(object):
+    """Request mixin for binding the request to the application's
+    :attr:`~URLMapMixin.url_map`."""
 
     @cached_property
-    def app(self): #pragma: no cover
-        """Reference to itself, to allow views to access the
-        application."""
-        return self
+    def url_map_adapter(self):
+        """A :class:`~werkzeug.routing.MapAdapter` for the
+        :attr:`~URLMapMixin.url_map` bound to the request environment."""
+        return self.app.url_map.bind_to_environ(self.environ)
+
+    @cached_property
+    def url_map_adapter_match(self):
+        return self.url_map_adapter.match(return_rule=True)
+
+    @cached_property
+    def url_rule(self):
+        """The :class:`~werkzeug.routing.Rule` that matched this
+        request."""
+        return self.url_map_adapter_match[0]
+
+    @cached_property
+    def endpoint(self):
+        """The :term:`endpoint name` for the matched :attr:`url_rule`."""
+        return self.url_rule.endpoint
+
+    @cached_property
+    def segments(self):
+        """The converted values that matched the placeholders in the
+        :attr:`url_rule` as a :class:`~ramverk.utils.Bunch`."""
+        return Bunch(self.url_map_adapter_match[1])
 
     def absolute_endpoint(self, endpoint):
         """Expand the relative `endpoint` description to a fully qualified
@@ -87,60 +102,55 @@ class RoutingHelpersMixin(object):
         ``myapp.frontend:about`` and ``.backend:index`` to
         ``myapp.backend:index``."""
         if endpoint.startswith('.'):
-            return self.module + endpoint
+            return self.app.module + endpoint
         if endpoint.startswith(':') and ':' in self.endpoint:
             module = self.endpoint.split(':', 1)[0]
             return module + endpoint
         return endpoint
 
-    def update_endpoint_values(self, endpoint, values):
-        """Called to update `values` in-place when building a URL for
-        `endpoint`. Useful in combination with
-        :meth:`~werkzeug.routing.Map.is_endpoint_expecting` to set defaults
-        allowing you to avoid extraneous repetition."""
-
-    def __build_url(self, endpoint=None,
-                    values=None, method=None,
-                    force_external=False, append_unknown=True):
+    def build_url(self, endpoint=None, values=None, method=None,
+                  force_external=False, append_unknown=True):
         if endpoint is None:
             endpoint = self.endpoint
             values = dict(self.segments, **values)
         else:
             endpoint = self.absolute_endpoint(endpoint)
-            self.update_endpoint_values(endpoint, values)
-        return self.url_adapter.build(endpoint, values, method,
-                                      force_external, append_unknown)
+            self.app.update_endpoint_values(endpoint, values)
+        return self.url_map_adapter.build(endpoint, values, method,
+                                          force_external, append_unknown)
 
-    def url(self, endpoint=None, **values):
+    def url_for(self, endpoint=None, **values):
         """Build a URL for the route that matches `endpoint` (expanded with
         :meth:`absolute_endpoint`) and `values` (updated with
-        :meth:`update_endpoint_values`). If the endpoint is :const:`None`,
-        the current URL is returned with the values used as overrides."""
-        return self.__build_url(endpoint, values, force_external=True)
+        :meth:`~URLMapMixin.update_endpoint_values`). If the endpoint is
+        :const:`None`, the current URL is returned with the values used as
+        overrides."""
+        return self.build_url(endpoint, values, force_external=True)
 
-    def path(self, endpoint=None, **values):
-        """Like :meth:`url` but as an absolute path."""
-        return self.__build_url(endpoint, values)
+    def path_to(self, endpoint=None, **values):
+        """Like :meth:`url_for` but as an absolute path."""
+        return self.build_url(endpoint, values)
 
-    def redirect(self, endpoint=None, **values):
+    def redirect_to(self, endpoint=None, **values):
         """Create a response that redirects to the route for `endpoint`
         with `values`."""
-        return redirect(self.path(endpoint, **values))
+        return redirect(self.path_to(endpoint, **values))
 
 
 class URLMapMixin(object):
-    """Add URL dispatch using a :class:`~werkzeug.routing.Map` to an
-    application."""
+    """Application mixin dispatching requests using a URL
+    :class:`~werkzeug.routing.Map`."""
 
     @cached_property
     def url_map(self):
         """Map of URLs to :attr:`endpoints`."""
         return Map()
 
-    @request_property
-    def url_adapter(self):
-        """Adapter for :attr:`url_map` bound to the current request."""
-        return self.url_map.bind_to_environ(self.local.environ)
+    def update_endpoint_values(self, endpoint, values):
+        """Called to update `values` in-place when building a URL for
+        `endpoint`. Useful in combination with
+        :meth:`~werkzeug.routing.Map.is_endpoint_expecting` to set defaults
+        allowing you to avoid extraneous repetition."""
 
     def call_as_endpoint(self, callable, **kwargs):
         """Call the `callable` with `kwargs` using endpoint semantics: the
@@ -160,28 +170,14 @@ class URLMapMixin(object):
                       if name not in kwargs)
         return callable(**kwargs)
 
-    @request_property
-    def url_adapter_match_tuple(self):
-        return self.url_adapter.match()
-
-    @request_property
-    def endpoint(self):
-        """The endpoint matching the current request."""
-        endpoint, args = self.url_adapter_match_tuple
-        return endpoint
-
     def respond(self):
         """Match the request to an endpoint and call it with
         :meth:`call_as_endpoint` to produce a response."""
         try:
-            endpoint = self.endpoint
+            endpoint = self.request.endpoint
         except NotFound:
             return super(URLMapMixin, self).respond()
         return self.call_as_endpoint(import_string(endpoint))
-
-
-class RoutingMixin(RoutingHelpersMixin, URLMapMixin):
-    """Add complete URL dispatching to an application."""
 
 
 class MethodDispatch(object):

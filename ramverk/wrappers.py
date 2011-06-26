@@ -1,4 +1,11 @@
-from werkzeug.utils import get_content_type
+from werkzeug.utils import environ_property, get_content_type
+
+
+class ApplicationBoundRequestMixin(object):
+    """Mixin for request objects that are bound to an application."""
+
+    app = environ_property('ramverk.application', doc="""
+        The Ramverk application that received this request.""")
 
 
 class DeferredResponseInitMixin(object):

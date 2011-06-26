@@ -38,8 +38,8 @@ class TemplatingMixinBase(RenderingMixinBase):
         application, and the application as `app`, by default."""
         context.setdefault('app', self)
         context.setdefault('request', self.request)
-        context.setdefault('url', self.url)
-        context.setdefault('path', self.path)
+        context.setdefault('url', self.request.url_for)
+        context.setdefault('path', self.request.path_to)
 
     @cached_property
     def template_loaders(self):

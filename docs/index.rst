@@ -334,17 +334,21 @@ The Full Stack
 
     .. autoattribute:: request
 
-      .. inheritance-diagram:: werkzeug.wrappers.Request
-        :parts: 1
-
     .. autoattribute:: response
 
-      .. inheritance-diagram:: HTMLResponse
-        :parts: 1
-
-  .. autoclass:: HTMLResponse
+  .. autoclass:: Request
     :members:
     :show-inheritance:
+
+    .. inheritance-diagram:: Request
+      :parts: 1
+
+  .. autoclass:: Response
+    :members:
+    :show-inheritance:
+
+    .. inheritance-diagram:: Response
+      :parts: 1
 
 
 Minimal Base for Applications
@@ -440,6 +444,14 @@ Minimal Base for Applications
     .. automethod:: __exit__
 
 
+  .. autoclass:: Request
+    :show-inheritance:
+
+
+.. autoclass:: ramverk.wrappers.ApplicationBoundRequestMixin
+  :members:
+
+
 .. automodule:: ramverk.local
 
   .. attribute:: stack
@@ -490,15 +502,11 @@ Dispatching Requests by URL
 
   .. autofunction:: delete
 
-  .. autoclass:: RoutingHelpersMixin
+  .. autoclass:: URLMapAdapterRequestMixin
     :members:
 
   .. autoclass:: URLMapMixin
     :members:
-
-  .. autoclass:: RoutingMixin
-    :members:
-    :show-inheritance:
 
   .. autoclass:: MethodDispatch
 
@@ -524,7 +532,9 @@ Rendering Content
 -----------------
 
 .. automodule:: ramverk.wrappers
-  :members:
+
+  .. autoclass:: DeferredResponseInitMixin
+    :members:
 
 .. automodule:: ramverk.rendering
 
@@ -700,13 +710,14 @@ Tracking the Session of a User
 
 .. automodule:: ramverk.session
 
+  .. autoclass:: RequestSessionMixin
+    :members:
+
   .. autoclass:: SessionMixin
 
     .. attribute:: settings.secret_key
 
       A secret key to sign the session cookie with.
-
-    .. autoattribute:: session
 
   .. autoclass:: SecureJSONCookie
 
