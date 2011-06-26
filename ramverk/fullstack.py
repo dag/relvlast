@@ -12,6 +12,7 @@ from ramverk.logbook     import LogbookMixin
 from ramverk.rendering   import JSONMixin
 from ramverk.routing     import RoutingMixin
 from ramverk.scss        import SCSSMixin
+from ramverk.session     import SessionMixin, SecretKey
 from ramverk.transaction import TransactionMixin
 from ramverk.utils       import request_property
 from ramverk.venusian    import VenusianMixin
@@ -32,6 +33,7 @@ class Application(LogbookMixin,
                   GenshiMixin,
                   JSONMixin,
                   SCSSMixin,
+                  SessionMixin,
                   RoutingMixin,
                   VenusianMixin,
                   SharedDataMiddlewareMixin,
@@ -51,6 +53,7 @@ class Application(LogbookMixin,
     def settings(self):
         settings = super(Application, self).settings
         settings.storage = lambda: FileStorage(settings.name.lower() + '.db')
+        settings.secret_key = SecretKey(settings.name.lower() + '.key')
         return settings
 
     @cached_property

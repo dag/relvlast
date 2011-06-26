@@ -321,6 +321,11 @@ The Full Stack
     .. inheritance-diagram:: Application
       :parts: 1
 
+    .. attribute:: settings.secret_key
+
+      :default:
+        :class:`~ramverk.session.SecretKey` based on the `name` setting.
+
     .. attribute:: settings.storage
 
       :default: File storage based on the `name` setting.
@@ -688,6 +693,24 @@ Styling with SCSS
 
     Compiles Sassy stylesheets in :file:`{source}.scss` files into
     :file:`{compiled}.css` responses.
+
+
+Tracking the Session of a User
+------------------------------
+
+.. automodule:: ramverk.session
+
+  .. autoclass:: SessionMixin
+
+    .. attribute:: settings.secret_key
+
+      A secret key to sign the session cookie with.
+
+    .. autoattribute:: session
+
+  .. autoclass:: SecureJSONCookie
+
+  .. autoclass:: SecretKey
 
 
 Persisting Objects with ZODB

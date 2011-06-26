@@ -40,3 +40,17 @@ class Classic(MethodDispatch):
 
     def get(self, render):
         return render(self.renderer, greeting=self.greeting)
+
+
+@route('/session/')
+class Session(MethodDispatch):
+
+    def __init__(self):
+        pass
+
+    def post(self, session, request, redirect):
+        session['user'] = request.form['user']
+        return redirect(':Session')
+
+    def get(self, response, session):
+        return response(session['user'])

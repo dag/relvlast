@@ -1,6 +1,7 @@
 *.py?
 *.sw?
 relvlast.db*
+relvlast.key
 build
 dist
 *.egg-info

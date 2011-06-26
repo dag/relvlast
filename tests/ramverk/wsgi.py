@@ -91,3 +91,10 @@ def compiled_scss(client):
         }
 
         """)
+
+
+@wsgi.test
+def session(client):
+    response = client.post('/session/', data={'user': 'admin'},
+                                        follow_redirects=True)
+    assert response.data == 'admin'
