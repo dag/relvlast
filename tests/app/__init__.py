@@ -2,7 +2,7 @@ from persistent        import Persistent
 from werkzeug.utils    import cached_property
 from logbook           import TestHandler
 from genshi.filters    import Transformer
-from ramverk.fullstack import Environment, Application
+from ramverk.fullstack import Environment, TemplateContext, Application
 from ramverk.genshi    import HTMLTemplate
 
 
@@ -18,13 +18,16 @@ class TestEnvironment(Environment):
         return self.persistent.setdefault('root', Root())
 
 
+class TestTemplateContext(TemplateContext):
+
+    injected = 42
+
+
 class TestApp(Application):
 
     environment = TestEnvironment
 
-    def update_template_context(self, context):
-        super(TestApp, self).update_template_context(context)
-        context.setdefault('injected', 42)
+    template_context = TestTemplateContext
 
     def configure(self):
         self.log_handler = TestHandler()

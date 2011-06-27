@@ -344,6 +344,10 @@ The Full Stack
 
       :default: :class:`Response`
 
+    .. autoattribute:: template_context
+
+      :default: :class:`TemplateContext`
+
   .. autoclass:: Environment
     :members:
     :show-inheritance:
@@ -363,6 +367,13 @@ The Full Stack
     :show-inheritance:
 
     .. inheritance-diagram:: Response
+      :parts: 1
+
+  .. autoclass:: TemplateContext
+    :members:
+    :show-inheritance:
+
+    .. inheritance-diagram:: TemplateContext
       :parts: 1
 
 
@@ -500,6 +511,9 @@ Dispatching Requests by URL
   .. autofunction:: delete
 
   .. autoclass:: URLMapAdapterEnvironmentMixin
+    :members:
+
+  .. autoclass:: URLHelpersTemplateContextMixin
     :members:
 
   .. autoclass:: URLMapMixin
@@ -664,6 +678,9 @@ Templating with Genshi
 .. autoclass:: ramverk.rendering.TemplatingMixinBase
   :members:
   :show-inheritance:
+
+.. autoclass:: ramverk.rendering.BaseTemplateContext
+  :members:
 
 
 Compiling Static Resources On-Demand

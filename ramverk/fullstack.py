@@ -23,8 +23,12 @@ from ramverk.compiling   import EnvironmentCompilerMixin
 from ramverk.environment import BaseEnvironment
 from ramverk.genshi      import GenshiMixin
 from ramverk.logbook     import LogbookEnvironmentMixin, LogbookMixin
-from ramverk.rendering   import RenderingEnvironmentMixin, JSONMixin
-from ramverk.routing     import URLMapAdapterEnvironmentMixin, URLMapMixin
+from ramverk.rendering   import RenderingEnvironmentMixin,\
+                                BaseTemplateContext,\
+                                JSONMixin
+from ramverk.routing     import URLMapAdapterEnvironmentMixin,\
+                                URLHelpersTemplateContextMixin,\
+                                URLMapMixin
 from ramverk.scss        import SCSSMixin
 from ramverk.session     import EnvironmentSessionMixin, SecretKey
 from ramverk.transaction import TransactionEnvironmentMixin
@@ -66,6 +70,11 @@ class Response(CommonResponseDescriptorsMixin,
     """Fall back on :mimetype:`text/html` if no mimetype was set."""
 
 
+class TemplateContext(URLHelpersTemplateContextMixin,
+                      BaseTemplateContext):
+    """Full-stack template context."""
+
+
 class Application(LogbookMixin,
                   ZODBMixin,
                   GenshiMixin,
@@ -82,6 +91,8 @@ class Application(LogbookMixin,
     request = Request
 
     response = Response
+
+    template_context = TemplateContext
 
     @cached_property
     def settings(self):

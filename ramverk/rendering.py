@@ -35,17 +35,35 @@ class RenderingEnvironmentMixin(object):
         'application.render', ':meth:`~RenderingMixinBase.render`')
 
 
+class BaseTemplateContext(object):
+    """Base class for template contexts."""
+
+    def __init__(self, environment):
+
+        self.environment = environment
+        """The context-bound environment
+        :attr:`~ramverk.application.BaseApplication.local`."""
+
+    application = delegated_property(
+        'environment.application',
+        ':attr:`~ramverk.environment.BaseEnvironment.application`')
+
+    request = delegated_property(
+        'environment.request',
+        ':attr:`~ramverk.environment.BaseEnvironment.request`')
+
+
 class TemplatingMixinBase(RenderingMixinBase):
     """Base class for templating mixins."""
 
+    template_context = BaseTemplateContext
+    """Template context class."""
+
     def update_template_context(self, context):
-        """Add templating "globals" to `context` in-place. Override to add
-        your own globals.  Includes `request`, `url` and `path` from the
-        application, and the application as `app`, by default."""
-        context.setdefault('app', self)
-        context.setdefault('request', self.local.request)
-        context.setdefault('url', self.local.url)
-        context.setdefault('path', self.local.path)
+        namespace = self.template_context(self.local)
+        for name in dir(namespace):
+            if not name.startswith('_'):
+                context.setdefault(name, getattr(namespace, name))
 
     @cached_property
     def template_loaders(self):
