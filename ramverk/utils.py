@@ -16,6 +16,7 @@ class Bunch(dict):
 
 
 class delegated_property(object):
+    """Property that delegates to a distant attribute."""
 
     def __init__(self, path, doc=None):
         if isinstance(path, basestring):

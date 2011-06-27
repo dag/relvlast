@@ -874,6 +874,22 @@ Common Utilities
   .. autoclass:: Bunch
     :show-inheritance:
 
+  .. autoclass:: delegated_property
+
+    :param path:
+      Path to the delegated attribute from "self", as a dotted string or a
+      list of strings.
+    :param doc:
+      ReST markup for a link to the delegated attribute.
+
+    Example::
+
+      class DelegatingObject(object):
+
+          message = 'Howdy'
+
+          yell = delegated_property('message.upper', ':meth:`~str.upper`')
+
   .. autofunction:: has
 
     This is useful for setting attribute defaults for mutable types or
