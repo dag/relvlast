@@ -27,7 +27,7 @@ class ZODBConnectionMixin(object):
             self._zodb_connection.close()
         return super(ZODBConnectionMixin, self).__exit__(*exc_info)
 
-    @property
+    @cached_property
     def persistent(self):
         """The root :class:`~persistent.mapping.PersistentMapping` of the
         storage."""
