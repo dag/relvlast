@@ -431,9 +431,11 @@ Minimal Base for Applications
 
     .. centered:: Context Locals
 
-    .. autoattribute:: local_stack
+    .. autoattribute:: stack
 
     .. autoattribute:: local
+
+    .. automethod:: contextbound(environ)
 
 
     .. centered:: Low-level

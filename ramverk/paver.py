@@ -51,7 +51,7 @@ def shell():
     namespace = options.shell.namespace or app.module
     locals.update(vars(import_string(namespace)))
 
-    with app.environment(app, environ):
+    with app.contextbound(environ):
         try:
             from bpython import embed
             embed(locals)

@@ -1,10 +1,11 @@
+from contextlib          import contextmanager
+
 from werkzeug.exceptions import HTTPException
 from werkzeug.utils      import cached_property
 from werkzeug.wrappers   import BaseRequest, BaseResponse
 from werkzeug.wsgi       import responder
 
 from ramverk.environment import BaseEnvironment
-from ramverk.local       import stack
 from ramverk.utils       import Bunch
 
 
@@ -55,21 +56,33 @@ class BaseApplication(object):
         return getLogger(self.settings.name)
 
     @cached_property
-    def local_stack(self):
-        """Stack of context-locals, by default the globally shared
+    def stack(self):
+        """Stack of environments, by default a globally shared
         :attr:`~ramverk.local.stack`."""
+        from ramverk.local import stack
         return stack
 
     @property
     def local(self):
-        """Per-request container object, by default the top-most object on
-        the :attr:`local_stack`."""
-        return self.local_stack.top
+        """Environment bound to the context."""
+        return self.stack.top
+
+    @contextmanager
+    def contextbound(self, environ):
+        """Context manager stacking the WSGI `environ` wrapped in
+        :attr:`environment`."""
+        env = self.environment(self, environ)
+        self.stack.push(env)
+        try:
+            with env:
+                yield env
+        finally:
+            self.stack.pop()
 
     @responder
     def __call__(self, environ, start_response):
         """WSGI interface to this application."""
-        with self.environment(self, environ) as env:
+        with self.contextbound(environ) as env:
             try:
                 response = env.respond()
             except HTTPException as e:

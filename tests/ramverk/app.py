@@ -10,23 +10,23 @@ env = Tests(contexts=[testenv])
 @app.test
 def transactions(app):
 
-    with app.environment(app, create_environ()):
+    with app.contextbound(create_environ()):
         app.local.persistent[1] = 42
-    with app.environment(app, create_environ()):
+    with app.contextbound(create_environ()):
         assert app.local.persistent[1] == 42
 
-    with app.environment(app, create_environ()):
+    with app.contextbound(create_environ()):
         app.local.persistent[2] = 43
         app.local.transaction_manager.doom()
         assert 2 in app.local.persistent
-    with app.environment(app, create_environ()):
+    with app.contextbound(create_environ()):
         assert 2 not in app.local.persistent
 
-    with app.environment(app, create_environ()):
+    with app.contextbound(create_environ()):
         app.local.persistent[3] = 44
         app.local.transaction_manager.abort()
         assert 3 not in app.local.persistent
-    with app.environment(app, create_environ()):
+    with app.contextbound(create_environ()):
         assert 3 not in app.local.persistent
 
 

@@ -15,11 +15,10 @@ class BaseEnvironment(object):
         """WSGI environment."""
 
     def __enter__(self):
-        self.application.local_stack.push(self)
-        return self
+        pass
 
     def __exit__(self, exc_type, exc_val, exc_tb):
-        self.application.local_stack.pop()
+        pass
 
     def respond(self):
         """Respond to this request or raise an HTTP exception. Default
