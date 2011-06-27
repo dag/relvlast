@@ -26,6 +26,16 @@ class BaseApplication(object):
         self.__create__()
         self.configure()
 
+    def __create__(self):
+        """Called after :meth:`__init__` and meant to be hooked by
+        cooperative mixins who are expected to call :func:`super` as
+        needed."""
+
+    def configure(self):
+        """Called after :meth:`__init__` and meant to be overloaded by
+        applications who do not need to call :func:`super`, to configure
+        new instances."""
+
     @cached_property
     def settings(self):
         """Environmental configuration in a
@@ -43,16 +53,6 @@ class BaseApplication(object):
         """Log channel for this application."""
         from logging import getLogger
         return getLogger(self.settings.name)
-
-    def __create__(self):
-        """Called after :meth:`__init__` and meant to be hooked by
-        cooperative mixins who are expected to call :func:`super` as
-        needed."""
-
-    def configure(self):
-        """Called after :meth:`__init__` and meant to be overloaded by
-        applications who do not need to call :func:`super`, to configure
-        new instances."""
 
     @cached_property
     def local_stack(self):
