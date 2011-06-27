@@ -510,10 +510,10 @@ Dispatching Requests by URL
 
   .. autofunction:: delete
 
-  .. autoclass:: URLMapAdapterEnvironmentMixin
+  .. autoclass:: URLMapAdapterMixin
     :members:
 
-  .. autoclass:: URLHelpersTemplateContextMixin
+  .. autoclass:: URLHelpersMixin
     :members:
 
   .. autoclass:: URLMapMixin
@@ -729,7 +729,7 @@ Tracking the Session of a User
 
 .. automodule:: ramverk.session
 
-  .. autoclass:: EnvironmentSessionMixin
+  .. autoclass:: SessionMixin
     :members:
 
     .. attribute:: settings.secret_key
@@ -746,25 +746,25 @@ Persisting Objects with ZODB
 
 .. automodule:: ramverk.zodb
 
-  .. autoclass:: ZODBMixin
+  .. autoclass:: ZODBStorageMixin
 
     .. attribute:: settings.storage
 
         Must be set to a callable returning a ZODB storage object.
 
-  .. autoclass:: ZODBEnvironmentMixin
+  .. autoclass:: ZODBConnectionMixin
     :members:
 
 
 .. automodule:: ramverk.transaction
 
-  .. autoclass:: TransactionEnvironmentMixin
+  .. autoclass:: TransactionMixin
     :members:
 
     .. important::
 
       Should be mixed in before anything that relies on transactions, such
-      as :class:`~ramverk.zodb.ZODBEnvironmentMixin`.
+      as :class:`~ramverk.zodb.ZODBConnectionMixin`.
 
 
 Logging with Logbook
@@ -772,16 +772,16 @@ Logging with Logbook
 
 .. automodule:: ramverk.logbook
 
-  .. autoclass:: LogbookMixin
+  .. autoclass:: LogbookLoggerMixin
     :members:
 
-  .. autoclass:: LogbookEnvironmentMixin
+  .. autoclass:: LogbookHandlerMixin
 
     .. important::
 
       Should be mixed in at the top of the inheritance chain of the
       environment so that all log records during requests pass through
-      :attr:`~LogbookMixin.log_handler`.
+      :attr:`~LogbookLoggerMixin.log_handler`.
 
 
 Task Management with Paver

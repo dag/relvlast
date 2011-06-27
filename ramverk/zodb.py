@@ -4,9 +4,9 @@ from transaction    import manager
 from werkzeug.utils import cached_property
 
 
-class ZODBEnvironmentMixin(object):
+class ZODBConnectionMixin(object):
     """Environment mixin connecting the configured ZODB
-    :attr:`~ZODBMixin.settings.storage` on-demand."""
+    :attr:`~ZODBStorageMixin.settings.storage` on-demand."""
 
     transaction_manager = manager
 
@@ -25,7 +25,7 @@ class ZODBEnvironmentMixin(object):
             if __debug__:
                 self.application.log.debug('disconnecting ZODB')
             self._zodb_connection.close()
-        return super(ZODBEnvironmentMixin, self).__exit__(*exc_info)
+        return super(ZODBConnectionMixin, self).__exit__(*exc_info)
 
     @property
     def persistent(self):
@@ -34,9 +34,9 @@ class ZODBEnvironmentMixin(object):
         return self._zodb_connection.root()
 
 
-class ZODBMixin(object):
-    """Application mixin adding a ZODB connection pool for use with
-    :class:`ZODBEnvironmentMixin`."""
+class ZODBStorageMixin(object):
+    """Application mixin adding a connection pool for a ZODB storage for
+    use with :class:`ZODBConnectionMixin`."""
 
     @cached_property
     def _zodb_connection_pool(self):

@@ -13,7 +13,7 @@ class SecureJSONCookie(SecureCookie):
     serialization_method = json
 
 
-class EnvironmentSessionMixin(object):
+class SessionMixin(object):
     """Environment mixin adding a signed session cookie."""
 
     @cached_property
@@ -24,7 +24,7 @@ class EnvironmentSessionMixin(object):
             self.request, secret_key=self.application.settings.secret_key)
 
     def respond(self):
-        response = super(EnvironmentSessionMixin, self).respond()
+        response = super(SessionMixin, self).respond()
         self.session.save_cookie(response)
         return response
 

@@ -3,7 +3,7 @@ from transaction    import TransactionManager
 from werkzeug.utils import cached_property
 
 
-class TransactionEnvironmentMixin(object):
+class TransactionMixin(object):
     """Environment mixin binding the request to a transaction."""
 
     @cached_property
@@ -13,7 +13,7 @@ class TransactionEnvironmentMixin(object):
 
     def __enter__(self):
         self.transaction_manager.begin()
-        return super(TransactionEnvironmentMixin, self).__enter__()
+        return super(TransactionMixin, self).__enter__()
 
     def __exit__(self, *exc_info):
         manager = self.transaction_manager
@@ -21,4 +21,4 @@ class TransactionEnvironmentMixin(object):
             manager.commit()
         else:
             manager.abort()
-        return super(TransactionEnvironmentMixin, self).__exit__(*exc_info)
+        return super(TransactionMixin, self).__exit__(*exc_info)

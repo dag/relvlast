@@ -7,7 +7,7 @@ from werkzeug.wrappers   import BaseResponse
 from ramverk.application import BaseApplication
 from ramverk.environment import BaseEnvironment
 from ramverk.rendering   import JSONMixin
-from ramverk.transaction import TransactionEnvironmentMixin
+from ramverk.transaction import TransactionMixin
 from ramverk.utils       import Bunch
 from ramverk.utils       import EagerCachedProperties, ReprAttributes, has
 from ramverk.utils       import InitFromArgs, args
@@ -38,7 +38,7 @@ def bunch_attrs_and_items_are_same():
 @mock.test
 def successful_transaction():
 
-    class Env(TransactionEnvironmentMixin, BaseEnvironment):
+    class Env(TransactionMixin, BaseEnvironment):
         transaction_manager =\
             (Fake('TransactionManager')
             .remember_order()
@@ -54,7 +54,7 @@ def successful_transaction():
 @mock.test
 def failed_transaction():
 
-    class Env(TransactionEnvironmentMixin, BaseEnvironment):
+    class Env(TransactionMixin, BaseEnvironment):
         transaction_manager =\
             (Fake('TransactionManager')
             .remember_order()
@@ -69,7 +69,7 @@ def failed_transaction():
 @mock.test
 def doomed_transaction():
 
-    class Env(TransactionEnvironmentMixin, BaseEnvironment):
+    class Env(TransactionMixin, BaseEnvironment):
         transaction_manager =\
             (Fake('TransactionManager')
             .remember_order()

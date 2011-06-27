@@ -64,7 +64,7 @@ def delete(*args, **kwargs):
     return route(*args, **kwargs)
 
 
-class URLMapAdapterEnvironmentMixin(object):
+class URLMapAdapterMixin(object):
     """Environment mixin binding the request to the application's
     :attr:`~URLMapMixin.url_map`."""
 
@@ -72,7 +72,7 @@ class URLMapAdapterEnvironmentMixin(object):
         try:
             endpoint = self.endpoint
         except NotFound:
-            return super(URLMapAdapterEnvironmentMixin, self).respond()
+            return super(URLMapAdapterMixin, self).respond()
         return self.application.call_endpoint_in_environment(import_string(endpoint))
 
     @cached_property
@@ -144,7 +144,7 @@ class URLMapAdapterEnvironmentMixin(object):
         return redirect(self.path(endpoint, **values))
 
 
-class URLHelpersTemplateContextMixin(object):
+class URLHelpersMixin(object):
     """Template context mixin adding helpers for URL building."""
 
     url = delegated_property(

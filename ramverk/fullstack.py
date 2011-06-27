@@ -22,29 +22,27 @@ from ramverk.application import BaseApplication
 from ramverk.compiling   import EnvironmentCompilerMixin
 from ramverk.environment import BaseEnvironment
 from ramverk.genshi      import GenshiMixin
-from ramverk.logbook     import LogbookEnvironmentMixin, LogbookMixin
+from ramverk.logbook     import LogbookHandlerMixin, LogbookLoggerMixin
 from ramverk.rendering   import RenderingEnvironmentMixin,\
                                 BaseTemplateContext,\
                                 JSONMixin
-from ramverk.routing     import URLMapAdapterEnvironmentMixin,\
-                                URLHelpersTemplateContextMixin,\
-                                URLMapMixin
+from ramverk.routing     import URLMapAdapterMixin, URLHelpersMixin, URLMapMixin
 from ramverk.scss        import SCSSMixin
-from ramverk.session     import EnvironmentSessionMixin, SecretKey
-from ramverk.transaction import TransactionEnvironmentMixin
+from ramverk.session     import SessionMixin, SecretKey
+from ramverk.transaction import TransactionMixin
 from ramverk.venusian    import VenusianMixin
 from ramverk.wrappers    import DeferredResponseInitMixin
 from ramverk.wsgi        import SharedDataMiddlewareMixin
-from ramverk.zodb        import ZODBEnvironmentMixin, ZODBMixin
+from ramverk.zodb        import ZODBConnectionMixin, ZODBStorageMixin
 
 
-class Environment(LogbookEnvironmentMixin,
+class Environment(LogbookHandlerMixin,
                   EnvironmentCompilerMixin,
-                  EnvironmentSessionMixin,
+                  SessionMixin,
                   RenderingEnvironmentMixin,
-                  TransactionEnvironmentMixin,
-                  URLMapAdapterEnvironmentMixin,
-                  ZODBEnvironmentMixin,
+                  TransactionMixin,
+                  URLMapAdapterMixin,
+                  ZODBConnectionMixin,
                   BaseEnvironment):
     """Full-stack environment object."""
 
@@ -70,13 +68,13 @@ class Response(CommonResponseDescriptorsMixin,
     """Fall back on :mimetype:`text/html` if no mimetype was set."""
 
 
-class TemplateContext(URLHelpersTemplateContextMixin,
+class TemplateContext(URLHelpersMixin,
                       BaseTemplateContext):
     """Full-stack template context."""
 
 
-class Application(LogbookMixin,
-                  ZODBMixin,
+class Application(LogbookLoggerMixin,
+                  ZODBStorageMixin,
                   GenshiMixin,
                   JSONMixin,
                   SCSSMixin,
