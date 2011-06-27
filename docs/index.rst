@@ -753,6 +753,7 @@ Persisting Objects with ZODB
         Must be set to a callable returning a ZODB storage object.
 
   .. autoclass:: ZODBConnectionMixin
+    :show-inheritance:
     :members:
 
 
@@ -765,6 +766,9 @@ Persisting Objects with ZODB
 
       Should be mixed in before anything that relies on transactions, such
       as :class:`~ramverk.zodb.ZODBConnectionMixin`.
+
+  .. autoclass:: TransactionalMixinBase
+    :members:
 
 
 Logging with Logbook

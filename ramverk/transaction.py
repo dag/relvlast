@@ -3,13 +3,22 @@ from transaction    import TransactionManager
 from werkzeug.utils import cached_property
 
 
-class TransactionMixin(object):
-    """Environment mixin binding the request to a transaction."""
+class TransactionalMixinBase(object):
+    """Base class for transactional environment mixins."""
 
     @cached_property
     def transaction_manager(self):
         """The transaction manager to use for this request."""
         return TransactionManager()
+
+    @property
+    def transaction(self):
+        """The current transaction."""
+        return self.transaction_manager.get()
+
+
+class TransactionMixin(TransactionalMixinBase):
+    """Environment mixin binding the request to a transaction."""
 
     def __enter__(self):
         self.transaction_manager.begin()

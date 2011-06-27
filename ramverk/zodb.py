@@ -1,14 +1,12 @@
-from __future__     import absolute_import
-from ZODB.DB        import DB
-from transaction    import manager
-from werkzeug.utils import cached_property
+from __future__          import absolute_import
+from ZODB.DB             import DB
+from werkzeug.utils      import cached_property
+from ramverk.transaction import TransactionalMixinBase
 
 
-class ZODBConnectionMixin(object):
+class ZODBConnectionMixin(TransactionalMixinBase):
     """Environment mixin connecting the configured ZODB
     :attr:`~ZODBStorageMixin.settings.storage` on-demand."""
-
-    transaction_manager = manager
 
     _zodb_connected = False
 
