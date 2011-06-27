@@ -1,6 +1,6 @@
 from werkzeug.exceptions import NotFound
 from werkzeug.utils      import cached_property
-from ramverk.utils       import delegated_property
+from ramverk.utils       import Alias
 
 
 class BaseEnvironment(object):
@@ -37,6 +37,5 @@ class BaseEnvironment(object):
         this :attr:`environ`."""
         return self.application.request(self.environ)
 
-    response = delegated_property(
-        'application.response',
-        ':attr:`~ramverk.application.BaseApplication.response`')
+    response = Alias('application.response',
+                     ':attr:`~ramverk.application.BaseApplication.response`')

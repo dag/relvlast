@@ -13,7 +13,7 @@ from werkzeug.local      import LocalProxy
 from werkzeug.routing    import Rule
 from werkzeug.utils      import cached_property
 from ramverk             import fullstack
-from ramverk.utils       import delegated_property
+from ramverk.utils       import Alias
 from relvlast.objects    import Root
 
 
@@ -44,11 +44,11 @@ class Environment(fullstack.Environment):
 
 class TemplateContext(fullstack.TemplateContext):
 
-    creole = delegated_property('environment.creole_parser.generate')
+    creole = Alias('environment.creole_parser.generate')
 
-    locale = delegated_property('environment.locale')
+    locale = Alias('environment.locale')
 
-    _ = delegated_property('environment.message_catalog.gettext')
+    _ = Alias('environment.message_catalog.gettext')
 
     def locale_name(self, locale):
         return self.locale.languages.get(locale, Locale(locale).display_name)

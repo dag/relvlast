@@ -15,7 +15,7 @@ class Bunch(dict):
     __delattr__ = dict.__delitem__
 
 
-class delegated_property(object):
+class Alias(object):
     """Property that delegates to a distant attribute."""
 
     def __init__(self, path, doc=None):

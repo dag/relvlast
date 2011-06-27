@@ -886,7 +886,7 @@ Common Utilities
   .. autoclass:: Bunch
     :show-inheritance:
 
-  .. autoclass:: delegated_property
+  .. autoclass:: Alias
 
     :param path:
       Path to the delegated attribute from "self", as a dotted string or a
@@ -900,7 +900,7 @@ Common Utilities
 
           message = 'Howdy'
 
-          yell = delegated_property('message.upper', ':meth:`~str.upper`')
+          yell = Alias('message.upper', ':meth:`~str.upper`')
 
   .. autofunction:: has
 

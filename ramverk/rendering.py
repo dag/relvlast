@@ -4,7 +4,7 @@ except ImportError: #pragma: no cover
     import json
 
 from werkzeug.utils import cached_property
-from ramverk.utils  import Bunch, delegated_property
+from ramverk.utils  import Bunch, Alias
 
 
 class RenderingMixinBase(object):
@@ -31,8 +31,8 @@ class RenderingMixinBase(object):
 
 class RenderingEnvironmentMixin(object):
 
-    render = delegated_property(
-        'application.render', ':meth:`~RenderingMixinBase.render`')
+    render = Alias('application.render',
+                   ':meth:`~RenderingMixinBase.render`')
 
 
 class BaseTemplateContext(object):
@@ -44,12 +44,10 @@ class BaseTemplateContext(object):
         """The context-bound environment
         :attr:`~ramverk.application.BaseApplication.local`."""
 
-    application = delegated_property(
-        'environment.application',
+    application = Alias('environment.application',
         ':attr:`~ramverk.environment.BaseEnvironment.application`')
 
-    request = delegated_property(
-        'environment.request',
+    request = Alias('environment.request',
         ':attr:`~ramverk.environment.BaseEnvironment.request`')
 
 

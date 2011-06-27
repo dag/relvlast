@@ -6,7 +6,7 @@ from werkzeug.exceptions import NotFound
 from werkzeug.routing    import Map, Rule, Submount, Subdomain, EndpointPrefix
 from werkzeug.utils      import cached_property, redirect, import_string
 
-from ramverk.utils       import Bunch, delegated_property
+from ramverk.utils       import Bunch, Alias
 
 
 def _add_rules(scanner, rules, ob):
@@ -147,11 +147,11 @@ class URLMapAdapterMixin(object):
 class URLHelpersMixin(object):
     """Template context mixin adding helpers for URL building."""
 
-    url = delegated_property(
-        'environment.url', ':meth:`~URLMapAdapterEnvironmentMixin.url`')
+    url = Alias('environment.url',
+                ':meth:`~URLMapAdapterEnvironmentMixin.url`')
 
-    path = delegated_property(
-        'environment.path', ':meth:`~URLMapAdapterEnvironmentMixin.path`')
+    path = Alias('environment.path',
+                 ':meth:`~URLMapAdapterEnvironmentMixin.path`')
 
 
 class URLMapMixin(object):
