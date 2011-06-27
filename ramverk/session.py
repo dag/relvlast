@@ -19,18 +19,13 @@ class EnvironmentSessionMixin(object):
     @cached_property
     def session(self):
         """A :class:`SecureJSONCookie` signed with the configured
-        :attr:`~SessionMixin.settings.secret_key`."""
+        :attr:`~settings.secret_key`."""
         return SecureJSONCookie.load_cookie(
             self.request, secret_key=self.application.settings.secret_key)
 
-
-class SessionMixin(object):
-    """Application mixin for automatic saving of the
-    :attr:`~EnvironmentSessionMixin.session` as needed."""
-
     def respond(self):
-        response = super(SessionMixin, self).respond()
-        self.local.session.save_cookie(response)
+        response = super(EnvironmentSessionMixin, self).respond()
+        self.session.save_cookie(response)
         return response
 
 

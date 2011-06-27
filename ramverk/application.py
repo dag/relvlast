@@ -1,4 +1,4 @@
-from werkzeug.exceptions import HTTPException, NotFound
+from werkzeug.exceptions import HTTPException
 from werkzeug.utils      import cached_property
 from werkzeug.wrappers   import BaseRequest, BaseResponse
 from werkzeug.wsgi       import responder
@@ -66,25 +66,12 @@ class BaseApplication(object):
         the :attr:`local_stack`."""
         return self.local_stack.top
 
-    def respond(self):
-        """Called to return a response, or raise an HTTPException, after the
-        request environment has been bound to the context :attr:`local`.
-        Default raises :exc:`~werkzeug.exceptions.NotFound`."""
-        raise NotFound
-
-    def respond_for_error(self, error):
-        """Called to create a response for an
-        :exc:`~werkzeug.exceptions.HTTPException` if one was raised during
-        dispatch. Returns it as-is by default as they are basic responses.
-        Override for custom 404 pages etc."""
-        return error
-
     @responder
     def __call__(self, environ, start_response):
         """WSGI interface to this application."""
-        with self.environment(self, environ):
+        with self.environment(self, environ) as env:
             try:
-                response = self.respond()
+                response = env.respond()
             except HTTPException as e:
-                response = self.respond_for_error(e)
+                response = env.respond_for_error(e)
         return response

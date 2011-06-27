@@ -68,6 +68,13 @@ class URLMapAdapterEnvironmentMixin(object):
     """Environment mixin binding the request to the application's
     :attr:`~URLMapMixin.url_map`."""
 
+    def respond(self):
+        try:
+            endpoint = self.endpoint
+        except NotFound:
+            return super(URLMapAdapterEnvironmentMixin, self).respond()
+        return self.application.call_endpoint_in_environment(import_string(endpoint))
+
     @cached_property
     def url_map_adapter(self):
         """A :class:`~werkzeug.routing.MapAdapter` for the
@@ -169,15 +176,6 @@ class URLMapMixin(object):
                       for name in wants
                       if name not in kwargs)
         return endpoint(**kwargs)
-
-    def respond(self):
-        """Match the request to an endpoint and call it with
-        :meth:`call_endpoint_in_environment` to produce a response."""
-        try:
-            endpoint = self.local.endpoint
-        except NotFound:
-            return super(URLMapMixin, self).respond()
-        return self.call_endpoint_in_environment(import_string(endpoint))
 
 
 class MethodDispatch(object):

@@ -19,13 +19,14 @@ from werkzeug.wrappers   import BaseResponse,\
 from ZODB.FileStorage    import FileStorage
 
 from ramverk.application import BaseApplication
+from ramverk.compiling   import EnvironmentCompilerMixin
 from ramverk.environment import BaseEnvironment
 from ramverk.genshi      import GenshiMixin
 from ramverk.logbook     import LogbookEnvironmentMixin, LogbookMixin
 from ramverk.rendering   import RenderingEnvironmentMixin, JSONMixin
 from ramverk.routing     import URLMapAdapterEnvironmentMixin, URLMapMixin
 from ramverk.scss        import SCSSMixin
-from ramverk.session     import EnvironmentSessionMixin, SessionMixin, SecretKey
+from ramverk.session     import EnvironmentSessionMixin, SecretKey
 from ramverk.transaction import TransactionEnvironmentMixin
 from ramverk.venusian    import VenusianMixin
 from ramverk.wrappers    import DeferredResponseInitMixin
@@ -34,6 +35,7 @@ from ramverk.zodb        import ZODBEnvironmentMixin, ZODBMixin
 
 
 class Environment(LogbookEnvironmentMixin,
+                  EnvironmentCompilerMixin,
                   EnvironmentSessionMixin,
                   RenderingEnvironmentMixin,
                   TransactionEnvironmentMixin,
@@ -69,7 +71,6 @@ class Application(LogbookMixin,
                   GenshiMixin,
                   JSONMixin,
                   SCSSMixin,
-                  SessionMixin,
                   URLMapMixin,
                   VenusianMixin,
                   SharedDataMiddlewareMixin,

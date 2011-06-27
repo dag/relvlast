@@ -1,5 +1,6 @@
-from werkzeug.utils import cached_property
-from ramverk.utils  import delegated_property
+from werkzeug.exceptions import NotFound
+from werkzeug.utils      import cached_property
+from ramverk.utils       import delegated_property
 
 
 class BaseEnvironment(object):
@@ -15,9 +16,21 @@ class BaseEnvironment(object):
 
     def __enter__(self):
         self.application.local_stack.push(self)
+        return self
 
     def __exit__(self, exc_type, exc_val, exc_tb):
         self.application.local_stack.pop()
+
+    def respond(self):
+        """Respond to this request or raise an HTTP exception. Default
+        raises a :exc:`~werkzeug.exceptions.NotFound`."""
+        raise NotFound
+
+    def respond_for_error(self, error):
+        """If :meth:`respond` raised an HTTP exception, this is called with
+        the exception and should return an error response. The default
+        returns the exception which is a basic response."""
+        return error
 
     @cached_property
     def request(self):

@@ -436,16 +436,9 @@ Minimal Base for Applications
     .. autoattribute:: local
 
 
-    .. centered:: WSGI
-
-    .. automethod:: respond
-
-    .. automethod:: respond_for_error
+    .. centered:: Low-level
 
     .. automethod:: __call__(environ, start_response)
-
-
-    .. centered:: Hooking-points for Mixins
 
     .. automethod:: __create__
 
@@ -697,6 +690,8 @@ Compiling Static Resources On-Demand
     compiled version of :file:`compiled/main.scss` if the mixin below is
     used.
 
+  .. autoclass:: EnvironmentCompilerMixin
+
 
 Styling with SCSS
 -----------------
@@ -715,14 +710,12 @@ Tracking the Session of a User
 
 .. automodule:: ramverk.session
 
-  .. autoclass:: SessionMixin
+  .. autoclass:: EnvironmentSessionMixin
+    :members:
 
     .. attribute:: settings.secret_key
 
       A secret key to sign the session cookie with.
-
-  .. autoclass:: EnvironmentSessionMixin
-    :members:
 
   .. autoclass:: SecureJSONCookie
 
