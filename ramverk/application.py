@@ -1,25 +1,24 @@
-from contextlib          import contextmanager
-
 from werkzeug.exceptions import HTTPException, NotFound
 from werkzeug.utils      import cached_property
 from werkzeug.wrappers   import BaseRequest, BaseResponse
 from werkzeug.wsgi       import responder
 
+from ramverk.environment import BaseEnvironment
 from ramverk.local       import stack
-from ramverk.utils       import Bunch, request_property
-from ramverk.wrappers    import ApplicationBoundRequestMixin
-
-
-class Request(ApplicationBoundRequestMixin, BaseRequest):
-    """Minimal application-bound request object."""
+from ramverk.utils       import Bunch
 
 
 class BaseApplication(object):
     """Base for applications."""
 
+    environment = BaseEnvironment
+    """Environment class."""
+
+    request = BaseRequest
+    """Request class."""
+
     response = BaseResponse
-    """Factory for response objects, defaulting to a minimal
-    :class:`~werkzeug.wrappers.BaseResponse`."""
+    """Response class."""
 
     def __init__(self, **settings):
         """Create a new application object using `settings`."""
@@ -67,12 +66,6 @@ class BaseApplication(object):
         the :attr:`local_stack`."""
         return self.local_stack.top
 
-    @request_property
-    def request(self):
-        """The currently processed request wrapped in a
-        :class:`Request`."""
-        return Request(self.local.environ)
-
     def respond(self):
         """Called to return a response, or raise an HTTPException, after the
         request environment has been bound to the context :attr:`local`.
@@ -86,34 +79,12 @@ class BaseApplication(object):
         Override for custom 404 pages etc."""
         return error
 
-    @contextmanager
-    def request_context(self, environ):
-        """Context manager in which :attr:`local` is bound to `environ`.
-        Default is to push a :class:`~ramverk.utils.Bunch` containing the
-        environment and application, on the :attr:`local_stack`."""
-        environ.setdefault('ramverk.application', self)
-        local = Bunch(application=self, environ=environ)
-        self.local_stack.push(local)
-        try:
-            yield local
-        finally:
-            self.local_stack.pop()
-
-    def __enter__(self):
-        """Called inside :meth:`request_context` before :meth:`respond`."""
-
-    def __exit__(self, exc_type, exc_val, exc_tb):
-        """Called after :meth:`respond` and :meth:`respond_for_error`;
-        arguments are `None` unless an exception was raised from the
-        dispatch. Should return `True` to suppress that exception."""
-
     @responder
     def __call__(self, environ, start_response):
         """WSGI interface to this application."""
-        with self.request_context(environ):
-            with self:
-                try:
-                    response = self.respond()
-                except HTTPException as e:
-                    response = self.respond_for_error(e)
+        with self.environment(self, environ):
+            try:
+                response = self.respond()
+            except HTTPException as e:
+                response = self.respond_for_error(e)
         return response

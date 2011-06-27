@@ -1,9 +1,9 @@
 from persistent        import Persistent
+from werkzeug.utils    import cached_property
 from logbook           import TestHandler
 from genshi.filters    import Transformer
-from ramverk.fullstack import Application
+from ramverk.fullstack import Environment, Application
 from ramverk.genshi    import HTMLTemplate
-from ramverk.utils     import request_property
 
 
 class Root(Persistent):
@@ -11,17 +11,20 @@ class Root(Persistent):
     greeting = 'Welcome'
 
 
+class TestEnvironment(Environment):
+
+    @cached_property
+    def db(self):
+        return self.persistent.setdefault('root', Root())
+
+
 class TestApp(Application):
+
+    environment = TestEnvironment
 
     def update_template_context(self, context):
         super(TestApp, self).update_template_context(context)
         context.setdefault('injected', 42)
-
-    @request_property
-    def db(self):
-        if 'testapp' not in self.persistent:
-            self.persistent['testapp'] = Root()
-        return self.persistent['testapp']
 
     def configure(self):
         self.log_handler = TestHandler()

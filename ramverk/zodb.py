@@ -2,45 +2,42 @@ from __future__     import absolute_import
 from ZODB.DB        import DB
 from transaction    import manager
 from werkzeug.utils import cached_property
-from ramverk.utils  import request_property
 
 
-class ZODBMixin(object):
-    """Add automatic ZODB connection management to an application."""
+class ZODBEnvironmentMixin(object):
+    """Environment mixin connecting the configured ZODB
+    :attr:`~ZODBMixin.settings.storage` on-demand."""
 
-    transaction_manager = manager  # if TransactionMixin isn't used
-    """The :obj:`transaction manager <transaction.manager>` for this
-    application. You should use this rather than the the transaction
-    package, for example ``self.transaction_manager.doom()``."""
+    transaction_manager = manager
+
+    _zodb_connected = False
 
     @cached_property
-    def _ZODBMixin__db(self):
-        """The :class:`connection pool <ZODB.DB>`."""
-        return DB(self.settings.storage())
-
-    @request_property
-    def _ZODBMixin__connection(self):
-        """On-demand per-request :class:`connection
-        <ZODB.Connection.Connection>`."""
+    def _zodb_connection(self):
         if __debug__:
-            self.log.debug('connecting ZODB')
-        return self.__db.open(transaction_manager=self.transaction_manager)
+            self.application.log.debug('connecting ZODB')
+        self._zodb_connected = True
+        return self.application._zodb_connection_pool.open(
+            transaction_manager=self.transaction_manager)
+
+    def __exit__(self, *exc_info):
+        if self._zodb_connected:
+            if __debug__:
+                self.application.log.debug('disconnecting ZODB')
+            self._zodb_connection.close()
+        return super(ZODBEnvironmentMixin, self).__exit__(*exc_info)
 
     @property
     def persistent(self):
-        """The root object of the storage, which is a
-        :class:`~persistent.mapping.PersistentMapping` and behaves like a
-        :class:`dict`."""
-        return self.__connection.root()
+        """The root :class:`~persistent.mapping.PersistentMapping` of the
+        storage."""
+        return self._zodb_connection.root()
 
-    def __exit__(self, *exc_info):
-        try:
-            connection = self.local._ZODBMixin__connection
-        except AttributeError:
-            pass
-        else:
-            if __debug__:
-                self.log.debug('disconnecting ZODB')
-            connection.close()
-            del self.local._ZODBMixin__connection
-        return super(ZODBMixin, self).__exit__(*exc_info)
+
+class ZODBMixin(object):
+    """Application mixin adding a ZODB connection pool for use with
+    :class:`ZODBEnvironmentMixin`."""
+
+    @cached_property
+    def _zodb_connection_pool(self):
+        return DB(self.settings.storage())

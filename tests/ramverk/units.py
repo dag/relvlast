@@ -2,11 +2,13 @@ from __future__          import absolute_import
 from datetime            import datetime
 from attest              import Tests, assert_hook, raises
 from fudge               import Fake
+from werkzeug.test       import create_environ
 from werkzeug.wrappers   import BaseResponse
 from ramverk.application import BaseApplication
+from ramverk.environment import BaseEnvironment
 from ramverk.rendering   import JSONMixin
-from ramverk.transaction import TransactionMixin
-from ramverk.utils       import Bunch, request_property
+from ramverk.transaction import TransactionEnvironmentMixin
+from ramverk.utils       import Bunch
 from ramverk.utils       import EagerCachedProperties, ReprAttributes, has
 from ramverk.utils       import InitFromArgs, args
 from ramverk.wrappers    import DeferredResponseInitMixin
@@ -36,7 +38,7 @@ def bunch_attrs_and_items_are_same():
 @mock.test
 def successful_transaction():
 
-    class App(TransactionMixin, BaseApplication):
+    class Env(TransactionEnvironmentMixin, BaseEnvironment):
         transaction_manager =\
             (Fake('TransactionManager')
             .remember_order()
@@ -45,14 +47,14 @@ def successful_transaction():
             .returns(False)
             .expects('commit'))
 
-    with App():
+    with Env(BaseApplication(), create_environ()):
         pass
 
 
 @mock.test
 def failed_transaction():
 
-    class App(TransactionMixin, BaseApplication):
+    class Env(TransactionEnvironmentMixin, BaseEnvironment):
         transaction_manager =\
             (Fake('TransactionManager')
             .remember_order()
@@ -60,14 +62,14 @@ def failed_transaction():
             .expects('abort'))
 
     with raises(RuntimeError):
-        with App():
+        with Env(BaseApplication(), create_environ()):
             raise RuntimeError
 
 
 @mock.test
 def doomed_transaction():
 
-    class App(TransactionMixin, BaseApplication):
+    class Env(TransactionEnvironmentMixin, BaseEnvironment):
         transaction_manager =\
             (Fake('TransactionManager')
             .remember_order()
@@ -76,7 +78,7 @@ def doomed_transaction():
             .returns(True)
             .expects('abort'))
 
-    with App():
+    with Env(BaseApplication(), create_environ()):
         pass
 
 
@@ -104,30 +106,6 @@ def deferred_response_init():
 
     response = Response(status=300).using(status='404 NOT FOUND')
     assert response.status_code == 404
-
-
-@unit.test
-def request_properties():
-
-    class App(object):
-
-        @request_property
-        def mapping(self):
-            return {}
-
-    assert isinstance(App.mapping, request_property)
-
-    app = App()
-    app.local = Bunch()
-    mapping = app.mapping
-
-    assert mapping is app.local.mapping
-    assert app.mapping is mapping
-
-    app.local = Bunch()
-    newmapping = app.mapping
-
-    assert mapping is not app.local.mapping is newmapping
 
 
 @unit.test

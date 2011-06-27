@@ -18,8 +18,8 @@ class CompilerMixinBase(object):
         return {}
 
     def respond(self):
-        if self.request.path.startswith('/compiled/'):
-            filename = self.request.path.split('/compiled/', 1)[1]
+        if self.local.request.path.startswith('/compiled/'):
+            filename = self.local.request.path.split('/compiled/', 1)[1]
             compiler_name = filename[filename.index('.'):]
             compiler = self.compilers[compiler_name]
             return compiler(filename)

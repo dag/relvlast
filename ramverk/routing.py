@@ -6,7 +6,7 @@ from werkzeug.exceptions import NotFound
 from werkzeug.routing    import Map, Rule, Submount, Subdomain, EndpointPrefix
 from werkzeug.utils      import cached_property, redirect, import_string
 
-from ramverk.utils       import Bunch, delegated_property
+from ramverk.utils       import Bunch
 
 
 def _add_rules(scanner, rules, ob):
@@ -64,15 +64,15 @@ def delete(*args, **kwargs):
     return route(*args, **kwargs)
 
 
-class URLMapAdapterRequestMixin(object):
-    """Request mixin for binding the request to the application's
+class URLMapAdapterEnvironmentMixin(object):
+    """Environment mixin binding the request to the application's
     :attr:`~URLMapMixin.url_map`."""
 
     @cached_property
     def url_map_adapter(self):
         """A :class:`~werkzeug.routing.MapAdapter` for the
         :attr:`~URLMapMixin.url_map` bound to the request environment."""
-        return self.app.url_map.bind_to_environ(self.environ)
+        return self.application.url_map.bind_to_environ(self.environ)
 
     @cached_property
     def url_map_adapter_match(self):
@@ -102,7 +102,7 @@ class URLMapAdapterRequestMixin(object):
         ``myapp.frontend:about`` and ``.backend:index`` to
         ``myapp.backend:index``."""
         if endpoint.startswith('.'):
-            return self.app.module + endpoint
+            return self.application.module + endpoint
         if endpoint.startswith(':') and ':' in self.endpoint:
             module = self.endpoint.split(':', 1)[0]
             return module + endpoint
@@ -115,11 +115,11 @@ class URLMapAdapterRequestMixin(object):
             values = dict(self.segments, **values)
         else:
             endpoint = self.absolute_endpoint(endpoint)
-            self.app.update_endpoint_values(endpoint, values)
+            self.application.update_endpoint_values(endpoint, values)
         return self.url_map_adapter.build(endpoint, values, method,
                                           force_external, append_unknown)
 
-    def url_for(self, endpoint=None, **values):
+    def url(self, endpoint=None, **values):
         """Build a URL for the route that matches `endpoint` (expanded with
         :meth:`absolute_endpoint`) and `values` (updated with
         :meth:`~URLMapMixin.update_endpoint_values`). If the endpoint is
@@ -127,44 +127,19 @@ class URLMapAdapterRequestMixin(object):
         overrides."""
         return self.build_url(endpoint, values, force_external=True)
 
-    def path_to(self, endpoint=None, **values):
-        """Like :meth:`url_for` but as an absolute path."""
+    def path(self, endpoint=None, **values):
+        """Like :meth:`url` but as an absolute path."""
         return self.build_url(endpoint, values)
 
-    def redirect_to(self, endpoint=None, **values):
+    def redirect(self, endpoint=None, **values):
         """Create a response that redirects to the route for `endpoint`
         with `values`."""
-        return redirect(self.path_to(endpoint, **values))
-
-
-class EndpointNamespace(object):
-
-    def __init__(self, application):
-        self.application = application
-        """The application receiving the request."""
-
-    def __getattr__(self, name):
-        return getattr(self.application, name)
-
-    url = delegated_property(
-        'request.url_for', ':meth:`~URLMapAdapterRequestMixin.url_for`')
-
-    path = delegated_property(
-        'request.path_to', ':meth:`~URLMapAdapterRequestMixin.path_to`')
-
-    redirect = delegated_property(
-        'request.redirect_to', ':meth:`~URLMapAdapterRequestMixin.redirect_to`')
+        return redirect(self.path(endpoint, **values))
 
 
 class URLMapMixin(object):
     """Application mixin dispatching requests using a URL
     :class:`~werkzeug.routing.Map`."""
-
-    endpoint_namespace = EndpointNamespace
-    """A class used to create a namespace of attributes that get passed as
-    keyword arguments to endpoints based on their signature. The default is
-    :class:`EndpointNamespace` which falls back on application
-    attributes."""
 
     @cached_property
     def url_map(self):
@@ -177,38 +152,37 @@ class URLMapMixin(object):
         :meth:`~werkzeug.routing.Map.is_endpoint_expecting` to set defaults
         allowing you to avoid extraneous repetition."""
 
-    def call_endpoint_in_namespace(self, endpoint, **kwargs):
+    def call_endpoint_in_environment(self, endpoint, **kwargs):
         """Call `endpoint` with the keyword arguments `kwargs` and fetch
         any missing arguments from the attributes on
-        :attr:`endpoint_namespace`."""
-        namespace = self.endpoint_namespace(self)
+        :attr:`~ramverk.application.BaseApplication.local`."""
         if isclass(endpoint):
             wants = getargspec(endpoint.__init__).args[1:]
-            initargs = dict(kwargs, **dict((name, getattr(namespace, name))
+            initargs = dict(kwargs, **dict((name, getattr(self.local, name))
                                            for name in wants
                                            if name not in kwargs))
             endpoint = endpoint(**initargs).__call__
         wants = getargspec(endpoint).args
         if ismethod(endpoint):
             wants = wants[1:]
-        kwargs.update((name, getattr(namespace, name))
+        kwargs.update((name, getattr(self.local, name))
                       for name in wants
                       if name not in kwargs)
         return endpoint(**kwargs)
 
     def respond(self):
         """Match the request to an endpoint and call it with
-        :meth:`call_endpoint_in_namespace` to produce a response."""
+        :meth:`call_endpoint_in_environment` to produce a response."""
         try:
-            endpoint = self.request.endpoint
+            endpoint = self.local.endpoint
         except NotFound:
             return super(URLMapMixin, self).respond()
-        return self.call_endpoint_in_namespace(import_string(endpoint))
+        return self.call_endpoint_in_environment(import_string(endpoint))
 
 
 class MethodDispatch(object):
     """Dispatch a class-based endpoint by HTTP method."""
 
-    def __call__(self, request, call_endpoint_in_namespace):
+    def __call__(self, request, application):
         method = getattr(self, request.method.lower())
-        return call_endpoint_in_namespace(method)
+        return application.call_endpoint_in_environment(method)

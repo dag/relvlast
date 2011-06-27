@@ -19,28 +19,34 @@ from werkzeug.wrappers   import BaseResponse,\
 from ZODB.FileStorage    import FileStorage
 
 from ramverk.application import BaseApplication
+from ramverk.environment import BaseEnvironment
 from ramverk.genshi      import GenshiMixin
-from ramverk.logbook     import LogbookMixin
-from ramverk.rendering   import JSONMixin
-from ramverk.routing     import URLMapAdapterRequestMixin, URLMapMixin
+from ramverk.logbook     import LogbookEnvironmentMixin, LogbookMixin
+from ramverk.rendering   import RenderingEnvironmentMixin, JSONMixin
+from ramverk.routing     import URLMapAdapterEnvironmentMixin, URLMapMixin
 from ramverk.scss        import SCSSMixin
-from ramverk.session     import RequestSessionMixin, SessionMixin, SecretKey
-from ramverk.transaction import TransactionMixin
-from ramverk.utils       import request_property
+from ramverk.session     import EnvironmentSessionMixin, SessionMixin, SecretKey
+from ramverk.transaction import TransactionEnvironmentMixin
 from ramverk.venusian    import VenusianMixin
-from ramverk.wrappers    import ApplicationBoundRequestMixin,\
-                                DeferredResponseInitMixin
+from ramverk.wrappers    import DeferredResponseInitMixin
 from ramverk.wsgi        import SharedDataMiddlewareMixin
-from ramverk.zodb        import ZODBMixin
+from ramverk.zodb        import ZODBEnvironmentMixin, ZODBMixin
+
+
+class Environment(LogbookEnvironmentMixin,
+                  EnvironmentSessionMixin,
+                  RenderingEnvironmentMixin,
+                  TransactionEnvironmentMixin,
+                  URLMapAdapterEnvironmentMixin,
+                  ZODBEnvironmentMixin,
+                  BaseEnvironment):
+    """Full-stack environment object."""
 
 
 class Request(AcceptMixin,
-              ApplicationBoundRequestMixin,
               AuthorizationMixin,
               CommonRequestDescriptorsMixin,
               ETagRequestMixin,
-              RequestSessionMixin,
-              URLMapAdapterRequestMixin,
               UserAgentMixin,
               BaseRequest):
     """Full-stack request object."""
@@ -59,7 +65,6 @@ class Response(CommonResponseDescriptorsMixin,
 
 
 class Application(LogbookMixin,
-                  TransactionMixin,
                   ZODBMixin,
                   GenshiMixin,
                   JSONMixin,
@@ -71,13 +76,11 @@ class Application(LogbookMixin,
                   BaseApplication):
     """Full-stack application."""
 
-    response = Response
-    """Use :class:`Response` for creating responses."""
+    environment = Environment
 
-    @request_property
-    def request(self):
-        """A :class:`Request` wrapping the current request."""
-        return Request(self.local.environ)
+    request = Request
+
+    response = Response
 
     @cached_property
     def settings(self):

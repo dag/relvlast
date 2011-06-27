@@ -1,9 +1,9 @@
 from textwrap import dedent
 from attest   import Tests, assert_hook
-from tests    import testapp
+from tests    import testenv
 
 
-genshi = Tests(contexts=[testapp])
+genshi = Tests(contexts=[testenv])
 
 
 @genshi.test

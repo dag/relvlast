@@ -13,24 +13,24 @@ class SecureJSONCookie(SecureCookie):
     serialization_method = json
 
 
-class RequestSessionMixin(object):
-    """Request mixin adding a signed session cookie."""
+class EnvironmentSessionMixin(object):
+    """Environment mixin adding a signed session cookie."""
 
     @cached_property
     def session(self):
         """A :class:`SecureJSONCookie` signed with the configured
         :attr:`~SessionMixin.settings.secret_key`."""
         return SecureJSONCookie.load_cookie(
-            self, secret_key=self.app.settings.secret_key)
+            self.request, secret_key=self.application.settings.secret_key)
 
 
 class SessionMixin(object):
     """Application mixin for automatic saving of the
-    :attr:`~RequestSessionMixin.session` as needed."""
+    :attr:`~EnvironmentSessionMixin.session` as needed."""
 
     def respond(self):
         response = super(SessionMixin, self).respond()
-        self.request.session.save_cookie(response)
+        self.local.session.save_cookie(response)
         return response
 
 

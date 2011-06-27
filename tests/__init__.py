@@ -7,9 +7,14 @@ from tests.app        import TestApp
 
 @contextmanager
 def testapp():
-    app = TestApp(storage=DemoStorage, secret_key='testing')
-    with app.request_context(create_environ()):
-        yield app
+    yield TestApp(storage=DemoStorage, secret_key='testing')
+
+
+@contextmanager
+def testenv():
+    with testapp() as app:
+        with app.environment(app, create_environ()):
+            yield app
 
 
 @contextmanager

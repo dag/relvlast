@@ -3,23 +3,29 @@ from logbook        import Logger, default_handler
 from werkzeug.utils import cached_property
 
 
+class LogbookEnvironmentMixin(object):
+    """Environment mixin binding the request to the application's
+    :attr:`~LogbookMixin.log_handler`."""
+
+    def __enter__(self):
+        self.application.log_handler.push_thread()
+        return super(LogbookEnvironmentMixin, self).__enter__()
+
+    def __exit__(self, *exc_info):
+        value = super(LogbookEnvironmentMixin, self).__exit__(*exc_info)
+        self.application.log_handler.pop_thread()
+        return value
+
+
 class LogbookMixin(object):
-    """Add a Logbook log channel to an application."""
+    """Application mixin dispatching log records with :term:`Logbook`."""
 
     @cached_property
     def log(self):
-        """Log channel for this application."""
+        """A Logbook logging channel for this application."""
         return Logger(self.settings.name)
 
     log_handler = default_handler
-    """Log handler bound to requests. Uses the Logbook default handler by
-    default, which is an :class:`~logbook.handlers.StderrHandler`."""
-
-    def __enter__(self):
-        self.log_handler.push_thread()
-        return super(LogbookMixin, self).__enter__()
-
-    def __exit__(self, *exc_info):
-        value = super(LogbookMixin, self).__exit__(*exc_info)
-        self.log_handler.pop_thread()
-        return value
+    """The Logbook handler used by the :class:`LogbookEnvironmentMixin`.
+    The default is the Logbook default, which is an
+    :class:`~logbook.handlers.StderrHandler`."""

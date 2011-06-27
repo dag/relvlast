@@ -7,8 +7,8 @@ def urls():
     yield Rule('/', endpoint='index', methods=('GET', 'POST'))
 
 
-def index(log, request, render, db):
-    log.info('in index view')
+def index(application, request, render, db, redirect):
+    application.log.info('in index view')
 
     if request.method == 'GET':
         if 'json' in request.args:
@@ -17,17 +17,17 @@ def index(log, request, render, db):
 
     if request.method == 'POST':
         db.greeting = request.form.get('greeting')
-        return request.redirect_to(':index')
+        return redirect(':index')
 
 
 @get('/page/<page>/')
-def page(response, request):
-    return response(request.segments.page)
+def page(response, segments):
+    return response(segments.page)
 
 
 @get('/relative-endpoint/')
-def relative_endpoint(response, request):
-    return response(request.path_to(':page', page='fubar'))
+def relative_endpoint(response, path):
+    return response(path(':page', page='fubar'))
 
 
 @route('/classic/')
@@ -48,9 +48,9 @@ class Session(MethodDispatch):
     def __init__(self):
         pass
 
-    def post(self, request):
-        request.session['user'] = request.form['user']
-        return request.redirect_to(':Session')
+    def post(self, session, request, redirect):
+        session['user'] = request.form['user']
+        return redirect(':Session')
 
-    def get(self, response, request):
-        return response(request.session['user'])
+    def get(self, response, session):
+        return response(session['user'])

@@ -332,9 +332,24 @@ The Full Stack
 
     .. autoattribute:: log_handler
 
+    .. autoattribute:: environment
+
+      :default: :class:`Environment`
+
     .. autoattribute:: request
 
+      :default: :class:`Request`
+
     .. autoattribute:: response
+
+      :default: :class:`Response`
+
+  .. autoclass:: Environment
+    :members:
+    :show-inheritance:
+
+    .. inheritance-diagram:: Environment
+      :parts: 1
 
   .. autoclass:: Request
     :members:
@@ -401,32 +416,27 @@ Minimal Base for Applications
 
     .. autoattribute:: log
 
+    .. autoattribute:: environment
+
+      :default: :class:`~ramverk.environment.BaseEnvironment`
+
+    .. autoattribute:: request
+
+      :default: :class:`~werkzeug.wrappers.BaseRequest`
+
+    .. autoattribute:: response
+
+      :default: :class:`~werkzeug.wrappers.BaseResponse`
+
 
     .. centered:: Context Locals
-
-    .. automethod:: request_context(environ)
 
     .. autoattribute:: local_stack
 
     .. autoattribute:: local
 
-    .. attribute:: local.environ
-
-      WSGI environment of the current request.
-
-    .. attribute:: local.application
-
-      This application object; mainly useful when :attr:`local_stack` is
-      shared between multiple applications, which is the default: inside
-      request contexts, :attr:`stack.top.application <ramverk.local.stack>`
-      is the active application.
-
-    .. autoattribute:: request
-
 
     .. centered:: WSGI
-
-    .. autoattribute:: response
 
     .. automethod:: respond
 
@@ -439,16 +449,8 @@ Minimal Base for Applications
 
     .. automethod:: __create__
 
-    .. automethod:: __enter__
 
-    .. automethod:: __exit__
-
-
-  .. autoclass:: Request
-    :show-inheritance:
-
-
-.. autoclass:: ramverk.wrappers.ApplicationBoundRequestMixin
+.. automodule:: ramverk.environment
   :members:
 
 
@@ -502,13 +504,10 @@ Dispatching Requests by URL
 
   .. autofunction:: delete
 
-  .. autoclass:: URLMapAdapterRequestMixin
+  .. autoclass:: URLMapAdapterEnvironmentMixin
     :members:
 
   .. autoclass:: URLMapMixin
-    :members:
-
-  .. autoclass:: EndpointNamespace
     :members:
 
   .. autoclass:: MethodDispatch
@@ -542,6 +541,9 @@ Rendering Content
 .. automodule:: ramverk.rendering
 
   .. autoclass:: RenderingMixinBase
+    :members:
+
+  .. autoclass:: RenderingEnvironmentMixin
     :members:
 
   .. autoclass:: JSONMixin
@@ -713,14 +715,14 @@ Tracking the Session of a User
 
 .. automodule:: ramverk.session
 
-  .. autoclass:: RequestSessionMixin
-    :members:
-
   .. autoclass:: SessionMixin
 
     .. attribute:: settings.secret_key
 
       A secret key to sign the session cookie with.
+
+  .. autoclass:: EnvironmentSessionMixin
+    :members:
 
   .. autoclass:: SecureJSONCookie
 
@@ -733,26 +735,24 @@ Persisting Objects with ZODB
 .. automodule:: ramverk.zodb
 
   .. autoclass:: ZODBMixin
-    :members:
 
     .. attribute:: settings.storage
 
         Must be set to a callable returning a ZODB storage object.
 
-    .. autoattribute:: _ZODBMixin__db
-
-    .. autoattribute:: _ZODBMixin__connection
+  .. autoclass:: ZODBEnvironmentMixin
+    :members:
 
 
 .. automodule:: ramverk.transaction
 
-  .. autoclass:: TransactionMixin
+  .. autoclass:: TransactionEnvironmentMixin
     :members:
 
     .. important::
 
       Should be mixed in before anything that relies on transactions, such
-      as :class:`~ramverk.zodb.ZODBMixin`.
+      as :class:`~ramverk.zodb.ZODBEnvironmentMixin`.
 
 
 Logging with Logbook
@@ -763,11 +763,13 @@ Logging with Logbook
   .. autoclass:: LogbookMixin
     :members:
 
+  .. autoclass:: LogbookEnvironmentMixin
+
     .. important::
 
       Should be mixed in at the top of the inheritance chain of the
-      application so that all log records during requests pass through
-      :attr:`log_handler`.
+      environment so that all log records during requests pass through
+      :attr:`~LogbookMixin.log_handler`.
 
 
 Task Management with Paver
@@ -871,8 +873,6 @@ Common Utilities
 
   .. autoclass:: Bunch
     :show-inheritance:
-
-  .. autoclass:: request_property
 
   .. autofunction:: has
 

@@ -4,7 +4,7 @@ except ImportError: #pragma: no cover
     import json
 
 from werkzeug.utils import cached_property
-from ramverk.utils  import Bunch
+from ramverk.utils  import Bunch, delegated_property
 
 
 class RenderingMixinBase(object):
@@ -29,6 +29,12 @@ class RenderingMixinBase(object):
         return renderer(renderer_name, **context)
 
 
+class RenderingEnvironmentMixin(object):
+
+    render = delegated_property(
+        'application.render', ':meth:`~RenderingMixinBase.render`')
+
+
 class TemplatingMixinBase(RenderingMixinBase):
     """Base class for templating mixins."""
 
@@ -37,9 +43,9 @@ class TemplatingMixinBase(RenderingMixinBase):
         your own globals.  Includes `request`, `url` and `path` from the
         application, and the application as `app`, by default."""
         context.setdefault('app', self)
-        context.setdefault('request', self.request)
-        context.setdefault('url', self.request.url_for)
-        context.setdefault('path', self.request.path_to)
+        context.setdefault('request', self.local.request)
+        context.setdefault('url', self.local.url)
+        context.setdefault('path', self.local.path)
 
     @cached_property
     def template_loaders(self):

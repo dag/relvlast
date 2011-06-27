@@ -45,16 +45,16 @@ def shell():
     from werkzeug.test import create_environ
     appfactory = import_string(options.ramverk.app)
     app = appfactory(debug=True)
+    environ = create_environ(options.shell.fake_request)
 
     locals = dict(app=app)
     namespace = options.shell.namespace or app.module
     locals.update(vars(import_string(namespace)))
 
-    with app.request_context(create_environ(options.shell.fake_request)):
-        with app:
-            try:
-                from bpython import embed
-                embed(locals)
-            except ImportError:
-                from code import interact
-                interact(local=locals)
+    with app.environment(app, environ):
+        try:
+            from bpython import embed
+            embed(locals)
+        except ImportError:
+            from code import interact
+            interact(local=locals)
