@@ -6,7 +6,7 @@ from werkzeug.exceptions import NotFound
 from werkzeug.routing    import Map, Rule, Submount, Subdomain, EndpointPrefix
 from werkzeug.utils      import cached_property, redirect, import_string
 
-from ramverk.utils       import Bunch
+from ramverk.utils       import Bunch, delegated_property
 
 
 def _add_rules(scanner, rules, ob):
@@ -137,9 +137,34 @@ class URLMapAdapterRequestMixin(object):
         return redirect(self.path_to(endpoint, **values))
 
 
+class EndpointNamespace(object):
+
+    def __init__(self, application):
+        self.application = application
+        """The application receiving the request."""
+
+    def __getattr__(self, name):
+        return getattr(self.application, name)
+
+    url = delegated_property(
+        'request.url_for', ':meth:`~URLMapAdapterRequestMixin.url_for`')
+
+    path = delegated_property(
+        'request.path_to', ':meth:`~URLMapAdapterRequestMixin.path_to`')
+
+    redirect = delegated_property(
+        'request.redirect_to', ':meth:`~URLMapAdapterRequestMixin.redirect_to`')
+
+
 class URLMapMixin(object):
     """Application mixin dispatching requests using a URL
     :class:`~werkzeug.routing.Map`."""
+
+    endpoint_namespace = EndpointNamespace
+    """A class used to create a namespace of attributes that get passed as
+    keyword arguments to endpoints based on their signature. The default is
+    :class:`EndpointNamespace` which falls back on application
+    attributes."""
 
     @cached_property
     def url_map(self):
@@ -152,37 +177,38 @@ class URLMapMixin(object):
         :meth:`~werkzeug.routing.Map.is_endpoint_expecting` to set defaults
         allowing you to avoid extraneous repetition."""
 
-    def call_as_endpoint(self, callable, **kwargs):
-        """Call the `callable` with `kwargs` using endpoint semantics: the
-        default is to fetch missing arguments in the callable's signature, from
-        the attributes of the application."""
-        if isclass(callable):
-            wants = getargspec(callable.__init__).args[1:]
-            initargs = dict(kwargs, **dict((name, getattr(self, name))
+    def call_endpoint_in_namespace(self, endpoint, **kwargs):
+        """Call `endpoint` with the keyword arguments `kwargs` and fetch
+        any missing arguments from the attributes on
+        :attr:`endpoint_namespace`."""
+        namespace = self.endpoint_namespace(self)
+        if isclass(endpoint):
+            wants = getargspec(endpoint.__init__).args[1:]
+            initargs = dict(kwargs, **dict((name, getattr(namespace, name))
                                            for name in wants
                                            if name not in kwargs))
-            callable = callable(**initargs).__call__
-        wants = getargspec(callable).args
-        if ismethod(callable):
+            endpoint = endpoint(**initargs).__call__
+        wants = getargspec(endpoint).args
+        if ismethod(endpoint):
             wants = wants[1:]
-        kwargs.update((name, getattr(self, name))
+        kwargs.update((name, getattr(namespace, name))
                       for name in wants
                       if name not in kwargs)
-        return callable(**kwargs)
+        return endpoint(**kwargs)
 
     def respond(self):
         """Match the request to an endpoint and call it with
-        :meth:`call_as_endpoint` to produce a response."""
+        :meth:`call_endpoint_in_namespace` to produce a response."""
         try:
             endpoint = self.request.endpoint
         except NotFound:
             return super(URLMapMixin, self).respond()
-        return self.call_as_endpoint(import_string(endpoint))
+        return self.call_endpoint_in_namespace(import_string(endpoint))
 
 
 class MethodDispatch(object):
     """Dispatch a class-based endpoint by HTTP method."""
 
-    def __call__(self, request, call_as_endpoint):
+    def __call__(self, request, call_endpoint_in_namespace):
         method = getattr(self, request.method.lower())
-        return call_as_endpoint(method)
+        return call_endpoint_in_namespace(method)

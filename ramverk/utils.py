@@ -35,6 +35,22 @@ class request_property(object):
         return getattr(instance.local, name)
 
 
+class delegated_property(object):
+
+    def __init__(self, path, doc=None):
+        if isinstance(path, basestring):
+            path = path.split('.')
+        self.path = path
+        if doc is None:
+            doc = ':attr:`{0}`'.format('.'.join(path))
+        self.__doc__ = 'Alias of {0}.'.format(doc)
+
+    def __get__(self, instance, owner):
+        if instance is None:
+            return self
+        return reduce(getattr, [instance] + self.path)
+
+
 def has(**properties):
     """Class decorator sugar for adding simple cached properties. Keyword
     arguments name the properties and the values are factory callables for

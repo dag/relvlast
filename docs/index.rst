@@ -508,6 +508,9 @@ Dispatching Requests by URL
   .. autoclass:: URLMapMixin
     :members:
 
+  .. autoclass:: EndpointNamespace
+    :members:
+
   .. autoclass:: MethodDispatch
 
     Example::
