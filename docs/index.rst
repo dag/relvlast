@@ -478,62 +478,8 @@ Dispatching Requests by URL
 
 .. automodule:: ramverk.routing
 
-  .. autofunction:: router
-
-    Endpoints will be prefixed with the module of the decorated callable
-    plus a colon. The scan can optionally take the keywords `submount` and
-    `subdomain` as strings which will wrap the rules in the corresponding
-    rule factories, and `rulefactory` which wraps the rules in an arbitrary
-    rule factory that must take only one argument: the list of rules. You
-    can use :func:`~functools.partial` to adapt factories to this
-    requirement, but for simple cases with positional arguments where the
-    rules come last, you can simply pass a tuple of the rule factory
-    constructor and the other positional arguments. Here's an example::
-
-      @router
-      def urls():
-          yield Rule('/show', endpoint='message')
-
-      def localized_message(response):
-          return response('Howdy')
-
-      class App(Application):
-
-          def configure(self):
-              self.scan(submount='/<locale>',
-                        rulefactory=(EndpointPrefix, 'localized_'))
-
-    The scan in this example adds a rule that looks something like this::
-
-      Submount('/<locale>', [
-          EndpointPrefix(__name__ + ':', [
-              EndpointPrefix('localized_', [
-                  Rule('/show', endpoint='message')
-              ])
-          ])
-      ])
-
-    Which in more simple terms is essentially this rule::
-
-      Rule('/<locale>/', endpoint='name.of.module:localized_message')
-
-  .. autofunction:: route
-
-    The dotted name of the decorated callable will be used as the endpoint
-    and a :class:`~werkzeug.routing.Rule` using the arguments of the
-    decorator will be created and added. Example::
-
-      @route('/')
-      def index(response):
-          return response('Howdy')
-
-  .. autofunction:: get
-
-  .. autofunction:: post
-
-  .. autofunction:: put
-
-  .. autofunction:: delete
+  .. autoclass:: URLMapMixin
+    :members:
 
   .. autoclass:: URLMapAdapterMixin
     :members:
@@ -541,27 +487,83 @@ Dispatching Requests by URL
   .. autoclass:: URLHelpersMixin
     :members:
 
-  .. autoclass:: URLMapMixin
-    :members:
-
-  .. autoclass:: MethodDispatch
-
-    Example::
-
-      @route('/')
-      class Index(MethodDispatch):
-
-          renderer = 'index.html'
-
-          def __init__(self, db):
-              self.greeting = db.greeting
-
-          def get(self, render):
-              return render(self.renderer, greeting=self.greeting)
-
 
 .. automodule:: ramverk.venusian
   :members:
+
+.. currentmodule:: ramverk.routing
+
+.. autofunction:: router
+
+  Endpoints will be prefixed with the module of the decorated callable
+  plus a colon. The scan can optionally take the keywords `submount` and
+  `subdomain` as strings which will wrap the rules in the corresponding
+  rule factories, and `rulefactory` which wraps the rules in an arbitrary
+  rule factory that must take only one argument: the list of rules. You
+  can use :func:`~functools.partial` to adapt factories to this
+  requirement, but for simple cases with positional arguments where the
+  rules come last, you can simply pass a tuple of the rule factory
+  constructor and the other positional arguments. Here's an example::
+
+    @router
+    def urls():
+        yield Rule('/show', endpoint='message')
+
+    def localized_message(response):
+        return response('Howdy')
+
+    class App(Application):
+
+        def configure(self):
+            self.scan(submount='/<locale>',
+                      rulefactory=(EndpointPrefix, 'localized_'))
+
+  The scan in this example adds a rule that looks something like this::
+
+    Submount('/<locale>', [
+        EndpointPrefix(__name__ + ':', [
+            EndpointPrefix('localized_', [
+                Rule('/show', endpoint='message')
+            ])
+        ])
+    ])
+
+  Which in more simple terms is essentially this rule::
+
+    Rule('/<locale>/', endpoint='name.of.module:localized_message')
+
+.. autofunction:: route
+
+  The dotted name of the decorated callable will be used as the endpoint
+  and a :class:`~werkzeug.routing.Rule` using the arguments of the
+  decorator will be created and added. Example::
+
+    @route('/')
+    def index(response):
+        return response('Howdy')
+
+.. autofunction:: get
+
+.. autofunction:: post
+
+.. autofunction:: put
+
+.. autofunction:: delete
+
+.. autoclass:: MethodDispatch
+
+  Example::
+
+    @route('/')
+    class Index(MethodDispatch):
+
+        renderer = 'index.html'
+
+        def __init__(self, db):
+            self.greeting = db.greeting
+
+        def get(self, render):
+            return render(self.renderer, greeting=self.greeting)
 
 
 Rendering Content
