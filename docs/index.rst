@@ -854,31 +854,31 @@ WSGI Middlewares
 
 .. automodule:: ramverk.wsgi
 
-  .. autoclass:: SharedDataMiddlewareMixin
+  .. autoclass:: SharedDataMixin
     :members: __create__, shared_data
 
-  .. autofunction:: mixin_from_middleware
+  .. autofunction:: mixin
 
     Example::
 
       from werkzeug._internal import _easteregg
 
-      class App(mixin_from_middleware(_easteregg), BaseApplication):
+      class App(mixin(_easteregg), BaseApplication):
           pass
 
-  .. autofunction:: middleware_mixin
+  .. autofunction:: middleware
 
     Example::
 
       from werkzeug._internal import _easteregg
 
-      @middleware_mixin
-      class EasterEggMiddlewareMixin(object):
+      @middleware
+      class EasterEggMixin(object):
 
           def pipeline(self, app):
               return _easteregg(app)
 
-      class App(EasterEggMiddlewareMixin, BaseApplication):
+      class App(EasterEggMixin, BaseApplication):
           pass
 
 

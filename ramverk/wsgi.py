@@ -3,8 +3,8 @@ from werkzeug.utils   import cached_property
 from werkzeug.wsgi    import SharedDataMiddleware, responder
 
 
-def mixin_from_middleware(middleware):
-    """Create a mixin from a middleware."""
+def mixin(middleware):
+    """Mix in a simple middleware."""
 
     class MiddlewareMixin(object):
 
@@ -19,13 +19,12 @@ def mixin_from_middleware(middleware):
                 self._middlewares[middleware] = middleware(app)
             return self._middlewares[middleware]
 
-    MiddlewareMixin.__name__ =\
-            'mixin_from_middleware({0})'.format(middleware.__name__)
+    MiddlewareMixin.__name__ ='mixin({0})'.format(middleware.__name__)
     return MiddlewareMixin
 
 
 
-def middleware_mixin(mixin):
+def middleware(mixin):
     """Decorate a class as a middleware mixin. A special `pipeline` method
     is passed the WSGI application to wrap, and the pipeline is transformed
     into a cooperative :meth:`__call__` override."""
@@ -48,7 +47,7 @@ def middleware_mixin(mixin):
     return mixin
 
 
-@middleware_mixin
+@middleware
 class SharedDataMixin(object):
     """Serve static files for an application."""
 
