@@ -49,13 +49,13 @@ def middleware_mixin(mixin):
 
 
 @middleware_mixin
-class SharedDataMiddlewareMixin(object):
+class SharedDataMixin(object):
     """Serve static files for an application."""
 
     def __create__(self):
         """Configures a build-only endpoint called `static` if the
         application has a :attr:`url_map`."""
-        super(SharedDataMiddlewareMixin, self).__create__()
+        super(SharedDataMixin, self).__create__()
         if hasattr(self, 'url_map'):
             self.url_map.add(Rule('/static/<path:name>',
                                   endpoint='static',
@@ -72,11 +72,3 @@ class SharedDataMiddlewareMixin(object):
 
     def pipeline(self, app):
         return SharedDataMiddleware(app, self.shared_data)
-
-
-@middleware_mixin
-class EasterEggMiddlewareMixin(object): #pragma: no cover
-
-    def pipeline(self, app):
-        from werkzeug._internal import _easteregg
-        return _easteregg(app)

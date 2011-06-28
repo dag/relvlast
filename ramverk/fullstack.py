@@ -32,7 +32,7 @@ from ramverk.session     import SessionMixin, SecretKey
 from ramverk.transaction import TransactionMixin
 from ramverk.venusian    import VenusianMixin
 from ramverk.wrappers    import DeferredResponseInitMixin
-from ramverk.wsgi        import SharedDataMiddlewareMixin
+from ramverk.wsgi        import SharedDataMixin
 from ramverk.zodb        import ZODBConnectionMixin, ZODBStorageMixin
 
 
@@ -80,7 +80,7 @@ class Application(LogbookLoggerMixin,
                   SCSSMixin,
                   URLMapMixin,
                   VenusianMixin,
-                  SharedDataMiddlewareMixin,
+                  SharedDataMixin,
                   BaseApplication):
     """Full-stack application."""
 
