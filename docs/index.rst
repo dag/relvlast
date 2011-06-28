@@ -399,17 +399,6 @@ Minimal Base for Applications
 
   .. autoclass:: BaseApplication
 
-    The call stack for WSGI requests looks like this:
-
-    .. digraph:: request
-
-      __call__ -> bind_to_environ;
-      bind_to_environ -> __enter__;
-      bind_to_environ -> respond;
-      respond -> response;
-      respond -> error_response -> response;
-      bind_to_environ -> __exit__;
-
     :param settings:
       Used to update :attr:`settings`.
 
