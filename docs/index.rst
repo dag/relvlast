@@ -40,14 +40,6 @@ frameworks tick and why they do what they do.
 Sample Application: Hello World with Writable Greeting
 ------------------------------------------------------
 
-First we need some boring imports::
-
-  from persistent        import Persistent
-  from werkzeug.routing  import Rule
-  from ramverk.fullstack import Application
-  from ramverk.utils     import request_property
-  from ramverk.routing   import MethodDispatch, router, route, get, post
-
 .. sidebar:: ZODB
 
   The :term:`ZODB` is a transactional persistence system with ACID
@@ -57,63 +49,41 @@ First we need some boring imports::
   right? In reality it's just the :mod:`pickle` module with scalability
   added.
 
-We also make a persistent object that we will use as the root of our tree
-of persistent objects. The actual root of the persistent storage is a dict
-but using a virtual root like this is more maintainable - we can set
-defaults, add methods to the root object, and access children as
-attributes. Note that this object is just an object and does nothing fancy
-except knowing when it's been mutated and needs to be written to the
-storage.
+Our sample application is writable which means we'll need persistence. To
+that end we create an object that we will use as the root of our persistent
+object tree. We use the :class:`~persistent.Persistent` base class which is
+simply an :func:`object` that tracks modifications so it is only saved when
+needed.
 
 ::
+
+  from persistent import Persistent
 
   class Root(Persistent):
 
       greeting = 'Hello'
 
-Now, we'll write the class for our application. We're using the "fullstack"
-base to get all the bells and whistles and some nice defaults. Our
-"virtual" root is simply a property, cached for each request, that reads a
-specific key in the persistent mapping. We also :term:`scan <Venusian>` the
-module to register the :term:`router` and :term:`endpoint` we'll add next.
+For convenience we write a property for accessing the root object, creating
+one if needed. This is achieved by extending the "environment" - a
+thread-safe object created for every request.
 
 ::
 
-  class Greeter(Application):
+  from werkzeug.utils import cached_property
+  from ramverk import fullstack
 
-      @request_property
+  class Environment(fullstack.Environment):
+
+      @cached_property
       def db(self):
           return self.persistent.setdefault('greeter', Root())
 
-      def configure(self):
-          self.scan()
+To expose the object over HTTP we route some endpoints that decide what to
+do with requests matching certain paths or methods. The endpoints receive
+attributes from the environment as keyword arguments, but only the
+attributes they ask for::
 
-This "scan" will look for functions decorated as routers and endpoints in
-the same module as the application (because we passed no argument). A
-"router" is a function that returns a list of URL patterns that map to
-"endpoints" which in turn are functions that respond to requests.
-
-The arguments to the endpoint function can be any or none and refer to
-attributes on the application, which the dispatcher will then pass to the
-function.
-
-::
-
-  @router
-  def urls():
-      yield Rule('/', endpoint='index', methods=('GET', 'POST'))
-
-  def index(request, render, db, redirect):
-
-      if request.method == 'GET':
-          return render('index.html', greeting=db.greeting)
-
-      if request.method == 'POST':
-          db.greeting = request.form.get('greeting')
-          return redirect(':index')
-
-Optionally we could have written that in a style reminiscent of the Bottle
-framework which is more limiting but sufficient for most situations::
+  from ramverk.routing import get, post
 
   @get('/')
   def greet_visitor(render, db):
@@ -121,27 +91,38 @@ framework which is more limiting but sufficient for most situations::
 
   @post('/')
   def set_greeting(db, request, redirect):
-      db.greeting = request.form.get('greeting')
+      db.greeting = request.form['greeting']
       return redirect(':greet_visitor')
 
-Or why not a class::
+Fairly straight-forward. The
+:meth:`~ramverk.routing.URLMapAdapterMixin.redirect` function takes the
+name of an endpoint. Endpoints are named by the fully qualified
+:term:`dotted name` of the endpoint function or class but functions like
+redirect also accept :term:`relative endpoint` names that are resolved in
+the context of the request. In this case, the request endpoint is
+``greeter:set_greeting`` (assuming we put the application in
+:file:`greeter.py`) which means that ``:greet_visitor`` is resolved to
+``greeter:greet_visitor``.
 
-  @route('/')
-  class Index(MethodDispatch):
+But wait a minute: what sort of sorcery is this that these functions become
+exposed on the web server just by being decorated as endpoints?  Actually,
+there is no magic - these decorators are "declarative" more than they are
+"imperative" - to use these endpoints we must first register them with an
+application. We can automate this procedure by scanning modules and
+packages, looking for decorated objects defined in the top-level namespace.
+Our application also needs to be told to use our custom environment class
+so the endpoints can use our :attr:`db` property::
 
-      def get(self, render, db):
-          return render('index.html', greeting=db.greeting)
+  class Greeter(fullstack.Application):
 
-      def post(self, db, request, redirect):
-          db.greeting = request.form.get('greeting')
-          return redirect(':Index')
+      environment = Environment
 
-The argument to the redirect function is an endpoint name. Scanned
-endpoints are named by the fully qualified dotted name of the view function
-and a prefixing colon means "relative to current endpoint". A dot prefix is
-also allowed which prepends the module of the application to the endpoint
-and is useful when the application is a Python package with views spread
-out in modules.
+      def configure(self):
+          self.scan()
+
+The default behavior of :meth:`~ramverk.venusian.VenusianMixin.scan` is to
+look in the module the application is defined in, so in this simple case we
+don't need to pass it any arguments.
 
 .. sidebar:: Genshi
 
@@ -153,8 +134,11 @@ out in modules.
   transformations on the stream before it renders. This comes at the cost
   of speed but for most uses it is fast enough.
 
-We also need to write the :file:`index.html` template. We'll use
-:term:`Genshi` with the :term:`Compact XML` dialect:
+One thing left to do before we can rock this application! Can you guess
+what? We need to write the :file:`index.html` template that we're rendering
+in our :func:`greet_visitor` endpoint. We'll use :term:`Genshi` for its raw
+power and parse templates with :term:`Compact XML` because no one likes to
+write XML by hand.
 
 .. sourcecode:: compactxml+genshi
 
@@ -166,7 +150,7 @@ We also need to write the :file:`index.html` template. We'll use
         "$greeting, World!
 
     <form
-        @action=${path(':index')}
+        @action=${path(':set_greeting')}
         @method=POST
 
         <input
@@ -174,10 +158,26 @@ We also need to write the :file:`index.html` template. We'll use
             @placeholder=Enter a greeting
             @type=text
 
-For a development server we can use Paver and write a :file:`pavement.py`::
+That wasn't so hard was it? Compact XML is a dialect of XML that, like
+Python and YAML, bases the syntactical structure on the indentation of each
+line meaning we don't need to write closing tags and don't need to quote
+attributes even if they contain spaces. The "indent restart" just means to
+continue at the first column while keeping the nesting level, so we can
+nest deeply while keeping our sanity intact. The
+:meth:`~ramverk.routing.URLMapAdapterMixin.path` function takes an
+:term:`endpoint name` just like the :func:`redirect` function we used
+earlier, and returns an absolute path on the web server that routes to the
+specified endpoint. This way we can change the routes or mount the
+application at a subdirectory on the webserver without changing our
+template, but in this simple scenario the path function will simply return
+``/``.
 
-  from paver.easy    import options
-  from ramverk.paver import serve
+To run the application in development mode we can use :term:`Paver`.
+Ramverk includes a few helpful tasks that we can import in our
+:file:`pavement.py` and configure to use the Greeter application::
+
+  from paver.easy import options
+  from ramverk.paver import serve, shell
 
   options.ramverk.app = 'greeter:Greeter'
 
@@ -185,9 +185,24 @@ For a development server we can use Paver and write a :file:`pavement.py`::
 
   $ paver serve
   ---> ramverk.paver.serve
-      INFO: Greeter:  * Running on http://localhost:8008/
-      INFO: Greeter:  * Restarting with reloader: stat() polling
+      INFO: werkzeug:  * Running on http://localhost:8008/
+      INFO: werkzeug:  * Restarting with reloader: stat() polling
   ---> ramverk.paver.serve
+
+As a bonus we also got a ``paver shell`` task that imports everything
+in our application module to a bpython_ console and creates an instance of
+our application as `app` bound to a fake request which means we get access
+to an environment and our persistent objects:
+
+>>> app
+<greeter.Greeter object at ...>
+>>> app.local
+<greeter.Environment object at ...>
+>>> app.local.db
+   DEBUG: Greeter: connecting ZODB
+<greeter.Root object at ...>
+>>> app.local.db.greeting
+'Hello'  # or whatever we set it to in the web interface
 
 
 Framework Design
