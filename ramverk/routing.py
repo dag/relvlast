@@ -78,7 +78,7 @@ class URLMapAdapterMixin(object):
             endpoint = self.endpoint
         except NotFound:
             return super(URLMapAdapterMixin, self).respond()
-        return self.application.call_endpoint_in_environment(import_string(endpoint))
+        return self.application.dispatch_to_endpoint(import_string(endpoint))
 
     @cached_property
     def url_map_adapter(self):
@@ -174,10 +174,15 @@ class URLMapMixin(object):
         :meth:`~werkzeug.routing.Map.is_endpoint_expecting` to set defaults
         allowing you to avoid extraneous repetition."""
 
-    def call_endpoint_in_environment(self, endpoint, **kwargs):
-        """Call `endpoint` with the keyword arguments `kwargs` and fetch
-        any missing arguments from the attributes on
-        :attr:`~ramverk.application.BaseApplication.local`."""
+    def dispatch_to_endpoint(self, endpoint, *args, **kwargs):
+        """Implements the logic for dispatching a request to an
+        endpoint. Applications can override this to customize how endpoints
+        are called. If provided, `args` and `kwargs` should be passed to
+        the endpoint overriding the corresponding arguments of the usual
+        logic to simplify unit testing. The default implementation inspects
+        the call signature of the endpoint and map the keyword
+        arguments to attributes on the :class:`environment
+        <ramverk.environment.BaseEnvironment>`."""
         if isclass(endpoint):
             wants = getargspec(endpoint.__init__).args[1:]
             initargs = dict(kwargs, **dict((name, getattr(self.local, name))
@@ -198,4 +203,4 @@ class MethodDispatch(object):
 
     def __call__(self, request, application):
         method = getattr(self, request.method.lower())
-        return application.call_endpoint_in_environment(method)
+        return application.dispatch_to_endpoint(method)
