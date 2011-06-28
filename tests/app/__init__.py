@@ -1,4 +1,3 @@
-from functools         import partial
 from genshi.filters    import Transformer
 from logbook           import TestHandler
 from persistent        import Persistent
@@ -37,7 +36,7 @@ class TestApp(Application):
         self.scan('tests.app.frontend')
         self.scan('tests.app.module', submount='/module')
         self.scan('tests.app.subdomain', subdomain='en',
-                  rulefactory=partial(EndpointPrefix, 'en_'))
+                  rulefactory=(EndpointPrefix, 'en_'))
 
     def filter_genshi_stream(self, template, stream):
         if template.filename == 'filtering.html':

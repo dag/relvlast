@@ -486,19 +486,36 @@ Dispatching Requests by URL
     rule factories, and `rulefactory` which wraps the rules in an arbitrary
     rule factory that must take only one argument: the list of rules. You
     can use :func:`~functools.partial` to adapt factories to this
-    requirement. Example::
+    requirement, but for simple cases with positional arguments where the
+    rules come last, you can simply pass a tuple of the rule factory
+    constructor and the other positional arguments. Here's an example::
 
       @router
       def urls():
-          yield Rule('/', endpoint='index')
+          yield Rule('/show', endpoint='message')
 
-      def localized_index(response):
+      def localized_message(response):
           return response('Howdy')
 
       class App(Application):
+
           def configure(self):
               self.scan(submount='/<locale>',
-                        rulefactory=partial(EndpointPrefix, 'localized_'))
+                        rulefactory=(EndpointPrefix, 'localized_'))
+
+    The scan in this example adds a rule that looks something like this::
+
+      Submount('/<locale>', [
+          EndpointPrefix(__name__ + ':', [
+              EndpointPrefix('localized_', [
+                  Rule('/show', endpoint='message')
+              ])
+          ])
+      ])
+
+    Which in more simple terms is essentially this rule::
+
+      Rule('/<locale>/', endpoint='name.of.module:localized_message')
 
   .. autofunction:: route
 

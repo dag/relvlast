@@ -1,4 +1,5 @@
 from __future__          import absolute_import
+from functools           import partial
 from inspect             import isclass, ismethod, getargspec
 
 from venusian            import attach
@@ -11,6 +12,8 @@ from ramverk.utils       import Bunch, Alias
 
 def _add_rules(scanner, rules, ob):
     if hasattr(scanner, 'rulefactory'):
+        if isinstance(scanner.rulefactory, tuple):
+            scanner.rulefactory = partial(*scanner.rulefactory)
         rules = [scanner.rulefactory(rules)]
     rules = [EndpointPrefix(ob.__module__ + ':', rules)]
     if hasattr(scanner, 'submount'):
