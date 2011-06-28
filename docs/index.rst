@@ -483,18 +483,22 @@ Dispatching Requests by URL
     Endpoints will be prefixed with the module of the decorated callable
     plus a colon. The scan can optionally take the keywords `submount` and
     `subdomain` as strings which will wrap the rules in the corresponding
-    rule factories. Example::
+    rule factories, and `rulefactory` which wraps the rules in an arbitrary
+    rule factory that must take only one argument: the list of rules. You
+    can use :func:`~functools.partial` to adapt factories to this
+    requirement. Example::
 
       @router
       def urls():
           yield Rule('/', endpoint='index')
 
-      def index(response):
+      def localized_index(response):
           return response('Howdy')
 
       class App(Application):
           def configure(self):
-              self.scan(submount='/<locale>')
+              self.scan(submount='/<locale>',
+                        rulefactory=partial(EndpointPrefix, 'localized_'))
 
   .. autofunction:: route
 

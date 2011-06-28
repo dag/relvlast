@@ -10,6 +10,8 @@ from ramverk.utils       import Bunch, Alias
 
 
 def _add_rules(scanner, rules, ob):
+    if hasattr(scanner, 'rulefactory'):
+        rules = [scanner.rulefactory(rules)]
     rules = [EndpointPrefix(ob.__module__ + ':', rules)]
     if hasattr(scanner, 'submount'):
         rules = [Submount(scanner.submount, rules)]

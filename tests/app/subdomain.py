@@ -4,4 +4,4 @@ from ramverk.routing  import router
 
 @router
 def urls():
-    yield Rule('/', endpoint='en_index')
+    yield Rule('/', endpoint='index')
