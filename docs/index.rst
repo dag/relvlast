@@ -532,23 +532,27 @@ Dispatching Requests by URL
 
     Rule('/<locale>/', endpoint='name.of.module:localized_message')
 
-.. autofunction:: route
+.. autofunction:: route(string, defaults=None, subdomain=None, methods=None)
 
-  The dotted name of the decorated callable will be used as the endpoint
-  and a :class:`~werkzeug.routing.Rule` using the arguments of the
-  decorator will be created and added. Example::
+  Creates a :class:`~werkzeug.routing.Rule` from the decorator arguments
+  with the :term:`endpoint name` set to the :term:`dotted name` of the
+  decorated function or class.
 
-    @route('/')
+  Variants for specific HTTP methods are also available:
+
+  .. function:: get
+
+  .. function:: post
+
+  .. function:: put
+
+  .. function:: delete
+
+  Example::
+
+    @get('/')
     def index(response):
         return response('Howdy')
-
-.. autofunction:: get
-
-.. autofunction:: post
-
-.. autofunction:: put
-
-.. autofunction:: delete
 
 .. autoclass:: MethodDispatch
 
