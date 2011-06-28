@@ -1,16 +1,40 @@
-from __future__     import absolute_import
-from paver.easy     import options, Bunch, task, cmdopts
-from werkzeug.utils import import_string
+from __future__          import absolute_import
+from ast                 import literal_eval
+from paver.easy          import Bunch, options, task, cmdopts
+from werkzeug.utils      import import_string
+from ramverk.application import BaseApplication
 
 
-options.ramverk = Bunch()
-options.shell   = Bunch(namespace=None, fake_request=None)
-options.serve   = Bunch(hostname='localhost',
-                        port=8008,
-                        no_reloader=False,
-                        no_debugger=False,
-                        no_evalex=False,
-                        debug=True)
+options.app      = None
+options.settings = Bunch(debug=True)
+options.shell    = Bunch(namespace=None, fake_request='/')
+options.serve    = Bunch(hostname='localhost',
+                         port=8008,
+                         no_reloader=False,
+                         no_debugger=False,
+                         no_evalex=False)
+
+
+def _get_application():
+    app = options.app
+    if app is None:
+        raise SystemExit('no app configured')
+    if isinstance(app, basestring):
+        try:
+            app = import_string(app)
+        except ImportError:
+            import sys
+            sys.path.insert(0, '')
+            app = import_string(app)
+    if not isinstance(app, BaseApplication):
+        settings = {}
+        for key, value in options.settings.iteritems():
+            try:
+                settings[key] = literal_eval(value)
+            except ValueError:
+                settings[key] = value
+        app = app(**settings)
+    return app
 
 
 @task
@@ -26,10 +50,8 @@ def serve():
     redirect_logging()
     getLogger().setLevel(DEBUG)
 
-    appfactory = import_string(options.ramverk.app)
-
     opts = options.serve
-    app = appfactory(debug=opts.debug)
+    app = _get_application()
     app.log_handler.push_application()
 
     from werkzeug.serving import run_simple
@@ -43,8 +65,7 @@ def serve():
 def shell():
     """Enter a [b]python shell set up for the app."""
     from werkzeug.test import create_environ
-    appfactory = import_string(options.ramverk.app)
-    app = appfactory(debug=True)
+    app = _get_application()
     environ = create_environ(options.shell.fake_request)
 
     locals = dict(app=app)

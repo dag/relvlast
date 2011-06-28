@@ -7,10 +7,10 @@ from paver.doctools import doc_clean, html
 from ramverk.paver  import serve, shell
 
 
-options.ramverk = Bunch(app='relvlast:Relvlast')
-options.sphinx  = Bunch(builddir='../build')
-options.shell   = Bunch(namespace='relvlast.objects',
-                        fake_request='/jbo/vlaste/')
+options.app    = 'relvlast:Relvlast'
+options.sphinx = Bunch(builddir='../build')
+options.shell  = Bunch(namespace='relvlast.objects',
+                       fake_request='/jbo/vlaste/')
 
 
 @task
@@ -49,7 +49,7 @@ def deploy():
 @consume_args
 def epio(args):
     commands = ' '.join(args)
-    sh('epio run_command paver ramverk.app=deployments.epio:app ' + commands)
+    sh('epio run_command paver app=deployments.epio:app ' + commands)
 
 
 @task

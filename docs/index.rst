@@ -179,7 +179,7 @@ Ramverk includes a few helpful tasks that we can import in our
   from paver.easy import options
   from ramverk.paver import serve, shell
 
-  options.ramverk.app = 'greeter:Greeter'
+  options.app = 'greeter:Greeter'
 
 .. code-block:: console
 
@@ -808,16 +808,34 @@ Task Management with Paver
 
 .. automodule:: ramverk.paver
 
-  .. attribute:: options.ramverk.app
+  .. attribute:: options.app
 
-    :term:`Dotted name` of your application class.
+    Set this to your application class or an application instance,
+    optionally as a :term:`dotted name`.
+
+  .. attribute:: options.settings
+
+    Settings to use when creating application instances. Values are
+    converted with :func:`~ast.literal_eval` where possible, as Paver
+    doesn't process options coming from the command-line in any way and
+    simply stores them as strings. This conversion means you can override
+    settings directly on the command-line with literal Python types such as
+    booleans and numbers, for example:
+
+    .. code-block:: console
+
+      $ paver settings.debug=False serve
+
+  .. attribute:: options.settings.debug
+
+    :default: :const:`True`
 
   Example :file:`pavement.py`::
 
     from paver.easy    import options
     from ramverk.paver import serve, shell
 
-    options.ramverk.app = 'my.own:Application'
+    options.app = 'my.own:Application'
 
   .. autofunction:: serve()
 
@@ -832,13 +850,6 @@ Task Management with Paver
       Port number to listen on.
 
       :default: ``8008``
-
-    .. attribute:: options.serve.debug
-
-      Sets the :attr:`~ramverk.application.BaseApplication.settings.debug`
-      setting for the served application.
-
-      :default: :const:`True`
 
   .. autofunction:: shell()
 
