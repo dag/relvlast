@@ -101,12 +101,9 @@ class Application(LogbookLoggerMixin,
 
     @cached_property
     def log_handler(self): #pragma: no cover
-        """A :class:`~logbook.more.ColorizedStderrHandler` if the `debug`
-        setting is true, otherwise only logging warnings and above in plain
-        text to stderr."""
+        """Use colors and alignment in the log during development, and log
+        only warnings and above in production."""
         if self.settings.debug:
-            return ColorizedStderrHandler(
-                format_string='{record.level_name:>8}: '
-                              '{record.channel}: {record.message}')
-        return NestedSetup([NullHandler(),
-                            StderrHandler(level='WARNING')])
+            return ColorizedStderrHandler(format_string=
+                '{record.level_name:>8}: {record.channel}: {record.message}')
+        return NestedSetup([NullHandler(), StderrHandler(level='WARNING')])
