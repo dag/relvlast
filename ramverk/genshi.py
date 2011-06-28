@@ -1,8 +1,7 @@
 from __future__        import absolute_import
 from genshi.filters    import Transformer
 from genshi.input      import HTML
-from genshi.template   import TemplateLoader, loader
-from genshi.template   import MarkupTemplate, NewTextTemplate
+from genshi.template   import TemplateLoader, MarkupTemplate, NewTextTemplate
 from werkzeug.utils    import cached_property
 from ramverk.rendering import TemplatingMixinBase
 
@@ -148,7 +147,7 @@ class GenshiMixin(TemplatingMixinBase):
         """Adds a :func:`~genshi.template.loader.package` loader for the
         :file:`{application module}/templates` directory."""
         loaders = super(GenshiMixin, self).template_loaders
-        loaders.genshi = [loader.package(self.module, 'templates')]
+        loaders.genshi = [TemplateLoader.package(self.module, 'templates')]
         return loaders
 
     @cached_property
