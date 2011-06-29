@@ -70,7 +70,9 @@ def shell():
 
     locals = dict(app=app)
     namespace = options.shell.namespace or app.module
-    locals.update(vars(import_string(namespace)))
+    module = import_string(namespace)
+    locals.update(item for item in vars(module).iteritems()
+                  if not item[0].startswith('_'))
 
     with app.contextbound(environ):
         try:
