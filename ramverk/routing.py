@@ -1,4 +1,5 @@
 from __future__          import absolute_import
+from abc                 import ABCMeta, abstractmethod
 from functools           import partial
 from inspect             import isclass, ismethod, getargspec
 
@@ -183,29 +184,51 @@ class URLMapMixin(object):
     def dispatch_to_endpoint(self, endpoint, **kwargs):
         """Implements the logic for dispatching a request to an endpoint.
         Applications can override this to customize how endpoints are
-        called. To simplify unit testing `kwargs` should be included in the
-        keyword arguments as overrides for those keywords. The default
-        implementation inspects the call signature of the endpoint, mapping
-        the keyword arguments to attributes on the :class:`environment
-        <ramverk.environment.BaseEnvironment>`."""
+        called."""
+        env = self.local
         if isclass(endpoint):
-            wants = getargspec(endpoint.__init__).args[1:]
-            initargs = dict(kwargs, **dict((name, getattr(self.local, name))
-                                           for name in wants
-                                           if name not in kwargs))
-            endpoint = endpoint(**initargs).__call__
-        wants = getargspec(endpoint).args
+            return endpoint(env)()
+        args = getargspec(endpoint).args
         if ismethod(endpoint):
-            wants = wants[1:]
-        kwargs.update((name, getattr(self.local, name))
-                      for name in wants
-                      if name not in kwargs)
+            del args[0]  # 'self'
+        for name in args:
+            if name not in kwargs:
+                kwargs[name] = getattr(env, name)
         return endpoint(**kwargs)
 
 
-class MethodDispatch(object):
-    """Dispatch a class-based endpoint by HTTP method."""
+class AbstractEndpoint(object):
+    """Optional base for endpoint classes that must implement
+    :meth:`__call__`."""
 
-    def __call__(self, request, application):
+    __metaclass__ = ABCMeta
+
+    environment = None
+    """The environment object for the current request."""
+
+    def __init__(self, environment):
+        self.environment = environment
+        self.__create__()
+        self.configure()
+
+    def __create__(self):
+        """Called to let mixins configure instances."""
+
+    def configure(self):
+        """Called to let the endpoint instance configure itself."""
+
+    @abstractmethod
+    def __call__(self):
+        """Abstract method that must be implemented to return a
+        response."""
+
+
+class MethodDispatch(AbstractEndpoint):
+    """Endpoint class that dispatches to methods named as the HTTP request
+    method ("verb")."""
+
+    def __call__(self):
+        request = self.environment.request
+        application = self.environment.application
         method = getattr(self, request.method.lower())
         return application.dispatch_to_endpoint(method)

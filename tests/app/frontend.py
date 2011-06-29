@@ -35,8 +35,8 @@ class Classic(MethodDispatch):
 
     renderer = 'json'
 
-    def __init__(self, db):
-        self.greeting = db.greeting
+    def configure(self):
+        self.greeting = self.environment.db.greeting
 
     def get(self, render):
         return render(self.renderer, greeting=self.greeting)
@@ -44,9 +44,6 @@ class Classic(MethodDispatch):
 
 @route('/session/')
 class Session(MethodDispatch):
-
-    def __init__(self):
-        pass
 
     def post(self, session, request, redirect):
         session['user'] = request.form['user']

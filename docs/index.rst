@@ -508,18 +508,39 @@ Minimal Base for Applications
 Dispatching Requests by URL
 ---------------------------
 
-
 .. automodule:: ramverk.routing
 
-  .. autoclass:: URLMapMixin
-    :members:
+Mixins
+""""""
 
-  .. autoclass:: URLMapAdapterMixin
-    :members:
+.. autoclass:: URLMapMixin
 
-  .. autoclass:: URLHelpersMixin
-    :members:
+  .. autoattribute:: url_map
 
+  .. automethod:: update_endpoint_values
+
+  .. automethod:: dispatch_to_endpoint
+
+    For functions and methods, the default implementation will inspect
+    the call signature and map the keyword arguments to attributes on the
+    :class:`environment <ramverk.environment.BaseEnvironment>`.
+
+    For classes, it will create an instance passing the environment as a
+    single positional argument and call it with no arguments.
+
+    To simplify unit testing `kwargs` should be included as overrides
+    when dispatching to an endpoint with keyword arguments, i.e. the case
+    with functions and methods in the default implementation.
+
+.. autoclass:: URLMapAdapterMixin
+  :members:
+
+.. autoclass:: URLHelpersMixin
+  :members:
+
+
+Decorators
+""""""""""
 
 .. automodule:: ramverk.venusian
   :members:
@@ -587,6 +608,13 @@ Dispatching Requests by URL
     def index(response):
         return response('Howdy')
 
+
+Endpoint Classes
+""""""""""""""""
+
+.. autoclass:: AbstractEndpoint
+  :members: environment, __create__, configure, __call__
+
 .. autoclass:: MethodDispatch
 
   Example::
@@ -596,8 +624,8 @@ Dispatching Requests by URL
 
         renderer = 'index.html'
 
-        def __init__(self, db):
-            self.greeting = db.greeting
+        def configure(self):
+            self.greeting = self.environment.db.greeting
 
         def get(self, render):
             return render(self.renderer, greeting=self.greeting)
