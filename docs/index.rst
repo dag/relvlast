@@ -177,7 +177,7 @@ Ramverk includes a few helpful tasks that we can import in our
 :file:`pavement.py` and configure to use the Greeter application::
 
   from paver.easy import options
-  from ramverk.paver import serve, shell
+  from ramverk.paver import *
 
   options.app = 'greeter:Greeter'
 
@@ -964,7 +964,7 @@ Task Management with Paver
   Example :file:`pavement.py`::
 
     from paver.easy    import options
-    from ramverk.paver import serve, shell
+    from ramverk.paver import *
 
     options.app = 'my.own:Application'
 
@@ -1004,6 +1004,25 @@ Task Management with Paver
       Path to fake a request to before entering the shell.
 
       :default: ``/``
+
+  .. autofunction:: routes()
+
+    .. code-block:: console
+
+      $ paver routes
+      ---> ramverk.paver.routes
+
+        /static/<path:name>
+          -> static
+
+        /compiled/<path:name>
+          -> compiled
+
+        [HEAD|GET] /
+          -> greeter:greet_visitor
+
+        [POST] /
+          -> greeter:set_greeting
 
 
 WSGI Middlewares

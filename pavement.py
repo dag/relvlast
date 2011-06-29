@@ -4,7 +4,7 @@ from paver.easy     import options, Bunch, sh, pushd, path, info
 from paver.easy     import task, consume_args
 from paver.tasks    import help
 from paver.doctools import doc_clean, html
-from ramverk.paver  import serve, shell
+from ramverk.paver  import *
 
 
 options.app    = 'relvlast:Relvlast'

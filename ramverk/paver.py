@@ -81,3 +81,16 @@ def shell():
         except ImportError:
             from code import interact
             interact(local=locals)
+
+
+@task
+def routes():
+    """List the application's URL rules."""
+    app = _get_application()
+    for rule in app.url_map.iter_rules():
+        print
+        print ' ',
+        if rule.methods:
+            print '[' + '|'.join(rule.methods) + ']',
+        print rule.rule
+        print '    ->', rule.endpoint
