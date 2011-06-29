@@ -4,11 +4,24 @@ from functools           import partial
 from inspect             import isclass, ismethod, getargspec
 
 from venusian            import attach
-from werkzeug.exceptions import NotFound
+from werkzeug.exceptions import NotFound, MethodNotAllowed
 from werkzeug.routing    import Map, Rule, Submount, Subdomain, EndpointPrefix
 from werkzeug.utils      import cached_property, redirect, import_string
 
 from ramverk.utils       import Bunch, Alias
+
+
+HTTP_METHODS = [
+    'CONNECT',
+    'DELETE',
+    'GET',
+    'HEAD',
+    'OPTIONS',
+    'PATCH',
+    'POST',
+    'PUT',
+    'TRACE',
+]
 
 
 def _add_rules(scanner, rules, ob):
@@ -38,8 +51,10 @@ def route(*args, **kwargs):
     """Venusian decorator for routing a single URL rule."""
     def decorator(endpoint):
         def route_endpoint(scanner, name, ob):
-            kwargs.setdefault('endpoint', name)
-            rule = Rule(*args, **kwargs)
+            options = getattr(ob, '__rule_options__', dict)()
+            options.update(kwargs)
+            options.setdefault('endpoint', name)
+            rule = Rule(*args, **options)
             _add_rules(scanner, [rule], ob)
         attach(endpoint, route_endpoint, category='ramverk')
         return endpoint
@@ -206,6 +221,14 @@ class AbstractEndpoint(object):
     environment = None
     """The environment object for the current request."""
 
+    @classmethod
+    def __rule_options__(cls):
+        """The :func:`route` family of decorators look for this attribute
+        and call it if available, using the returned dict as the base for
+        the keyword arguments that get passed to the URL rule being
+        created."""
+        return {}
+
     def __init__(self, environment):
         self.environment = environment
         self.__create__()
@@ -224,11 +247,19 @@ class AbstractEndpoint(object):
 
 
 class MethodDispatch(AbstractEndpoint):
-    """Endpoint class that dispatches to methods named as the HTTP request
-    method ("verb")."""
+    """Base for endpoint classes that dispatches the request to the
+    instance method whose name is the HTTP request method in lower case."""
+
+    @classmethod
+    def __rule_options__(cls):
+        methods = [m for m in HTTP_METHODS if hasattr(cls, m.lower())]
+        return dict(methods=methods)
 
     def __call__(self):
         request = self.environment.request
         application = self.environment.application
-        method = getattr(self, request.method.lower())
+        method = getattr(self, request.method.lower(), None)
+        if method is None:
+            valid = [m for m in HTTP_METHODS if hasattr(self, m.lower())]
+            raise MethodNotAllowed(valid)
         return application.dispatch_to_endpoint(method)

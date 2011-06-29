@@ -613,9 +613,53 @@ Endpoint Classes
 """"""""""""""""
 
 .. autoclass:: AbstractEndpoint
-  :members: environment, __create__, configure, __call__
+  :members: __rule_options__, environment, __create__, configure, __call__
 
 .. autoclass:: MethodDispatch
+
+  If no corresponding method exists a
+  :exc:`~werkzeug.exceptions.MethodNotAllowed` is raised with a list of
+  valid methods. If routed with the :func:`route` decorator the resulting
+  rule will by default only match HTTP methods implemented in the class.
+
+  The methods are called with :meth:`~URLMapMixin.dispatch_to_endpoint`
+  meaning they behave like endpoint functions by default.
+
+  .. method:: connect
+
+    Respond to a CONNECT request.
+
+  .. method:: delete
+
+    Respond to a DELETE request.
+
+  .. method:: get
+
+    Respond to a GET request.
+
+  .. method:: head
+
+    Respond to a HEAD request.
+
+  .. method:: options
+
+    Respond to an OPTIONS request.
+
+  .. method:: patch
+
+    Respond to a PATCH request.
+
+  .. method:: post
+
+    Respond to a POST request.
+
+  .. method:: put
+
+    Respond to a PUT request.
+
+  .. method:: trace
+
+    Respond to a TRACE request.
 
   Example::
 
