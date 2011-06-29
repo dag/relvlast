@@ -8,20 +8,8 @@ from werkzeug.exceptions import NotFound, MethodNotAllowed
 from werkzeug.routing    import Map, Rule, Submount, Subdomain, EndpointPrefix
 from werkzeug.utils      import cached_property, redirect, import_string
 
+from ramverk.http        import HTTP_METHODS
 from ramverk.utils       import Bunch, Alias
-
-
-HTTP_METHODS = [
-    'CONNECT',
-    'DELETE',
-    'GET',
-    'HEAD',
-    'OPTIONS',
-    'PATCH',
-    'POST',
-    'PUT',
-    'TRACE',
-]
 
 
 def _add_rules(scanner, rules, ob):
