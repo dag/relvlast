@@ -51,38 +51,24 @@ def route(*args, **kwargs):
     """Venusian decorator for routing a single URL rule."""
     def decorator(endpoint):
         def route_endpoint(scanner, name, ob):
-            options = getattr(ob, '__rule_options__', dict)()
-            options.update(kwargs)
-            options.setdefault('endpoint', name)
-            rule = Rule(*args, **options)
+            opts = getattr(ob, '__rule_options__', dict)()
+            opts.update(kwargs)
+            opts.setdefault('endpoint', name)
+            rule = Rule(*args, **opts)
             _add_rules(scanner, [rule], ob)
         attach(endpoint, route_endpoint, category='ramverk')
         return endpoint
     return decorator
 
 
-def get(*args, **kwargs):
-    """Like :func:`route` with method defaulting to GET."""
-    kwargs.setdefault('methods', ('GET',))
-    return route(*args, **kwargs)
-
-
-def post(*args, **kwargs):
-    """Like :func:`route` with method defaulting to POST."""
-    kwargs.setdefault('methods', ('POST',))
-    return route(*args, **kwargs)
-
-
-def put(*args, **kwargs):
-    """Like :func:`route` with method defaulting to PUT."""
-    kwargs.setdefault('methods', ('PUT',))
-    return route(*args, **kwargs)
-
-
-def delete(*args, **kwargs):
-    """Like :func:`route` with method defaulting to DELETE."""
-    kwargs.setdefault('methods', ('DELETE',))
-    return route(*args, **kwargs)
+for method in HTTP_METHODS:
+    name = method.lower()
+    func = partial(route, methods=(method,))
+    func.__name__ = name
+    func.__doc__ = """
+        Like ``@route(methods=[{0!r}])``.
+    """.format(method)
+    globals()[name] = func
 
 
 class URLMapAdapterMixin(object):

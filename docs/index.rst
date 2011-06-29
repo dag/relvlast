@@ -594,13 +594,23 @@ Decorators
 
   Variants for specific HTTP methods are also available:
 
-  .. function:: get
+  .. autofunction:: connect(string, defaults=None, subdomain=None)
 
-  .. function:: post
+  .. autofunction:: delete(string, defaults=None, subdomain=None)
 
-  .. function:: put
+  .. autofunction:: get(string, defaults=None, subdomain=None)
 
-  .. function:: delete
+  .. autofunction:: head(string, defaults=None, subdomain=None)
+
+  .. autofunction:: options(string, defaults=None, subdomain=None)
+
+  .. autofunction:: patch(string, defaults=None, subdomain=None)
+
+  .. autofunction:: post(string, defaults=None, subdomain=None)
+
+  .. autofunction:: put(string, defaults=None, subdomain=None)
+
+  .. autofunction:: trace(string, defaults=None, subdomain=None)
 
   Example::
 
