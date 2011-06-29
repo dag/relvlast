@@ -60,7 +60,7 @@ class TemplatingMixinBase(RenderingMixinBase):
     def update_template_context(self, context):
         namespace = self.template_context(self.local)
         for name in dir(namespace):
-            if not name.startswith('_'):
+            if not name.startswith('_') or name == '_':
                 context.setdefault(name, getattr(namespace, name))
 
     @cached_property
