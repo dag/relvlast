@@ -145,10 +145,10 @@ class URLHelpersMixin(object):
     """Template context mixin with helpers for URL building."""
 
     url = Alias('environment.url',
-                ':meth:`~URLMapAdapterEnvironmentMixin.url`')
+                ':meth:`~URLMapAdapterMixin.url`')
 
     path = Alias('environment.path',
-                 ':meth:`~URLMapAdapterEnvironmentMixin.path`')
+                 ':meth:`~URLMapAdapterMixin.path`')
 
 
 class URLMapMixin(object):
