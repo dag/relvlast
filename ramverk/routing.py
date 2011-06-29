@@ -70,8 +70,10 @@ def delete(*args, **kwargs):
 
 
 class URLMapAdapterMixin(object):
-    """Environment mixin binding the request to the application's
-    :attr:`~URLMapMixin.url_map`."""
+    """Environment mixin that binds the application
+    :attr:`~URLMapMixin.url_map` for the request in a
+    :class:`~werkzeug.routing.MapAdapter` and dispatches to the matching
+    endpoint if there was one."""
 
     def respond(self):
         try:
@@ -150,7 +152,7 @@ class URLMapAdapterMixin(object):
 
 
 class URLHelpersMixin(object):
-    """Template context mixin adding helpers for URL building."""
+    """Template context mixin with helpers for URL building."""
 
     url = Alias('environment.url',
                 ':meth:`~URLMapAdapterEnvironmentMixin.url`')
@@ -160,19 +162,23 @@ class URLHelpersMixin(object):
 
 
 class URLMapMixin(object):
-    """Application mixin dispatching requests using a URL
-    :class:`~werkzeug.routing.Map`."""
+    """Application mixin for dispatching to endpoints by matching the
+    requested URL against a map of rules."""
 
     @cached_property
     def url_map(self):
-        """Map of URLs to :attr:`endpoints`."""
+        """An empty :class:`~werkzeug.routing.Map` that you can add rules
+        to or replace with your own map of rules."""
         return Map()
 
     def update_endpoint_values(self, endpoint, values):
-        """Called to update `values` in-place when building a URL for
-        `endpoint`. Useful in combination with
-        :meth:`~werkzeug.routing.Map.is_endpoint_expecting` to set defaults
-        allowing you to avoid extraneous repetition."""
+        """This method is called when a URL for `endpoint` is being built
+        using `values` to fill in the placeholder variables of the URL
+        rule. By overriding this you can modify the `values` mapping
+        in-place to set defaults so you don't have to specify them manually
+        every time. This is particularly useful in combination with
+        :meth:`~werkzeug.routing.Map.is_endpoint_expecting` for example if
+        you have a placeholder for a language code in the rule."""
 
     def dispatch_to_endpoint(self, endpoint, *args, **kwargs):
         """Implements the logic for dispatching a request to an
