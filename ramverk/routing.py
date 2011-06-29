@@ -35,14 +35,14 @@ def router(generator):
     return generator
 
 
-def route(*args, **kwargs):
+def route(string, **kwargs):
     """Venusian decorator for routing a single URL rule."""
     def decorator(endpoint):
         def route_endpoint(scanner, name, ob):
             opts = getattr(ob, '__rule_options__', dict)()
             opts.update(kwargs)
             opts.setdefault('endpoint', name)
-            rule = Rule(*args, **opts)
+            rule = Rule(string, **opts)
             _add_rules(scanner, [rule], ob)
         attach(endpoint, route_endpoint, category='ramverk')
         return endpoint
