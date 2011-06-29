@@ -528,9 +528,9 @@ Dispatching Requests by URL
         ])
     ])
 
-  Which in more simple terms is essentially this rule::
+  In more simple terms it is essentially this rule::
 
-    Rule('/<locale>/', endpoint='name.of.module:localized_message')
+    Rule('/<locale>/show', endpoint='name.of.module:localized_message')
 
 .. autofunction:: route(string, defaults=None, subdomain=None, methods=None)
 
