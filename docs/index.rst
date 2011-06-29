@@ -327,6 +327,39 @@ example hook redirections.
 The Full Stack
 --------------
 
+.. centered:: Components
+
+.. glossary::
+
+  Application
+    Implements the application logic and configuration. Usually one
+    instance per process.
+
+  Environment
+    Each request creates an Environment instance wrapping the application
+    and the WSGI environment. These objects are stacked on a context-local
+    stack so that they can be retreived safely from threads and greenlets.
+    This object is the place for application request logic.
+
+  Request
+    This object wraps only the WSGI environment and expose a more
+    high-level interface to it. It is similar in many ways to the
+    Environment object but usually not application-bound and usually not
+    implementing any logic, only representing the incoming HTTP request as
+    data. The request object lives on the environment object.
+
+  Response
+    High-level interface for composing the application response to an HTTP
+    request. Not usually created automatically by the framework. Instances
+    are callable as WSGI applications which is the only interface the
+    framework expects, meaning any WSGI application can be used as a
+    response.
+
+  Template Context
+    Namespace that templates render in, in addition to the keyword
+    arguments passed to the renderer. Instances are passed the environment
+    object.
+
 
 .. automodule:: ramverk.fullstack
 
