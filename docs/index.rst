@@ -607,15 +607,25 @@ Decorators
 
 .. autofunction:: router
 
-  Endpoints will be prefixed with the module of the decorated callable
-  plus a colon. The scan can optionally take the keywords `submount` and
-  `subdomain` as strings which will wrap the rules in the corresponding
-  rule factories, and `rulefactory` which wraps the rules in an arbitrary
-  rule factory that must take only one argument: the list of rules. You
-  can use :func:`~functools.partial` to adapt factories to this
-  requirement, but for simple cases with positional arguments where the
-  rules come last, you can simply pass a tuple of the rule factory
-  constructor and the other positional arguments. Here's an example::
+  These scan parameters are recognized:
+
+  :param basestring submount:
+    The rules are wrapped in a :class:`~werkzeug.routing.Submount` rule
+    factory created with this string, effectively prepending the string to
+    each rule.
+  :param basestring subdomain:
+    Like `submount` but for the :class:`~werkzeug.routing.Subdomain`
+    factory.
+  :param rulefactory:
+    Wrap the rules in an arbitrary rule factory. Should be a callable that
+    accept the list of rules as a single argument, or a tuple that is used
+    to create a :func:`~functools.partial`.
+
+  The rules are also wrapped in an
+  :class:`~werkzeug.routing.EndpointPrefix` factory for the name of the
+  module the router is located in plus a colon.
+
+  Here's a non-trivial example::
 
     @router
     def urls():
@@ -646,11 +656,9 @@ Decorators
 
 .. autofunction:: route(string, defaults=None, subdomain=None, methods=None)
 
-  Creates a :class:`~werkzeug.routing.Rule` from the decorator arguments
-  with the :term:`endpoint name` set to the :term:`dotted name` of the
-  decorated function or class.
-
-  Variants for specific HTTP methods are also available:
+  The recognized scan parameters are the same as that of :func:`router` as
+  is the use of the module name to prefix endpoints. Variants for the
+  different HTTP methods are also available:
 
   .. autofunction:: connect(string, defaults=None, subdomain=None)
 

@@ -28,13 +28,16 @@ def _add_rules(scanner, rules, ob):
 
 @decorator
 def router(scanner, name, ob):
-    """Decorator for use with :class:`~ramverk.venusian.VenusianMixin` for
-    callables that return an iterable of routing rules."""
+    """Decorator for adding URL rules to an application. Typically used
+    with a function that returns a list of rules or a generator that yield
+    rules."""
     _add_rules(scanner, ob(), ob)
 
 
 def route(string, **kwargs):
-    """Venusian decorator for routing a single URL rule."""
+    """Decorator for adding a single URL rule using the arguments to the
+    decorator and inferring the endpoint name from the decorated
+    function/class."""
     @decorator
     def route_endpoint(scanner, name, ob):
         opts = getattr(ob, '__rule_options__', dict)()
