@@ -3,13 +3,13 @@ from abc                 import ABCMeta, abstractmethod
 from functools           import partial
 from inspect             import isclass, ismethod, getargspec
 
-from venusian            import attach
 from werkzeug.exceptions import NotFound, MethodNotAllowed
 from werkzeug.routing    import Map, Rule, Submount, Subdomain, EndpointPrefix
 from werkzeug.utils      import cached_property, redirect, import_string
 
 from ramverk.http        import HTTP_METHODS
 from ramverk.utils       import Bunch, Alias
+from ramverk.venusian    import decorator
 
 
 def _add_rules(scanner, rules, ob):
@@ -26,27 +26,23 @@ def _add_rules(scanner, rules, ob):
         scanner.app.url_map.add(rule)
 
 
-def router(generator):
+@decorator
+def router(scanner, name, ob):
     """Decorator for use with :class:`~ramverk.venusian.VenusianMixin` for
     callables that return an iterable of routing rules."""
-    def route(scanner, name, ob):
-        _add_rules(scanner, ob(), ob)
-    attach(generator, route, category='ramverk')
-    return generator
+    _add_rules(scanner, ob(), ob)
 
 
 def route(string, **kwargs):
     """Venusian decorator for routing a single URL rule."""
-    def decorator(endpoint):
-        def route_endpoint(scanner, name, ob):
-            opts = getattr(ob, '__rule_options__', dict)()
-            opts.update(kwargs)
-            opts.setdefault('endpoint', name)
-            rule = Rule(string, **opts)
-            _add_rules(scanner, [rule], ob)
-        attach(endpoint, route_endpoint, category='ramverk')
-        return endpoint
-    return decorator
+    @decorator
+    def route_endpoint(scanner, name, ob):
+        opts = getattr(ob, '__rule_options__', dict)()
+        opts.update(kwargs)
+        opts.setdefault('endpoint', name)
+        rule = Rule(string, **opts)
+        _add_rules(scanner, [rule], ob)
+    return route_endpoint
 
 
 for method in HTTP_METHODS:

@@ -1,5 +1,6 @@
 from __future__     import absolute_import
-from venusian       import Scanner
+from functools      import wraps
+from venusian       import Scanner, attach
 from werkzeug.utils import import_string
 
 
@@ -27,3 +28,13 @@ class VenusianMixin(object):
         if isinstance(package, basestring):
             package = import_string(package)
         scanner.scan(package, categories)
+
+
+def decorator(callback):
+    """A decorator for turning a Venusian callback into a decorator that
+    attaches the callback."""
+    @wraps(callback)
+    def wrapper(target):
+        attach(target, callback, category='ramverk')
+        return target
+    return wrapper

@@ -575,7 +575,33 @@ Decorators
 """"""""""
 
 .. automodule:: ramverk.venusian
-  :members:
+
+  .. autoclass:: VenusianMixin
+    :members:
+
+  .. autofunction:: decorator
+
+    For reference consider the canonical example from the Venusian
+    documentation::
+
+      def jsonify(wrapped):
+          def callback(scanner, name, ob):
+              def jsonified(request):
+                  result = wrapped(request)
+                  return json.dumps(result)
+              scanner.registry.add(name, jsonified)
+          venusian.attach(wrapped, callback)
+          return wrapped
+
+    Using the :func:`decorator` decorator we can simplify it a little::
+
+      @decorator
+      def jsonify(scanner, name, ob):
+          def jsonified(request):
+              result = ob(request)
+              return json.dumps(result)
+          scanner.registry.add(name, jsonified)
+
 
 .. currentmodule:: ramverk.routing
 
