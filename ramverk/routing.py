@@ -23,7 +23,7 @@ def _add_rules(scanner, rules, ob):
     if hasattr(scanner, 'subdomain'):
         rules = [Subdomain(scanner.subdomain, rules)]
     for rule in rules:
-        scanner.app.url_map.add(rule)
+        scanner.application.url_map.add(rule)
 
 
 @decorator

@@ -577,7 +577,16 @@ Decorators
 .. automodule:: ramverk.venusian
 
   .. autoclass:: VenusianMixin
-    :members:
+
+    .. automethod:: scan
+
+      If `package` is a string it is treated as a :term:`dotted name` that
+      gets imported, and if it is :const:`None` the application
+      :attr:`~ramverk.application.BaseApplication.module` is scanned. The
+      `parameters` set attributes on the scanner that is passed to the
+      callbacks and can be used to configure the behavior of decorators for
+      individual scans. In addition the `application` attribute is set to
+      the application running the scan.
 
   .. autofunction:: decorator
 
