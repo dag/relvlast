@@ -498,11 +498,7 @@ Minimal Base for Applications
 
 
 .. automodule:: ramverk.local
-
-  .. attribute:: stack
-
-    Shared :class:`~werkzeug.local.LocalStack` used as the default by
-    applications.
+  :members:
 
 
 Dispatching Requests by URL
