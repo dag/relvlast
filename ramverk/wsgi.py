@@ -1,6 +1,5 @@
-from werkzeug.routing import Rule
-from werkzeug.utils   import cached_property
-from werkzeug.wsgi    import SharedDataMiddleware, responder
+from werkzeug.utils import cached_property
+from werkzeug.wsgi  import SharedDataMiddleware, responder
 
 
 def mixin(middleware):
@@ -56,9 +55,11 @@ class SharedDataMixin(object):
         application has a :attr:`url_map`."""
         super(SharedDataMixin, self).__create__()
         if hasattr(self, 'url_map'):
-            self.url_map.add(Rule('/static/<path:name>',
-                                  endpoint='static',
-                                  build_only=True))
+            self.url_map.add(
+                self.url_rule_class(
+                    '/static/<path:name>',
+                    endpoint='static',
+                    build_only=True))
 
     @cached_property
     def shared_data(self):

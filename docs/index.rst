@@ -547,6 +547,10 @@ Mixins
 
 .. autoclass:: URLMapMixin
 
+  .. autoattribute:: url_rule_class
+
+    :default: :class:`~werkzeug.routing.Rule`
+
   .. autoattribute:: url_map
 
   .. automethod:: update_endpoint_values
@@ -644,8 +648,8 @@ Decorators
   Here's a non-trivial example::
 
     @router
-    def urls():
-        yield Rule('/show', endpoint='message')
+    def urls(rule):
+        yield rule('/show', endpoint='message')
 
     def localized_message(response):
         return response('Howdy')

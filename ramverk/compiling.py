@@ -1,5 +1,4 @@
-from werkzeug.routing import Rule
-from werkzeug.utils   import cached_property
+from werkzeug.utils import cached_property
 
 
 class EnvironmentCompilerMixin(object):
@@ -20,9 +19,11 @@ class CompilerMixinBase(object):
     def __create__(self):
         super(CompilerMixinBase, self).__create__()
         if hasattr(self, 'url_map'):
-            self.url_map.add(Rule('/compiled/<path:name>',
-                                  endpoint='compiled',
-                                  build_only=True))
+            self.url_map.add(
+                self.url_rule_class(
+                    '/compiled/<path:name>',
+                    endpoint='compiled',
+                    build_only=True))
 
     @cached_property
     def compilers(self):

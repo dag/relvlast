@@ -1,10 +1,9 @@
-from werkzeug.routing import Rule
-from ramverk.routing  import MethodDispatch, router, route, get
+from ramverk.routing import MethodDispatch, router, route, get
 
 
 @router
-def urls():
-    yield Rule('/', endpoint='index', methods=('GET', 'POST'))
+def urls(rule):
+    yield rule('/', endpoint='index', methods=('GET', 'POST'))
 
 
 def index(application, request, render, db, redirect):

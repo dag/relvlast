@@ -28,10 +28,11 @@ def _add_rules(scanner, rules, ob):
 
 @decorator
 def router(scanner, name, ob):
-    """Decorator for adding URL rules to an application. Typically used
-    with a function that returns a list of rules or a generator that yield
-    rules."""
-    _add_rules(scanner, ob(), ob)
+    """Decorator for adding URL rules to an application by calling the
+    router (passing the preferred :attr:`~URLMapMixin.url_rule_class`)
+    which should return an iterable of rules. Typically a router is a
+    generator or a function that return a list."""
+    _add_rules(scanner, ob(scanner.application.url_rule_class), ob)
 
 
 def route(string, **kwargs):
@@ -43,7 +44,7 @@ def route(string, **kwargs):
         opts = getattr(ob, '__rule_options__', dict)()
         opts.update(kwargs)
         opts.setdefault('endpoint', name)
-        rule = Rule(string, **opts)
+        rule = scanner.application.url_rule_class(string, **opts)
         _add_rules(scanner, [rule], ob)
     return route_endpoint
 
@@ -83,8 +84,8 @@ class URLMapAdapterMixin(object):
 
     @cached_property
     def url_rule(self):
-        """The :class:`~werkzeug.routing.Rule` that matched this
-        request."""
+        """The :attr:`~URLMapMixin.url_rule_class` instance that matched
+        this request."""
         return self.url_map_adapter_match[0]
 
     @cached_property
@@ -153,6 +154,9 @@ class URLHelpersMixin(object):
 class URLMapMixin(object):
     """Application mixin for dispatching to endpoints by matching the
     requested URL against a map of rules."""
+
+    url_rule_class = Rule
+    """The class used for URL rules."""
 
     @cached_property
     def url_map(self):
