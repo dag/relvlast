@@ -324,8 +324,11 @@ As you can see it would similarly be trivial to fake the `db` or for
 example hook redirections.
 
 
-The Full Stack
---------------
+Full Stack Configuration
+------------------------
+
+.. automodule:: ramverk.fullstack
+
 
 .. centered:: Components
 
@@ -361,150 +364,183 @@ The Full Stack
     object.
 
 
-.. automodule:: ramverk.fullstack
+.. autoclass:: Application
+  :show-inheritance:
 
-  .. autoclass:: Application
-    :show-inheritance:
+  .. inheritance-diagram:: Application
+    :parts: 1
 
-    .. inheritance-diagram:: Application
-      :parts: 1
+  .. attribute:: settings.secret_key
 
-    .. attribute:: settings.secret_key
+    :default:
+      :class:`~ramverk.session.SecretKey` based on the `name` setting.
 
-      :default:
-        :class:`~ramverk.session.SecretKey` based on the `name` setting.
+  .. attribute:: settings.storage
 
-    .. attribute:: settings.storage
+    :default: File storage based on the `name` setting.
 
-      :default: File storage based on the `name` setting.
+  .. autoattribute:: log_handler
 
-    .. autoattribute:: log_handler
+  .. autoattribute:: environment
 
-    .. autoattribute:: environment
+    :default: :class:`Environment`
 
-      :default: :class:`Environment`
+  .. autoattribute:: request
 
-    .. autoattribute:: request
+    :default: :class:`Request`
 
-      :default: :class:`Request`
+  .. autoattribute:: response
 
-    .. autoattribute:: response
+    :default: :class:`Response`
 
-      :default: :class:`Response`
+  .. autoattribute:: template_context
 
-    .. autoattribute:: template_context
-
-      :default: :class:`TemplateContext`
-
-  .. autoclass:: Environment
-    :members:
-    :show-inheritance:
-
-    .. inheritance-diagram:: Environment
-      :parts: 1
-
-  .. autoclass:: Request
-    :members:
-    :show-inheritance:
-
-    .. inheritance-diagram:: Request
-      :parts: 1
-
-  .. autoclass:: Response
-    :members:
-    :show-inheritance:
-
-    .. inheritance-diagram:: Response
-      :parts: 1
-
-  .. autoclass:: TemplateContext
-    :members:
-    :show-inheritance:
-
-    .. inheritance-diagram:: TemplateContext
-      :parts: 1
+    :default: :class:`TemplateContext`
 
 
-Minimal Base for Applications
------------------------------
+.. autoclass:: Environment
+  :members:
+  :show-inheritance:
+
+  .. inheritance-diagram:: Environment
+    :parts: 1
+
+
+.. autoclass:: Request
+  :members:
+  :show-inheritance:
+
+  .. inheritance-diagram:: Request
+    :parts: 1
+
+
+.. autoclass:: Response
+  :members:
+  :show-inheritance:
+
+  .. inheritance-diagram:: Response
+    :parts: 1
+
+
+.. autoclass:: TemplateContext
+  :members:
+  :show-inheritance:
+
+  .. inheritance-diagram:: TemplateContext
+    :parts: 1
+
+
+Minimal Configuration
+---------------------
 
 .. automodule:: ramverk.application
 
-  .. autoclass:: BaseApplication
 
-    :param settings:
-      Used to update :attr:`settings`.
+.. autoclass:: BaseApplication
 
-
-    .. centered:: Application
-
-    .. automethod:: configure
-
-    .. autoattribute:: settings
-
-    .. attribute:: settings.debug
-
-      Enable development niceties that shouldn't be enabled in production.
-      May be read by mixins and have no particular effect in itself.
-
-      :default: :const:`False`
-
-    .. attribute:: settings.name
-
-      Name of the application, may be used for log channels and database
-      defaults and such.
-
-      :default: The name of the class.
-
-    .. autoattribute:: module
-
-      Used by mixins to locate templates and endpoints and such. Defaults
-      to the module the application class was defined in, which is usually
-      what you want.
-
-    .. autoattribute:: log
-
-    .. autoattribute:: environment
-
-      :default: :class:`~ramverk.environment.BaseEnvironment`
-
-    .. autoattribute:: request
-
-      :default: :class:`~werkzeug.wrappers.BaseRequest`
-
-    .. autoattribute:: response
-
-      :default: :class:`~werkzeug.wrappers.BaseResponse`
+  :param settings:
+    Keyword arguments can be passed to the constructor and are added to
+    :attr:`settings`.
 
 
-    .. centered:: Context Locals
+  .. centered:: Application
 
-    .. autoattribute:: stack
+  .. automethod:: configure
 
-    .. autoattribute:: local
+  .. autoattribute:: settings
 
-    .. automethod:: contextbound(environ)
+  .. attribute:: settings.debug
+
+    Enable development niceties that shouldn't be enabled in production.
+    May be read by mixins and have no particular effect in itself.
+
+    :default: :const:`False`
+
+  .. attribute:: settings.name
+
+    Name of the application, may be used for log channels and database
+    defaults and such.
+
+    :default: The name of the class.
+
+  .. autoattribute:: module
+
+    Used by mixins to locate templates and endpoints and such. Defaults
+    to the module the application class was defined in, which is usually
+    what you want.
+
+  .. autoattribute:: log
+
+  .. autoattribute:: environment
+
+    :default: :class:`~ramverk.environment.BaseEnvironment`
+
+  .. autoattribute:: request
+
+    :default: :class:`~werkzeug.wrappers.BaseRequest`
+
+  .. autoattribute:: response
+
+    :default: :class:`~werkzeug.wrappers.BaseResponse`
 
 
-    .. centered:: Low-level
+  .. centered:: Context Locals
 
-    .. automethod:: __call__(environ, start_response)
+  .. autoattribute:: stack
 
-    .. automethod:: __create__
+  .. autoattribute:: local
+
+  .. automethod:: contextbound(environ)
+
+
+  .. centered:: Low-level
+
+  .. automethod:: __call__(environ, start_response)
+
+  .. automethod:: __create__
 
 
 .. automodule:: ramverk.environment
   :members:
 
 
+Context-Local Environment Stack
+"""""""""""""""""""""""""""""""
+
 .. automodule:: ramverk.local
-  :members:
+
+  A context-local object is a container that associates data with the
+  identity of the thread or greenlet of the calling context. The implication
+  of this is that global state can be imitated in a thread- and greenlet-safe
+  manner. Even so, it is usually not a good idea to rely on context-local
+  objects as it can complicate code and make it less explicit, but in certain
+  cases like internationalization it can be impractical to avoid them.
+
+  .. attribute:: stack
+
+    A :class:`~werkzeug.local.LocalStack` that applications share by
+    default.
+
+  .. autofunction:: get_current
+
+  .. attribute:: current
+
+    :class:`Proxy` to the current context-local. Operations like accessing
+    attributes are forwarded to the current object and return proper,
+    non-proxy results but be aware that if you pass something the proxy
+    itself, then that's what the receiver will get: a proxy, forwarding to
+    whatever is the current object of *their* context and which might
+    change at any time. To get the actual current object of your context,
+    use :func:`get_current`.
+
+  .. autoclass:: Proxy
 
 
 Dispatching Requests by URL
 ---------------------------
 
 .. automodule:: ramverk.routing
+
 
 Mixins
 """"""
