@@ -6,13 +6,8 @@ from werkzeug.utils import import_string
 
 class VenusianMixin(object):
     """Application mixin that uses :term:`Venusian` to provide support for
-    building modular applications with simple declarative decorators and
-    plain old Python modules. The decorators attach callback functions
-    but do not otherwise alter the decorated function/class in any way.
-    Applications can later scan for these callbacks in modules and packages
-    and call them with a reference to itself and any optional parameters,
-    thereby allowing the callbacks to register the decorated function/class
-    with the application in the manner they see fit."""
+    building modular applications with simple decorators and plain Python
+    modules."""
 
     def scan(self, package=None, categories=('ramverk',), **parameters):
         """Scan a module or (recursively) a package and configure the

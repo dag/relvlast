@@ -578,6 +578,13 @@ Decorators
 
   .. autoclass:: VenusianMixin
 
+    The decorators attach callbacks but do not otherwise alter the
+    decorated function/class in any way. Applications can later scan for
+    these callbacks in modules and packages and call them with a reference
+    to itself and any optional parameters, thereby allowing the callbacks
+    to register the decorated function/class with the application in the
+    manner they see fit.
+
     .. automethod:: scan
 
       If `package` is a string it is treated as a :term:`dotted name` that
@@ -618,11 +625,11 @@ Decorators
 
   These scan parameters are recognized:
 
-  :param basestring submount:
+  :param str submount:
     The rules are wrapped in a :class:`~werkzeug.routing.Submount` rule
     factory created with this string, effectively prepending the string to
     each rule.
-  :param basestring subdomain:
+  :param str subdomain:
     Like `submount` but for the :class:`~werkzeug.routing.Subdomain`
     factory.
   :param rulefactory:
