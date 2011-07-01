@@ -523,6 +523,9 @@ Context-Local Environment Stack
 
   .. autofunction:: get_current
 
+    Raises an :exc:`UnboundContextError` if called in a context not bound
+    to a request environment.
+
   .. attribute:: current
 
     :class:`Proxy` to the current context-local. Operations like accessing
@@ -533,7 +536,12 @@ Context-Local Environment Stack
     change at any time. To get the actual current object of your context,
     use :func:`get_current`.
 
+    Forwarding operations raise :exc:`UnboundContextError` if there is no
+    environment to forward to.
+
   .. autoclass:: Proxy
+
+  .. autoexception:: UnboundContextError
 
 
 Dispatching Requests by URL

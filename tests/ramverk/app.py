@@ -1,10 +1,22 @@
 from attest        import Tests, assert_hook
 from werkzeug.test import create_environ
+from ramverk.local import get_current, current
 from tests         import testapp, testenv
 
 
 app = Tests(contexts=[testapp])
 env = Tests(contexts=[testenv])
+
+
+@env.test
+def stack(app):
+    assert get_current() is app.local
+    assert current.application is app
+    first_env = get_current()
+    with app.contextbound(create_environ()) as second_env:
+        assert get_current() is not first_env
+        assert get_current() is second_env
+    assert get_current() is first_env
 
 
 @app.test

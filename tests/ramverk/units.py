@@ -6,6 +6,7 @@ from werkzeug.test       import create_environ
 from werkzeug.wrappers   import BaseResponse
 from ramverk.application import BaseApplication
 from ramverk.environment import BaseEnvironment
+from ramverk.local       import UnboundContextError, get_current, current
 from ramverk.rendering   import JSONMixin
 from ramverk.transaction import TransactionMixin
 from ramverk.utils       import super as _super
@@ -18,6 +19,14 @@ from tests               import mocking
 
 unit = Tests()
 mock = Tests(contexts=[mocking])
+
+
+@unit.test
+def unbound_contexts():
+    with raises(UnboundContextError):
+        get_current()
+    with raises(UnboundContextError):
+        current.application
 
 
 @unit.test
