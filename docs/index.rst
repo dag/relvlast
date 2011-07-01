@@ -622,6 +622,28 @@ Decorators
               return json.dumps(result)
           scanner.registry.add(name, jsonified)
 
+  .. autofunction:: configurator
+
+    Example:
+
+    .. centered:: :file:`pkg/conf.py`
+
+    ::
+
+      @configurator
+      def configure(application, submount):
+          application.scan('pkg.frontend', submount=submount)
+          application.scan('pkg.pages', submount=submount + '/pages')
+
+    .. centered:: :file:`app.py`
+
+    ::
+
+      class App(Application):
+
+          def configure(self):
+              self.scan('pkg.conf', submount='/pkg')
+
 
 .. currentmodule:: ramverk.routing
 

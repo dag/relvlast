@@ -1,5 +1,6 @@
 from __future__     import absolute_import
 from functools      import wraps
+from inspect        import getargspec
 from venusian       import Scanner, attach
 from werkzeug.utils import import_string
 
@@ -28,3 +29,14 @@ def decorator(callback):
         attach(target, callback, category='ramverk')
         return target
     return wrapper
+
+
+@decorator
+def configurator(scanner, name, ob):
+    """Generic decorator for configuring the scanning application. The
+    decorated function is called with the scan parameters listed in the
+    signature (which can include the implicit `application`)."""
+    args = getargspec(ob).args
+    params = vars(scanner)
+    kwargs = dict((name, params[name]) for name in args)
+    ob(**kwargs)

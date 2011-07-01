@@ -1,4 +1,15 @@
-from ramverk.routing import MethodDispatch, router, route, get
+from ramverk.venusian import configurator
+from ramverk.routing  import MethodDispatch, router, route, get
+
+
+@configurator
+def set_attribute(application):
+    application.some_attribute = 'set by configurator'
+
+
+@configurator
+def set_attribute_from_options(application, value):
+    application.another_attribute = value
 
 
 @router

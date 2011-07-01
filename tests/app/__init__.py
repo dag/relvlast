@@ -33,7 +33,7 @@ class TestApp(Application):
     def configure(self):
         self.log_handler = TestHandler()
         self.renderers['.html'].dialect = HTMLTemplate
-        self.scan('tests.app.frontend')
+        self.scan('tests.app.frontend', value=666)
         self.scan('tests.app.module', submount='/module')
         self.scan('tests.app.subdomain', subdomain='en',
                   rulefactory=(EndpointPrefix, 'en_'))

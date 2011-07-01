@@ -8,6 +8,12 @@ env = Tests(contexts=[testenv])
 
 
 @app.test
+def configurators(app):
+    assert app.some_attribute == 'set by configurator'
+    assert app.another_attribute == 666
+
+
+@app.test
 def transactions(app):
 
     with app.contextbound(create_environ()):
