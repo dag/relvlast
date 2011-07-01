@@ -1,5 +1,36 @@
-from inspect import isclass, isroutine
+import __builtin__ as builtins
+from inspect import currentframe, getmro, isfunction, isclass, isroutine
 from werkzeug.utils import cached_property
+
+
+class Omitted(object):
+
+    class __metaclass__(type):
+
+        def __repr__(cls):
+            return cls.__name__
+
+
+def super(type=Omitted, instance=Omitted):
+    """Variant of :func:`super` that mimics the behavior in Python 3 with
+    no arguments."""
+    if type is Omitted:
+        frame = currentframe(1)
+        instance = frame.f_locals[frame.f_code.co_varnames[0]]
+        for type in getmro(builtins.type(instance)):
+            for var in vars(type).itervalues():
+                if not isfunction(var):
+                    continue
+                if var.__code__ is frame.f_code:
+                    break
+            else:
+                continue
+            break
+        else:
+            raise SystemError('super(): no arguments')
+    if instance is Omitted:
+        return builtins.super(type)
+    return builtins.super(type, instance)
 
 
 class Bunch(dict):

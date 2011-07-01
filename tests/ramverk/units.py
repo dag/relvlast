@@ -8,6 +8,7 @@ from ramverk.application import BaseApplication
 from ramverk.environment import BaseEnvironment
 from ramverk.rendering   import JSONMixin
 from ramverk.transaction import TransactionMixin
+from ramverk.utils       import super as _super
 from ramverk.utils       import Bunch
 from ramverk.utils       import EagerCachedProperties, ReprAttributes, has
 from ramverk.utils       import InitFromArgs, args
@@ -17,6 +18,27 @@ from tests               import mocking
 
 unit = Tests()
 mock = Tests(contexts=[mocking])
+
+
+@unit.test
+def newstyle_super():
+
+    class Base(object):
+        def meth(self):
+            return 'base'
+
+    class FirstMixin(object):
+        def meth(self):
+            return _super().meth()
+
+    class SecondMixin(object):
+        def meth(self):
+            return 'second mixin'
+
+    class Multi(FirstMixin, SecondMixin, Base):
+        pass
+
+    assert Multi().meth() == 'second mixin'
 
 
 @unit.test

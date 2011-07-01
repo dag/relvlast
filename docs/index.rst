@@ -1149,6 +1149,8 @@ Common Utilities
 
 .. automodule:: ramverk.utils
 
+  .. autofunction:: super
+
   .. autoclass:: Bunch
     :show-inheritance:
 
