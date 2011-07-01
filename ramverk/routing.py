@@ -70,7 +70,8 @@ class URLMapAdapterMixin(object):
             endpoint = self.endpoint
         except NotFound:
             return super(URLMapAdapterMixin, self).respond()
-        return self.application.dispatch_to_endpoint(import_string(endpoint))
+        endpoint = import_string(endpoint)
+        return self.application.dispatch_to_endpoint(endpoint, self)
 
     @cached_property
     def url_map_adapter(self):
@@ -173,19 +174,18 @@ class URLMapMixin(object):
         :meth:`~werkzeug.routing.Map.is_endpoint_expecting` for example if
         you have a placeholder for a language code in the rule."""
 
-    def dispatch_to_endpoint(self, endpoint, **kwargs):
-        """Implements the logic for dispatching a request to an endpoint.
-        Applications can override this to customize how endpoints are
-        called."""
-        env = self.local
+    def dispatch_to_endpoint(self, endpoint, environment, **kwargs):
+        """Implements the logic for dispatching from an environment to an
+        endpoint. Applications can override this to customize how
+        endpoints are called."""
         if isclass(endpoint):
-            return endpoint(env)()
+            return endpoint(environment)()
         args = getargspec(endpoint).args
         if ismethod(endpoint):
             del args[0]  # 'self'
         for name in args:
             if name not in kwargs:
-                kwargs[name] = getattr(env, name)
+                kwargs[name] = getattr(environment, name)
         return endpoint(**kwargs)
 
 
@@ -239,4 +239,4 @@ class MethodDispatch(AbstractEndpoint):
         if method is None:
             valid = [m for m in HTTP_METHODS if hasattr(self, m.lower())]
             raise MethodNotAllowed(valid)
-        return application.dispatch_to_endpoint(method)
+        return application.dispatch_to_endpoint(method, self.environment)

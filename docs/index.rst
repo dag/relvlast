@@ -565,12 +565,16 @@ Mixins
 
   .. automethod:: dispatch_to_endpoint
 
-    For functions and methods, the default implementation will inspect
-    the call signature and map the keyword arguments to attributes on the
-    :class:`environment <ramverk.environment.BaseEnvironment>`.
+    :param endpoint:
+      A function, method or class that should produce a response for the
+      request `environment`.
+    :param ramverk.environment.BaseEnvironment environment:
+      Environment object wrapping the request to dispatch from.
 
-    For classes, it will create an instance passing the environment as a
-    single positional argument and call it with no arguments.
+    For functions and methods, the default implementation will inspect
+    the call signature and map keyword arguments to attributes on the
+    `environment`. For classes it creates an instance, passing along the
+    environment, and then calls the instance.
 
     To simplify unit testing `kwargs` should be included as overrides
     when dispatching to an endpoint with keyword arguments, i.e. the case
