@@ -22,10 +22,12 @@ class Proxy(LocalProxy):
         return '@'.join([proxy, actual])
 
 
-def get_current():
+def get_current(stack=None):
     """Fetch the current object local to the caller context, i.e. the tip
     of the :attr:`stack` and normally an instance of some
     :class:`~ramverk.environment.BaseEnvironment` subclass."""
+    if stack is None:
+        stack = globals()['stack']
     try:
         return stack._local.stack[-1]
     except (AttributeError, IndexError):
