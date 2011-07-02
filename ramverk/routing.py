@@ -8,7 +8,7 @@ from werkzeug.routing    import Map, Rule, Submount, Subdomain, EndpointPrefix
 from werkzeug.utils      import cached_property, redirect, import_string
 
 from ramverk.http        import HTTP_METHODS
-from ramverk.utils       import Bunch, Alias
+from ramverk.utils       import Bunch, Alias, Configurable
 from ramverk.venusian    import decorator
 
 
@@ -189,7 +189,7 @@ class URLMapMixin(object):
         return endpoint(**kwargs)
 
 
-class AbstractEndpoint(object):
+class AbstractEndpoint(Configurable):
     """Optional base for endpoint classes that must implement
     :meth:`__call__`."""
 
@@ -209,13 +209,6 @@ class AbstractEndpoint(object):
     def __init__(self, environment):
         self.environment = environment
         self.__create__()
-        self.configure()
-
-    def __create__(self):
-        """Called to let mixins configure instances."""
-
-    def configure(self):
-        """Called to let the endpoint instance configure itself."""
 
     @abstractmethod
     def __call__(self):

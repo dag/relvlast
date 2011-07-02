@@ -6,10 +6,10 @@ from werkzeug.wrappers   import BaseRequest, BaseResponse
 from werkzeug.wsgi       import responder
 
 from ramverk.environment import BaseEnvironment
-from ramverk.utils       import Bunch
+from ramverk.utils       import Bunch, Configurable
 
 
-class BaseApplication(object):
+class BaseApplication(Configurable):
     """Base for applications."""
 
     environment = BaseEnvironment
@@ -25,17 +25,6 @@ class BaseApplication(object):
         """Create a new application object using `settings`."""
         self.settings.update(settings)
         self.__create__()
-        self.configure()
-
-    def __create__(self):
-        """Called after :meth:`__init__` and meant to be hooked by
-        cooperative mixins who are expected to call :func:`super` as
-        needed."""
-
-    def configure(self):
-        """Called after :meth:`__init__` and meant to be overloaded by
-        applications who do not need to call :func:`super`, to configure
-        new instances."""
 
     @cached_property
     def settings(self):

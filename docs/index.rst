@@ -437,15 +437,11 @@ Minimal Configuration
 
 
 .. autoclass:: BaseApplication
+  :show-inheritance:
 
   :param settings:
     Keyword arguments can be passed to the constructor and are added to
     :attr:`settings`.
-
-
-  .. centered:: Application
-
-  .. automethod:: configure
 
   .. autoattribute:: settings
 
@@ -483,23 +479,16 @@ Minimal Configuration
 
     :default: :class:`~werkzeug.wrappers.BaseResponse`
 
-
-  .. centered:: Context Locals
-
   .. autoattribute:: stack
 
   .. automethod:: contextbound(environ)
 
-
-  .. centered:: Low-level
-
   .. automethod:: __call__(environ, start_response)
-
-  .. automethod:: __create__
 
 
 .. automodule:: ramverk.environment
   :members:
+  :show-inheritance:
 
 
 Context-Local Environment Stack
@@ -741,7 +730,7 @@ Endpoint Classes
 """"""""""""""""
 
 .. autoclass:: AbstractEndpoint
-  :members: __rule_options__, environment, __create__, configure, __call__
+  :members: __rule_options__, environment, __call__
 
 .. autoclass:: MethodDispatch
 
@@ -1181,6 +1170,12 @@ Common Utilities
 
 .. automodule:: ramverk.utils
 
+  .. autoclass:: Configurable
+    :members: __create__, configure
+
+    This class exists primarily to avoid repeating documentation for the
+    same pattern, and is mostly abstract in itself.
+
   .. autofunction:: super
 
   .. autoclass:: Bunch
@@ -1221,7 +1216,7 @@ Common Utilities
   .. autoclass:: ReprAttributes
 
   .. autoclass:: InitFromArgs
-    :members: __create__
+    :show-inheritance:
 
   .. autofunction:: args
 

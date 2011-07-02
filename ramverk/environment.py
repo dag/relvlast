@@ -1,9 +1,9 @@
 from werkzeug.exceptions import NotFound
 from werkzeug.utils      import cached_property
-from ramverk.utils       import Alias
+from ramverk.utils       import Alias, Configurable
 
 
-class BaseEnvironment(object):
+class BaseEnvironment(Configurable):
     """Environment base class."""
 
     def __init__(self, application, environ):
@@ -13,6 +13,8 @@ class BaseEnvironment(object):
 
         self.environ = environ
         """WSGI environment."""
+
+        self.__create__()
 
     def __enter__(self):
         pass

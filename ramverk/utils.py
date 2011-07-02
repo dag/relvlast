@@ -3,6 +3,21 @@ from inspect import currentframe, getmro, isfunction, isclass, isroutine
 from werkzeug.utils import cached_property
 
 
+class Configurable(object):
+    """Base for a common pattern for hooking instance creation cleanly."""
+
+    def __create__(self):
+        """Should be called by the "configurable" class after
+        :meth:`__init__` to allow cooperative mixins and other base classes
+        to configure the instance without needing to mess with
+        :meth:`__init__` directly."""
+        self.configure()
+
+    def configure(self):
+        """Called after :meth:`__create__` to allow the instance to
+        configure itself without bothering with :func:`python:super`."""
+
+
 class Omitted(object):
 
     class __metaclass__(type):
@@ -12,7 +27,7 @@ class Omitted(object):
 
 
 def super(type=Omitted, instance=Omitted):
-    """Variant of :func:`super` that mimics the behavior in Python 3 with
+    """Variant of :func:`python:super` that mimics the behavior in Python 3 with
     no arguments."""
     if type is Omitted:
         frame = currentframe(1)
@@ -105,7 +120,7 @@ class ReprAttributes(object):
         return '<{0} {1}>'.format(name, attrs)
 
 
-class InitFromArgs(object):
+class InitFromArgs(Configurable):
     """Add a convenience :meth:`__init__` based on :attr:`__args__` that
     accepts both positional and keyword arguments, setting unspecified args
     to none."""
@@ -118,9 +133,6 @@ class InitFromArgs(object):
         vars(self).update(zip(self.__args__, args))
         vars(self).update(kwargs)
         self.__create__()
-
-    def __create__(self):
-        """Called after :meth:`__init__` for cleaner overriding."""
 
 
 def args(*names):
