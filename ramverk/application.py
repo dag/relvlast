@@ -62,11 +62,6 @@ class BaseApplication(object):
         from ramverk.local import stack
         return stack
 
-    @property
-    def local(self):
-        """Environment bound to the context."""
-        return self.stack.top
-
     @contextmanager
     def contextbound(self, environ):
         """Context manager stacking the WSGI `environ` wrapped in

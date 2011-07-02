@@ -9,10 +9,10 @@ from babel.support       import Translations
 from creoleparser        import Parser, creole11_base
 from flatland.out.genshi import setup as setup_flatland
 from genshi.filters      import Translator
-from werkzeug.local      import LocalProxy
 from werkzeug.routing    import Rule
 from werkzeug.utils      import cached_property
 from ramverk             import fullstack
+from ramverk.local       import Proxy, current
 from ramverk.utils       import Alias
 from relvlast.objects    import Root
 
@@ -67,7 +67,7 @@ class Relvlast(fullstack.Application):
 
     def configure_genshi_template(self, template):
         setup_flatland(template)
-        catalog = LocalProxy(lambda: self.local.message_catalog)
+        catalog = Proxy(lambda: current.message_catalog)
         Translator(catalog).setup(template)
 
     def update_endpoint_values(self, environment, endpoint, values):

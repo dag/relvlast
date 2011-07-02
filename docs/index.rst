@@ -488,8 +488,6 @@ Minimal Configuration
 
   .. autoattribute:: stack
 
-  .. autoattribute:: local
-
   .. automethod:: contextbound(environ)
 
 

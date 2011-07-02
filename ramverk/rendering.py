@@ -38,8 +38,7 @@ class BaseTemplateContext(object):
     def __init__(self, environment):
 
         self.environment = environment
-        """The context-bound environment
-        :attr:`~ramverk.application.BaseApplication.local`."""
+        """The context-bound environment."""
 
     application = Alias('environment.application',
         ':attr:`~ramverk.environment.BaseEnvironment.application`')
