@@ -70,6 +70,6 @@ class Relvlast(fullstack.Application):
         catalog = LocalProxy(lambda: self.local.message_catalog)
         Translator(catalog).setup(template)
 
-    def update_endpoint_values(self, endpoint, values):
+    def update_endpoint_values(self, environment, endpoint, values):
         if self.url_map.is_endpoint_expecting(endpoint, 'locale'):
-            values.setdefault('locale', self.local.locale.language)
+            values.setdefault('locale', environment.locale.language)

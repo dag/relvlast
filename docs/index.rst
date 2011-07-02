@@ -565,11 +565,11 @@ Mixins
 
   .. automethod:: dispatch_to_endpoint
 
+    :param ramverk.environment.BaseEnvironment environment:
+      Environment object wrapping the request to dispatch from.
     :param endpoint:
       A function, method or class that should produce a response for the
       request `environment`.
-    :param ramverk.environment.BaseEnvironment environment:
-      Environment object wrapping the request to dispatch from.
 
     For functions and methods, the default implementation will inspect
     the call signature and map keyword arguments to attributes on the

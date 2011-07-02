@@ -71,7 +71,7 @@ class URLMapAdapterMixin(object):
         except NotFound:
             return super(URLMapAdapterMixin, self).respond()
         endpoint = import_string(endpoint)
-        return self.application.dispatch_to_endpoint(endpoint, self)
+        return self.application.dispatch_to_endpoint(self, endpoint)
 
     @cached_property
     def url_map_adapter(self):
@@ -120,7 +120,7 @@ class URLMapAdapterMixin(object):
             values = dict(self.segments, **values)
         else:
             endpoint = self.absolute_endpoint(endpoint)
-            self.application.update_endpoint_values(endpoint, values)
+            self.application.update_endpoint_values(self, endpoint, values)
         return self.url_map_adapter.build(endpoint, values, method,
                                           force_external, append_unknown)
 
@@ -165,7 +165,7 @@ class URLMapMixin(object):
         to or replace with your own map of rules."""
         return Map()
 
-    def update_endpoint_values(self, endpoint, values):
+    def update_endpoint_values(self, environment, endpoint, values):
         """This method is called when a URL for `endpoint` is being built
         using `values` to fill in the placeholder variables of the URL
         rule. By overriding this you can modify the `values` mapping
@@ -174,7 +174,7 @@ class URLMapMixin(object):
         :meth:`~werkzeug.routing.Map.is_endpoint_expecting` for example if
         you have a placeholder for a language code in the rule."""
 
-    def dispatch_to_endpoint(self, endpoint, environment, **kwargs):
+    def dispatch_to_endpoint(self, environment, endpoint, **kwargs):
         """Implements the logic for dispatching from an environment to an
         endpoint. Applications can override this to customize how
         endpoints are called."""
@@ -239,4 +239,4 @@ class MethodDispatch(AbstractEndpoint):
         if method is None:
             valid = [m for m in HTTP_METHODS if hasattr(self, m.lower())]
             raise MethodNotAllowed(valid)
-        return application.dispatch_to_endpoint(method, self.environment)
+        return application.dispatch_to_endpoint(self.environment, method)
