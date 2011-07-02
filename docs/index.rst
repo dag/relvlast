@@ -730,9 +730,11 @@ Endpoint Classes
 """"""""""""""""
 
 .. autoclass:: AbstractEndpoint
+  :show-inheritance:
   :members: __rule_options__, environment, __call__
 
 .. autoclass:: MethodDispatch
+  :show-inheritance:
 
   If no corresponding method exists a
   :exc:`~werkzeug.exceptions.MethodNotAllowed` is raised with a list of
