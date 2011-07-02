@@ -10,6 +10,8 @@ from werkzeug.wrappers   import BaseRequest,\
                                 CommonRequestDescriptorsMixin,\
                                 ETagRequestMixin,\
                                 UserAgentMixin
+from werkzeug.contrib.wrappers\
+                         import JSONRequestMixin
 from werkzeug.wrappers   import BaseResponse,\
                                 CommonResponseDescriptorsMixin,\
                                 ETagResponseMixin,\
@@ -51,6 +53,7 @@ class Request(AcceptMixin,
               AuthorizationMixin,
               CommonRequestDescriptorsMixin,
               ETagRequestMixin,
+              JSONRequestMixin,
               UserAgentMixin,
               BaseRequest):
     """Full-stack request object."""
