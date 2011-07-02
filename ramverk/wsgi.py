@@ -72,3 +72,7 @@ class SharedDataMixin(object):
 
     def pipeline(self, app):
         return SharedDataMiddleware(app, self.shared_data)
+
+
+from ramverk.inventory import members
+__all__ = members[__name__]

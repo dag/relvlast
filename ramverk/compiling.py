@@ -29,3 +29,7 @@ class CompilerMixinBase(object):
     def compilers(self):
         """Mapping of output file extensions to compilers."""
         return {}
+
+
+from ramverk.inventory import members
+__all__ = members[__name__]

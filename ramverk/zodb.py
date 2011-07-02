@@ -39,3 +39,7 @@ class ZODBStorageMixin(object):
     @cached_property
     def _zodb_connection_pool(self):
         return DB(self.settings.storage())
+
+
+from ramverk.inventory import members
+__all__ = members[__name__]

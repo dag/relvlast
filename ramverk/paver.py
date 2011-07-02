@@ -94,3 +94,7 @@ def routes():
             print '[' + '|'.join(rule.methods) + ']',
         print rule.rule
         print '    ->', rule.endpoint
+
+
+from ramverk.inventory import members
+__all__ = members[__name__]

@@ -39,3 +39,7 @@ class SCSSMixin(CompilerMixinBase):
         finally:
             scss.LOAD_PATHS = old
         return self.response(css, mimetype='text/css')
+
+
+from ramverk.inventory import members
+__all__ = members[__name__]

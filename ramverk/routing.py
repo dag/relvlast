@@ -233,3 +233,7 @@ class MethodDispatch(AbstractEndpoint):
             valid = [m for m in HTTP_METHODS if hasattr(self, m.lower())]
             raise MethodNotAllowed(valid)
         return application.dispatch_to_endpoint(self.environment, method)
+
+
+from ramverk.inventory import members
+__all__ = members[__name__]

@@ -110,3 +110,7 @@ class Application(LogbookLoggerMixin,
             return ColorizedStderrHandler(format_string=
                 '{record.level_name:>8}: {record.channel}: {record.message}')
         return NestedSetup([NullHandler(), StderrHandler(level='WARNING')])
+
+
+from ramverk.inventory import members
+__all__ = members[__name__]

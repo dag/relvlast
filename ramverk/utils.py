@@ -141,3 +141,7 @@ def args(*names):
         class_.__args__ = names
         return class_
     return decorator
+
+
+from ramverk.inventory import members
+__all__ = members[__name__]

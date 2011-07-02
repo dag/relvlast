@@ -36,3 +36,7 @@ def get_current(stack=None):
 
 stack = LocalStack()
 current = Proxy(get_current)
+
+
+from ramverk.inventory import members
+__all__ = members[__name__]

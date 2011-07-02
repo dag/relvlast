@@ -29,3 +29,7 @@ class LogbookLoggerMixin(object):
     """The Logbook handler used by the :class:`LogbookHandlerMixin`.
     The default is the Logbook default, which is an
     :class:`~logbook.handlers.StderrHandler`."""
+
+
+from ramverk.inventory import members
+__all__ = members[__name__]

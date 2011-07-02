@@ -85,3 +85,7 @@ class JSONMixin(RenderingMixinBase):
         serialized = json.dumps(kwargs, default=self.__default,
                                 indent=4 if self.settings.debug else None)
         return self.response(serialized, mimetype='application/json')
+
+
+from ramverk.inventory import members
+__all__ = members[__name__]

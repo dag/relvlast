@@ -75,3 +75,7 @@ class BaseApplication(Configurable):
             except HTTPException as error:
                 response = self.response_from_error(env, error)
         return response
+
+
+from ramverk.inventory import members
+__all__ = members[__name__]

@@ -166,3 +166,7 @@ class GenshiMixin(TemplatingMixinBase):
         """Fallback for :meth:`GenshiRenderer.filter`, returning the
         stream unaltered by default."""
         return stream
+
+
+from ramverk.inventory import members
+__all__ = members[__name__]

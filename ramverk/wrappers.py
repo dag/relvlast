@@ -37,3 +37,7 @@ class DeferredResponseInitMixin(object):
                 self.response = response
 
         return self
+
+
+from ramverk.inventory import members
+__all__ = members[__name__]

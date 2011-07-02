@@ -38,3 +38,7 @@ def configurator(scanner, name, ob):
     params = vars(scanner).copy()
     args, kwargs = validate_arguments(ob, (), params)
     ob(*args, **kwargs)
+
+
+from ramverk.inventory import members
+__all__ = members[__name__]

@@ -50,3 +50,7 @@ class SecretKey(object):
                 with open(self.filename, 'wb') as stream:
                     stream.write(self.key)
             return self.key
+
+
+from ramverk.inventory import members
+__all__ = members[__name__]

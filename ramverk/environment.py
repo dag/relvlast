@@ -35,3 +35,7 @@ class BaseEnvironment(Configurable):
 
     response = Alias('application.response',
                      ':attr:`~ramverk.application.BaseApplication.response`')
+
+
+from ramverk.inventory import members
+__all__ = members[__name__]
