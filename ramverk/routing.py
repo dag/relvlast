@@ -65,11 +65,11 @@ class URLMapAdapterMixin(object):
     :class:`~werkzeug.routing.MapAdapter` and dispatches to the matching
     endpoint if there was one."""
 
-    def respond(self):
+    def __call__(self):
         try:
             endpoint = self.endpoint
         except NotFound:
-            return super(URLMapAdapterMixin, self).respond()
+            return super(URLMapAdapterMixin, self).__call__()
         endpoint = import_string(endpoint)
         return self.application.dispatch_to_endpoint(self, endpoint)
 

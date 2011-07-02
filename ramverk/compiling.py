@@ -4,13 +4,13 @@ from werkzeug.utils import cached_property
 class EnvironmentCompilerMixin(object):
     """Environment mixin dispatching to compilers."""
 
-    def respond(self):
+    def __call__(self):
         if self.request.path.startswith('/compiled/'):
             filename = self.request.path.split('/compiled/', 1)[1]
             compiler_name = filename[filename.index('.'):]
             compiler = self.application.compilers[compiler_name]
             return compiler(filename)
-        return super(EnvironmentCompilerMixin, self).respond()
+        return super(EnvironmentCompilerMixin, self).__call__()
 
 
 class CompilerMixinBase(object):

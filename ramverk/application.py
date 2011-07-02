@@ -74,12 +74,15 @@ class BaseApplication(object):
         finally:
             self.stack.pop()
 
+    def response_from_error(self, environment, error):
+        return error
+
     @responder
     def __call__(self, environ, start_response):
         """WSGI interface to this application."""
         with self.contextbound(environ) as env:
             try:
-                response = env.respond()
-            except HTTPException as e:
-                response = env.respond_for_error(e)
+                response = env()
+            except HTTPException as error:
+                response = self.response_from_error(env, error)
         return response

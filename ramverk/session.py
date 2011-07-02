@@ -23,8 +23,8 @@ class SessionMixin(object):
         return SecureJSONCookie.load_cookie(
             self.request, secret_key=self.application.settings.secret_key)
 
-    def respond(self):
-        response = super(SessionMixin, self).respond()
+    def __call__(self):
+        response = super(SessionMixin, self).__call__()
         self.session.save_cookie(response)
         return response
 

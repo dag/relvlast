@@ -20,16 +20,10 @@ class BaseEnvironment(object):
     def __exit__(self, exc_type, exc_val, exc_tb):
         pass
 
-    def respond(self):
+    def __call__(self):
         """Respond to this request or raise an HTTP exception. Default
         raises a :exc:`~werkzeug.exceptions.NotFound`."""
         raise NotFound
-
-    def respond_for_error(self, error):
-        """If :meth:`respond` raised an HTTP exception, this is called with
-        the exception and should return an error response. The default
-        returns the exception which is a basic response."""
-        return error
 
     @cached_property
     def request(self):
