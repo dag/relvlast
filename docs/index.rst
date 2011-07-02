@@ -1240,6 +1240,26 @@ Common Utilities
     {'answer': 42, 'question': None}
 
 
+Importing Lazily
+----------------
+
+With apipkg_ installed you can import lazily from Ramverk, both in terms of
+lazy-loading modules on-demand and in terms of human laziness because you
+don't need to type out the full imports or for that matter remember them.
+Simply import the :mod:`ramverk.any` module, or from it::
+
+  from ramverk import any  # only apipkg loaded so far
+  any.Bunch                # ramverk.utils loaded on attribute access
+
+  # importing from different modules in one go
+  from ramverk.any import Application, route
+
+  # force everything to load
+  from ramverk.any import *
+
+.. _apipkg: http://pypi.python.org/pypi/apipkg/
+
+
 Glossary
 --------
 

@@ -5,6 +5,7 @@ Genshi
 Logbook
 PyYAML
 ZODB3
+apipkg
 compactxml
 creoleparser
 pyScss
