@@ -1,5 +1,4 @@
 from __future__          import absolute_import
-from datetime            import datetime
 from attest              import Tests, assert_hook, raises
 from fudge               import Fake
 from werkzeug.test       import create_environ
@@ -137,24 +136,6 @@ def deferred_response_init():
 
     response = Response(status=300).using(status='404 NOT FOUND')
     assert response.status_code == 404
-
-
-@unit.test
-def json_renderer():
-
-    class App(JSONMixin, BaseApplication):
-
-        def _JSONMixin__default(self, obj):
-            if isinstance(obj, datetime):
-                return obj.isoformat()
-            return super(App, self)._JSONMixin__default(obj)
-
-    now = datetime.now()
-    response = App().render('json', time=now)
-    assert response.data == '{"time": "%s"}' % now.isoformat()
-
-    with raises(TypeError):
-        App().render('json', response=response)
 
 
 @unit.test

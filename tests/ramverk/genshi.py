@@ -7,8 +7,8 @@ genshi = Tests(contexts=[testenv])
 
 
 @genshi.test
-def render_genshi_template(app):
-    response = app.render('index.html', greeting='Hi')
+def render_genshi_template(app, env):
+    response = env.render('index.html', greeting='Hi')
     assert response.data == dedent("""\
         <!DOCTYPE html>
         <html>
@@ -22,8 +22,8 @@ def render_genshi_template(app):
 
 
 @genshi.test
-def injected_context(app):
-    response = app.render('context.html')
+def injected_context(app, env):
+    response = env.render('context.html')
     assert response.data == dedent("""\
         <!DOCTYPE html>
         <html>
@@ -32,8 +32,8 @@ def injected_context(app):
 
 
 @genshi.test
-def override_context(app):
-    response = app.render('context.html', injected='not 144')
+def override_context(app, env):
+    response = env.render('context.html', injected='not 144')
     assert response.data == dedent("""\
         <!DOCTYPE html>
         <html>
@@ -42,8 +42,8 @@ def override_context(app):
 
 
 @genshi.test
-def stream_filtering(app):
-    response = app.render('filtering.html')
+def stream_filtering(app, env):
+    response = env.render('filtering.html')
     assert response.data == dedent("""\
         <!DOCTYPE html>
         <html>
@@ -52,22 +52,22 @@ def stream_filtering(app):
 
 
 @genshi.test
-def mutate_response(app):
-    response = app.render('context.html').using(status=404, mimetype='text/css')
+def mutate_response(app, env):
+    response = env.render('context.html').using(status=404, mimetype='text/css')
     assert response.status_code == 404
     assert response.content_type == 'text/css; charset=utf-8'
 
 
 @genshi.test
-def text_template(app):
-    response = app.render('newtext.txt')
+def text_template(app, env):
+    response = env.render('newtext.txt')
     assert response.content_type == 'text/plain; charset=utf-8'
     assert response.data == 'The answer to the ultimate question is 42\n'
 
 
 @genshi.test
-def html_template(app):
-    response = app.render('html-template.html', paragraphs=['One', 'Two'])
+def html_template(app, env):
+    response = env.render('html-template.html', paragraphs=['One', 'Two'])
     assert response.data == dedent("""\
         <!DOCTYPE html>
         <html>
@@ -78,8 +78,8 @@ def html_template(app):
 
 
 @genshi.test
-def compact_template(app):
-    response = app.render('compact.xml', names=['World', 'Friend'])
+def compact_template(app, env):
+    response = env.render('compact.xml', names=['World', 'Friend'])
     assert response.data == dedent("""\
         <html>
           <body>

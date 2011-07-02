@@ -17,6 +17,9 @@ class RenderingMixinBase(object):
         represent a file extension, e.g. ``'.html'``."""
         return {}
 
+
+class RenderingEnvironmentMixin(object):
+
     def render(self, renderer_name, **context):
         """Look up a renderer and call it with the name and context. The
         name is cut at the first dot such that ``'index.html'`` gets the
@@ -25,14 +28,8 @@ class RenderingMixinBase(object):
             renderer = renderer_name[renderer_name.index('.'):]
         else:
             renderer = renderer_name
-        renderer = self.renderers[renderer]
-        return renderer(renderer_name, **context)
-
-
-class RenderingEnvironmentMixin(object):
-
-    render = Alias('application.render',
-                   ':meth:`~RenderingMixinBase.render`')
+        renderer = self.application.renderers[renderer]
+        return renderer(self, renderer_name, **context)
 
 
 class BaseTemplateContext(object):
@@ -57,8 +54,8 @@ class TemplatingMixinBase(RenderingMixinBase):
     template_context = BaseTemplateContext
     """Template context class."""
 
-    def update_template_context(self, context):
-        namespace = self.template_context(self.local)
+    def update_template_context(self, environment, context):
+        namespace = self.template_context(environment)
         for name in dir(namespace):
             if not name.startswith('_') or name == '_':
                 context.setdefault(name, getattr(namespace, name))
@@ -85,7 +82,7 @@ class JSONMixin(RenderingMixinBase):
         :exc:`TypeError` (the default)."""
         raise TypeError
 
-    def __render(self, _, **kwargs):
+    def __render(self, *args, **kwargs):
         serialized = json.dumps(kwargs, default=self.__default,
                                 indent=4 if self.settings.debug else None)
         return self.response(serialized, mimetype='application/json')

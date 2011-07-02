@@ -13,8 +13,8 @@ def testapp():
 @contextmanager
 def testenv():
     with testapp() as app:
-        with app.contextbound(create_environ()):
-            yield app
+        with app.contextbound(create_environ()) as env:
+            yield app, env
 
 
 @contextmanager

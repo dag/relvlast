@@ -101,11 +101,11 @@ class GenshiRenderer(object):
         self.app, self.serializer, self.doctype = app, serializer, doctype
         self.mimetype, self.dialect, self.lazy = mimetype, dialect, lazy
 
-    def __call__(self, template_name, **context):
-        self.app.update_template_context(context)
+    def __call__(self, environment, template_name, **context):
+        self.app.update_template_context(environment, context)
         template = self.app.genshi_loader.load(template_name, cls=self.dialect)
         stream = template.generate(**context)
-        stream = self.filter(template, stream)
+        stream = self.filter(environment, template, stream)
         serialize = stream.serialize if self.lazy else stream.render
         if self.doctype is None:
             rendering = serialize(self.serializer)
@@ -113,10 +113,10 @@ class GenshiRenderer(object):
             rendering = serialize(self.serializer, doctype=self.doctype)
         return self.app.response(rendering, mimetype=self.mimetype)
 
-    def filter(self, template, stream):
+    def filter(self, environment, template, stream):
         """Called to filter the `stream` for `template`, delegating to
         :meth:`~GenshiMixin.filter_genshi_stream` by default."""
-        return self.app.filter_genshi_stream(template, stream)
+        return self.app.filter_genshi_stream(environment, template, stream)
 
     def __repr__(self): #pragma: no cover
         attrs = ('{0}={1!r}'.format(k, v)
@@ -162,7 +162,7 @@ class GenshiMixin(TemplatingMixinBase):
         """Called when `template` is first loaded; override to do Babel and
         Flatland installation and such."""
 
-    def filter_genshi_stream(self, template, stream):
+    def filter_genshi_stream(self, environment, template, stream):
         """Fallback for :meth:`GenshiRenderer.filter`, returning the
         stream unaltered by default."""
         return stream

@@ -1,4 +1,5 @@
-from attest        import Tests, assert_hook
+from datetime      import datetime
+from attest        import Tests, assert_hook, raises
 from werkzeug.test import create_environ
 from ramverk.local import get_current, current
 from tests         import testapp, testenv
@@ -57,3 +58,14 @@ def url_building(app):
     assert url('.module:index') == 'http://localhost/module/'
     assert url('tests.app.module:index') == 'http://localhost/module/'
     assert url('tests.app.subdomain:en_index') == 'http://en.localhost/'
+
+
+@env.test
+def json_renderer(app, env):
+
+    now = datetime.now()
+    response = env.render('json', time=now)
+    assert response.data == '{"time": "%s"}' % now.isoformat()
+
+    with raises(TypeError):
+        env.render('json', response=response)
